@@ -1,0 +1,320 @@
+<?php require APPROOT . '/views/inc/header.php';
+$employeeWorkingToday = (isset($data['employeeWorkingToday']) && $data['employeeWorkingToday'] != null) ? $data['employeeWorkingToday'] : [];
+$departmentName = (isset($data['departmentName']) && $data['departmentName'] != null) ? $data['departmentName'] : [];
+$totalEmployeesDepartment = (isset($data['totalEmployeesDepartment']) && $data['totalEmployeesDepartment'] != null) ? $data['totalEmployeesDepartment'] : [];
+$totalemployeeWorkingToday = (isset($employeeWorkingToday) && $employeeWorkingToday != null) ? count($employeeWorkingToday) : 0;
+$num = 1;
+?>
+<style>
+    .scrollCard {
+        max-height: 500px;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+</style>
+<div class="container">
+
+    <div class="page-inner">
+
+        <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
+            <div>
+                <h3 class="fw-bold mb-3">SurgePays, Inc.</h3>
+                <h6 class="op-7 mb-2">San Salvador, El Salvador</h6>
+            </div>
+            <!-- <div class="ms-md-auto py-2 py-md-0">
+                <a href="#" class="btn btn-label-info btn-round me-2">Manage</a>
+                <a href="#" class="btn btn-primary btn-round"> <i class="fa fa-add"></i> Add Employee</a>
+            </div> -->
+        </div>
+        <div class="row">
+            <div class="col-sm-6 col-md-3">
+                <div class="card card-stats card-round">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-icon">
+                                <div
+                                    class="icon-big text-center icon-primary bubble-shadow-small">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                            </div>
+                            <div class="col col-stats ms-3 ms-sm-0">
+                                <div class="numbers">
+                                    <p class="card-category">Employees</p>
+                                    <h4 class="card-title"><?php echo $data['employeeTotal']; ?></h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-3">
+                <div class="card card-stats card-round">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-icon">
+                                <div
+                                    class="icon-big text-center icon-info bubble-shadow-small">
+                                    <i class="fas fa-building"></i>
+                                </div>
+                            </div>
+                            <div class="col col-stats ms-3 ms-sm-0">
+                                <div class="numbers">
+                                    <p class="card-category">Employees Working Today</p>
+                                    <h4 class="card-title"><?php echo $totalemployeeWorkingToday ?></h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-3">
+                <div class="card card-stats card-round">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-icon">
+                                <div
+                                    class="icon-big text-center icon-success bubble-shadow-small">
+                                    <i class="fas fa-file"></i>
+                                </div>
+                            </div>
+                            <div class="col col-stats ms-3 ms-sm-0">
+                                <div class="numbers">
+                                    <p class="card-category">Leaves Created Today</p>
+                                    <h4 class="card-title">2</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-3">
+                <div class="card card-stats card-round">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-icon">
+                                <div
+                                    class="icon-big text-center icon-secondary bubble-shadow-small">
+                                    <i class="far fa-sticky-note"></i>
+                                </div>
+                            </div>
+                            <div class="col col-stats ms-3 ms-sm-0">
+                                <div class="numbers">
+                                    <p class="card-category">Tickets</p>
+                                    <h4 class="card-title">0</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between">
+                        <div class="card-title">Employees Working Today</div>
+
+                        <div class="card-tools">
+                            <a href="#" onclick="downloandTable_CSV()" class="btn btn-label-success btn-round btn-sm me-2"><span class="btn-label"><i class="fa fa-file-excel"></i></span>Export</a>
+                            <!-- <a href="#" class="btn btn-label-info btn-round btn-sm"><span class="btn-label">i class="fa fa-print"></i></span>Print</a> -->
+                        </div>
+                    </div>
+                    <div class="card-body scrollCard">
+                        <table id="employeeWorkingToday" class="table table-bordered ">
+                            <thead>
+                                <tr class="dataexp">
+                                    <th scope="col">#</th>
+                                    <th scope="col">Employee Name</th>
+                                    <th scope="col">Deparment</th>
+                                    <th scope="col">Position</th>
+                                    <th scope="col">Clock In</th>
+                                    <th scope="col">Clock Out</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php for ($i = 0; $i < count($employeeWorkingToday); $i++) { ?>
+                                    <tr class="dataexp">
+                                        <th scope="row"><?php echo $num++; ?></th>
+                                        <td><?php echo $employeeWorkingToday[$i]['firstName'] . ' ' . $employeeWorkingToday[$i]['firstLastName']; ?></td>
+                                        <td><?php echo $employeeWorkingToday[$i]['deparmentName']; ?></td>
+                                        <td><?php echo $employeeWorkingToday[$i]['positionName']; ?></td>
+                                        <td><?php echo $employeeWorkingToday[$i]['clockIn']; ?></td>
+                                        <td><?php echo $employeeWorkingToday[$i]['clockOut']; ?></td>
+                                    <?php } ?>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Employees By Deparment</div>
+                    </div>
+                    <div class="card-body" style="min-height: 500px;">
+                        <div class="chart-container pt-5">
+                            <canvas id="barChartEmployeesDeparment" width="739" height="300" style="display: block; width: 739px; height: 300px;" class="chartjs-render-monitor"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Line Chart</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <canvas id="lineChart" width="739" height="300" style="display: block; width: 739px; height: 300px;" class="chartjs-render-monitor"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Bar Chart</div>
+                    </div>
+                    <div class="card-body">
+                        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ex dolore asperiores eveniet et magni odit veniam, suscipit at amet temporibus quaerat quo iusto pariatur praesentium. Nulla expedita earum dolore natus.
+                    </div>
+                </div>
+            </div>
+
+        </div> -->
+
+
+        <?php require APPROOT . '/views/inc/footer.php'; ?>
+    </div> <!-- end/page-inner -->
+</div> <!-- end/container2 -->
+<script>
+    function downloandTable_CSV(table_id = "employeeWorkingToday", separator = ",") {
+        // Select rows from table_id
+        var rows = document.querySelectorAll("table#" + table_id + " tr.dataexp"); // Take tr with class "dataexp"
+        // Construct csv
+        var csv = [];
+        //looping through the table
+        for (var i = 0; i < rows.length; i++) {
+            var row = [],
+                cols = rows[i].querySelectorAll("td, th");
+            //looping through the tr
+            for (var j = 0; j < cols.length; j++) {
+                // removing space from the data
+                var data = cols[j].innerText.replace(/(\r\n|\n|\r)/gm, "").replace(/(\s\s)/gm, " ")
+                // removing double qoute from the data
+                data = data.replace(/"/g, `""`);
+                // Push escaped string
+                row.push(`"` + data + `"`);
+            }
+            csv.push(row.join(separator));
+        }
+        var csv_string = csv.join("\n");
+        // Download it
+        var filename = "export_" + table_id + "_" + new Date().toLocaleDateString() + ".csv";
+        var link = document.createElement("a");
+        link.style.display = "none";
+        link.setAttribute("target", "_blank");
+        link.setAttribute("href", "data:text/csv;charset=utf-8," + encodeURIComponent(csv_string));
+        link.setAttribute("download", filename);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
+
+    barChartEmployeesDeparment = document.getElementById("barChartEmployeesDeparment").getContext("2d");
+    var myBarChartEmployeesDeparment = new Chart(barChartEmployeesDeparment, {
+        type: "bar",
+        data: {
+            labels: <?php echo json_encode($departmentName) ?>,
+            datasets: [{
+                label: "Deparments",
+                backgroundColor: "#0674b9",
+                borderColor: "#0674b9",
+                data: <?php echo json_encode($totalEmployeesDepartment) ?>,
+            }, ],
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true,
+                    },
+                }, ],
+            },
+        },
+    });
+
+    // lineChart = document.getElementById("lineChart").getContext("2d");
+    // var myLineChart = new Chart(lineChart, {
+    //     type: "line",
+    //     data: {
+    //         labels: [
+    //             "Jan",
+    //             "Feb",
+    //             "Mar",
+    //             "Apr",
+    //             "May",
+    //             "Jun",
+    //             "Jul",
+    //             "Aug",
+    //             "Sep",
+    //             "Oct",
+    //             "Nov",
+    //             "Dec",
+    //         ],
+    //         datasets: [{
+    //             label: "Active Users",
+    //             borderColor: "#1d7af3",
+    //             pointBorderColor: "#FFF",
+    //             pointBackgroundColor: "#1d7af3",
+    //             pointBorderWidth: 2,
+    //             pointHoverRadius: 4,
+    //             pointHoverBorderWidth: 1,
+    //             pointRadius: 4,
+    //             backgroundColor: "transparent",
+    //             fill: true,
+    //             borderWidth: 2,
+    //             data: [
+    //                 542, 480, 430, 550, 530, 453, 380, 434, 568, 610, 700, 900,
+    //             ],
+    //         }, ],
+    //     },
+    //     options: {
+    //         responsive: true,
+    //         maintainAspectRatio: false,
+    //         legend: {
+    //             position: "bottom",
+    //             labels: {
+    //                 padding: 10,
+    //                 fontColor: "#1d7af3",
+    //             },
+    //         },
+    //         tooltips: {
+    //             bodySpacing: 4,
+    //             mode: "nearest",
+    //             intersect: 0,
+    //             position: "nearest",
+    //             xPadding: 10,
+    //             yPadding: 10,
+    //             caretPadding: 10,
+    //         },
+    //         layout: {
+    //             padding: {
+    //                 left: 15,
+    //                 right: 15,
+    //                 top: 15,
+    //                 bottom: 15
+    //             },
+    //         },
+    //     },
+    // });
+</script>
