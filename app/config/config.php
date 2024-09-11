@@ -9,13 +9,13 @@ if (ENVIRONMENT == 'development' || ENVIRONMENT == 'dev') {
   $host = 'localhost';
   $user = 'root';
   $pass = '';
-  $url_root = 'http://localhost/sys';
+  $url_root = 'http://localhost/app';
 
 }else{
   $host = '172.24.13.20';
   $user = 'hrsurge';
   $pass = '01cNSZZEwK1t';
-  $url_root = 'https://hr-surge.com/sys';
+  $url_root = 'https://hr-surge.com/app';
 }
   // DB Params
   define('DB_HOST', $host);
