@@ -35,7 +35,7 @@ class Employees extends Controller
         $this->relationshipModel = $this->model('Relationship');
         $this->usersModel = $this->model('User');
         $this->areaModel = $this->model('Area');
-        $this->billModel = $this->model('bill');
+        $this->billModel = $this->model('Bill');
     }
 
     public function index()
