@@ -460,7 +460,7 @@ $bills = (isset($data['bills']) && $data['bills'] != NULL) ? $data['bills'] : []
                                             <label id="billTo-error" class="error" for="billTo"></label></label>
                                         <div class="form-floating form-floating-custom mb-3">
                                             <select name="billTo" id="billTo" class="form-select form-control js-select-basic">
-                                                <!-- <option value="">Select</option> -->
+                                                <option value="">Select</option>
                                                 <?php for ($i = 0; $i < count($bills); $i++) {
                                                     $select = ($bills[$i]['billToId'] == $data['employeeInfo']['billTo']) ? 'selected' : '';
                                                     echo '<option ' . $select . '  value="' . $bills[$i]['billToId'] . '">' . $bills[$i]['billName'] . '</option>';
@@ -691,8 +691,14 @@ $bills = (isset($data['bills']) && $data['bills'] != NULL) ? $data['bills'] : []
         // Initial State Storage: When the document is ready, we store the initial values of the form fields in the initialState object.
         var initialState = {};
         $('#createEmployee').find('input, select').each(function() {
-            initialState[$(this).attr('name')] = $(this).val();
+            if ($(this).attr('type') === 'checkbox') {
+                initialState[$(this).attr('name')] = $(this).is(':checked') ? 1 : 0;
+            } else {
+                initialState[$(this).attr('name')] = $(this).val();
+            }
+
         });
+        // console.log(initialState)
 
         $('#photo').on('change', function() {
             previewFile(this, '#photo-preview');
@@ -715,7 +721,12 @@ $bills = (isset($data['bills']) && $data['bills'] != NULL) ? $data['bills'] : []
             var changedFields = {};
             $('#createEmployee').find('input, select').each(function() {
                 var name = $(this).attr('name');
-                var currentValue = $(this).val();
+
+                if ($(this).attr('type') === 'checkbox') {
+                    var currentValue = $(this).is(':checked') ? 1 : 0;
+                } else {
+                    var currentValue = $(this).val();
+                }
                 if (currentValue !== initialState[name]) {
                     changedFields[name] = currentValue;
                 }
@@ -800,6 +811,7 @@ $bills = (isset($data['bills']) && $data['bills'] != NULL) ? $data['bills'] : []
                 var jsonChangedFields = JSON.stringify(changedFields);
                 formData.append('changedFields', jsonChangedFields);
 
+                // console.log(jsonChangedFields)
 
                 $.ajax({
                     url: '<?php echo URLROOT; ?>/employees/createEmpProcess',
@@ -819,7 +831,7 @@ $bills = (isset($data['bills']) && $data['bills'] != NULL) ? $data['bills'] : []
 
                             resetForm();
 
-                            console.log("ALL GOOD");
+                            // console.log("ALL GOOD");
                             var content = {};
                             content.message = obj.message;
                             content.title = "Employee";
@@ -851,7 +863,7 @@ $bills = (isset($data['bills']) && $data['bills'] != NULL) ? $data['bills'] : []
 
 
                         } else {
-                            console.log("ALL BAD");
+                            // console.log("ALL BAD");
                             var content = {};
 
                             content.message = 'Error!!';
@@ -889,9 +901,12 @@ $bills = (isset($data['bills']) && $data['bills'] != NULL) ? $data['bills'] : []
         // Reset text, date, and file inputs
         const inputs = form.querySelectorAll('input');
         inputs.forEach(input => {
-            // if (input.type === 'text' || input.type === 'date' || input.type === 'file') {
-            input.value = '';
-            //  }
+
+            if (input.type === 'checkbox') {
+                input.checked = false; // Reset checkbox inputs
+            }else {
+                input.value = '';
+            }
         });
 
         // Reset textarea inputs

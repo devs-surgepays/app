@@ -1808,7 +1808,7 @@ for ($i = 0; $i < count($employeeDocumentsInfo); $i++) {
     }); // ready
 
     function getPhotoInfo(Badge, Fullname, photo) {
-        var link = '<?php echo URLROOT; ?> /public/documents/photo/' + photo;
+        var link = '<?php echo URLROOT; ?>/public/documents/photo/' + photo;
         $('.photo-preview').attr('src', link);
         $('.name-preview-photo').html(Badge + ' | ' + Fullname);
     }
