@@ -239,6 +239,7 @@ class Employees extends Controller
                 $re = $this->uploadSaveFile($_FILES, $employeeId, $nameFile); // errorFileSave - changedFields
                 $changesFinal = array_merge($changedFields, $re['changedFields']);
                 $return['responseFiles'] = $re;
+                $return['documentroot'] = $_SERVER['DOCUMENT_ROOT'];
                 // $return['changedFields'] = $changedFields;
                 // $return['FILES'] = $_FILES;
 
@@ -504,7 +505,7 @@ class Employees extends Controller
     {
 
         $maxFileSize = $maxFileSize * 1024 * 1024; // Specify the max file size (e.g., 5MB)
-        $targetDir = $_SERVER['DOCUMENT_ROOT'] . "/app/public/documents/{$nameDir}/";
+        $targetDir = $_SERVER['DOCUMENT_ROOT'] . "/public/documents/{$nameDir}/";
         if (!is_dir($targetDir)) mkdir($targetDir, 0777, true); //directory exists
         $re = ['status' => false, 'messageError' => '', 'nameFile' => '',];
 
