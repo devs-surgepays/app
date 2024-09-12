@@ -238,10 +238,9 @@ class Employees extends Controller
                 $nameFile = $badge . '_' . substr($firstName, 0, 1) . substr($firstLastName, 0, 1).'_'.date('mdyhis');
                 $re = $this->uploadSaveFile($_FILES, $employeeId, $nameFile); // errorFileSave - changedFields
                 $changesFinal = array_merge($changedFields, $re['changedFields']);
-
                 $return['responseFiles'] = $re;
-                $return['changedFields'] = $changedFields;
-                $return['FILES'] = $_FILES;
+                // $return['changedFields'] = $changedFields;
+                // $return['FILES'] = $_FILES;
 
                 // Add log
                 if (!empty($changesFinal)){
@@ -446,7 +445,6 @@ class Employees extends Controller
             $reantecedentesPenales = $this->handleFileUpload($FILES['antecedentesPenales'], 'antecedentesPenales', $nameFile . '_antecedentesPenales');
             $dataEmployeeDocument['documentTypeId'] = 3;
             $dataEmployeeDocument['document'] = $reantecedentesPenales['nameFile'];
-            $errorSave['antecedentesPenalesMoveUploadFile'] = $reantecedentesPenales['responseMoveUploadFile'];
             if ($reantecedentesPenales['status']) {
                 $this->employeeDocumentModel->removedEmployeeDocument($IdEmployee,3);
                 $this->employeeDocumentModel->saveEmployeeDocument($dataEmployeeDocument); // Save Documents name
@@ -506,7 +504,7 @@ class Employees extends Controller
     {
 
         $maxFileSize = $maxFileSize * 1024 * 1024; // Specify the max file size (e.g., 5MB)
-        $targetDir = $_SERVER['DOCUMENT_ROOT'] . "/surge-hr/public/documents/{$nameDir}/";
+        $targetDir = $_SERVER['DOCUMENT_ROOT'] . "/app/public/documents/{$nameDir}/";
         if (!is_dir($targetDir)) mkdir($targetDir, 0777, true); //directory exists
         $re = ['status' => false, 'messageError' => '', 'nameFile' => '',];
 
@@ -519,10 +517,7 @@ class Employees extends Controller
         if (in_array($fileExtension,  array("jpg", "png", "jpeg", "pdf"))) {
             // Validate file size
             if ($file["size"] <= $maxFileSize) {
-
-                $reFile = move_uploaded_file($file["tmp_name"], $targetFilePath);
-                $re['responseMoveUploadFile'] = $reFile;
-                if ($reFile) {
+                if (move_uploaded_file($file["tmp_name"], $targetFilePath)) {
                     $re['status'] = true;
                     $re['nameFile'] = $nameFinally;
                 } else {
