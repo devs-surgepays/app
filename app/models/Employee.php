@@ -194,13 +194,14 @@ class Employee
             em.status = 1
         GROUP BY
             de.name");
-            $result = $this->db->resultSetAssoc();
-            return $result;
+        $result = $this->db->resultSetAssoc();
+        return $result;
     }
 
-    public function getNamePhoto($idEmployee){
+    public function getNamePhoto($idEmployee)
+    {
         $this->db->query('SELECT photo FROM employees where employeeId=:employeeId');
-        $this->db->bind('employeeId',$idEmployee);
+        $this->db->bind('employeeId', $idEmployee);
         $re = $this->db->resultSetFetch();
         return $re['photo'];
     }
@@ -236,13 +237,13 @@ class Employee
                     e.documentNumber as 'Document Number'
                 FROM
                     employees e
-                        INNER JOIN
+                        LEFT JOIN
                     states s ON s.stateId = e.stateId
-                        INNER JOIN
+                        LEFT JOIN
                     cities c ON c.cityId = e.cityId
                         INNER JOIN
                     departments de ON de.departmentId = e.departmentId
-                        INNER JOIN
+                        LEFT JOIN
                     districts d ON d.districtId = e.districtId
                         INNER JOIN
                     users u ON u.userId = e.superiorId
@@ -251,8 +252,8 @@ class Employee
                         INNER JOIN
                     positions p ON p.positionId = e.positionId";
 
-        if($status != 2){
-            $query.= " WHERE e.status=:status";
+        if ($status != 2) {
+            $query .= " WHERE e.status=:status";
             $this->db->query($query);
             $this->db->bind('status', $status);
         } else {
