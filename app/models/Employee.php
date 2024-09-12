@@ -30,7 +30,7 @@ class Employee
         $query = '';
         if (!empty($searchQuery)) $query = "where " . $searchQuery . ' ';
 
-        $this->db->query("SELECT * FROM hr_surgepays.employees e 
+        $this->db->query("SELECT *, e.status as statusEmployee FROM hr_surgepays.employees e 
         INNER JOIN departments d ON d.departmentId = e.departmentId
         INNER JOIN positions p ON p.positionId = e.positionId 
         " . $query . " ORDER BY $orderby limit $offset,$per_page;");

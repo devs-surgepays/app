@@ -358,11 +358,11 @@ class Employees extends Controller
 
                 for ($i = 0; $i < count($registers); $i++) {
                     $c = $offset + $number;
-                    $status = ($registers[$i]['status'] == 1) ? '<span class="badge badge-success">Active</span>' : '<span class="badge badge-danger">Inactive</span>';
+                    $status = ($registers[$i]['statusEmployee'] == 1) ? '<span class="badge badge-success">Active</span>' : '<span class="badge badge-danger">Inactive</span>';
 
                     $htmlRows .= '<tr class="dataexp">';
                     $htmlRows .= '<td><i class="fa fa-point"></i>' . $c . '</td>';
-                    $htmlRows .= '<td><button class="btn btn-primary btn-border">#' . $registers[$i]['badge'] . '</button> </td>';
+                    $htmlRows .= '<td><a href="' . URLROOT . '/employees/edit/' . $registers[$i]['badge'] . '" class="btn btn-primary btn-border">#' . $registers[$i]['badge'] . '</a> </td>';
                     $htmlRows .= '<td>' . $registers[$i]['firstName'] . ' ' .
                         $registers[$i]['secondName'] . ' ' .
                         $registers[$i]['thirdName'] . ' ' .

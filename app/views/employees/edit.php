@@ -130,11 +130,11 @@ for ($i = 0; $i < count($employeeDocumentsInfo); $i++) {
         padding-top: 12px !important;
         margin: 0 0 0 6px !important;
     }
-
     .hr-color {
-
         color: #cfcfcf;
-
+    }
+    .cursor-unset {
+        cursor: unset;
     }
 </style>
 
@@ -523,18 +523,40 @@ for ($i = 0; $i < count($employeeDocumentsInfo); $i++) {
                                             <div class="row">
                                                 <div class="col-md-6 col-sm-12">
                                                     <label for="photo">Badge:</label><br>
-                                                    <a class="mt-2 btn btn-primary btn-border"># <?php echo $data['employeeInfo']['badge']; ?></a>
+                                                    <a class="mt-2 btn btn-primary btn-border cursor-unset"># <?php echo $data['employeeInfo']['badge']; ?></a>
                                                 </div>
-                                                <div class="col-md-6 col-sm-12 ">
+
+                                            </div>
+                                            <div class="row pt-4">
+                                                <div class="col-md-4 col-sm-12 ">
                                                     <div class="form-floating form-floating-custom mb-3">
-                                                        <select class="form-control " name="status" id="status">
-                                                            <option value="">Select</option>
-                                                            <option <?php echo (1 == $data['employeeInfo']['status']) ? 'selected' : '' ?> value="active">active</option>
-                                                            <option <?php echo (0 == $data['employeeInfo']['status']) ? 'selected' : '' ?> value="Inactive">Inactive</option>
-                                                        </select>
-                                                        <label for="status">Status</label>
+                                                        <div class="form-floating form-floating-custom mb-3">
+                                                            <?php $st = ($data['employeeInfo']['status'] == 1) ? 'Active' : 'Inactive'; ?>
+                                                            <input disabled type="text" value="<?php echo $st; ?>" class="form-control" id="status" name="status" placeholder="status">
+                                                            <label class="disableLabel" for="status">Status</label>
+                                                        </div>
                                                     </div>
                                                 </div>
+                                                <?php if ($data['employeeInfo']['status'] != 1) { ?>
+                                                    <div class="col-md-4 col-sm-12 ">
+                                                        <div class="form-floating form-floating-custom mb-3">
+                                                            <div class="form-floating form-floating-custom mb-3">
+                                                                <input disabled type="text" value="<?php echo $data['employeeInfo']['endDate']; ?>" class="form-control" id="endDate" name="endDate" placeholder="endDate">
+                                                                <label class="disableLabel" for="endDate">End Date</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4 col-sm-12 ">
+                                                        <div class="form-floating form-floating-custom mb-3">
+                                                            <div class="form-floating form-floating-custom mb-3">
+                                                                <?php $re = ($data['employeeInfo']['reHirable'] == 1) ? 'Yes' : 'No'; ?>
+
+                                                                <input disabled type="text" value="<?php echo $re; ?>" class="form-control" id="status" name="status" placeholder="status">
+                                                                <label class="disableLabel" for="status">Re-Hirable</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                <?php } ?>
                                             </div>
                                             <!-- Departament -->
                                             <div class="row pt-4">
@@ -1839,7 +1861,10 @@ for ($i = 0; $i < count($employeeDocumentsInfo); $i++) {
             'contract',
             'expediente',
             'hiredDateOld',
-            'salary'
+            'salary',
+            'endDate',
+            'reHirable',
+            'status'
         ]; // Lista de campos a ignorar
 
 
