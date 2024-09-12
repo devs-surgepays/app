@@ -81,28 +81,28 @@ class Employees extends Controller
                     'genderId' => (isset($_POST['genderId']) && $_POST['genderId'] != NULL) ? trim($_POST['genderId']) : Null,
                     'documentNumber' => $_POST['documentNumber'],
                     'documentExpDate' => $_POST['documentExpDate'],
-                    'documentExpedDate' =>  (isset($_POST['documentExpedDate']) && $_POST['documentExpedDate'] != NULL) ? trim($_POST['documentExpedDate']) : Null,
+                    'documentExpedDate' => (isset($_POST['documentExpedDate']) && $_POST['documentExpedDate'] != NULL) ? trim($_POST['documentExpedDate']) : Null,
                     'documentExpedPlace' => $_POST['documentExpedPlace'],
                     'ssn' => trim($_POST['ssn']),
-                    'stateId' =>  (isset($_POST['stateId']) && $_POST['stateId'] != NULL) ? trim($_POST['stateId']) : Null,
+                    'stateId' => (isset($_POST['stateId']) && $_POST['stateId'] != NULL) ? trim($_POST['stateId']) : Null,
                     'cityId' => (isset($_POST['cityId']) && $_POST['cityId'] != NULL) ? trim($_POST['cityId']) : Null,
                     'districtId' => (isset($_POST['districtId']) && $_POST['districtId'] != NULL) ? trim($_POST['districtId']) : Null,
                     'address' => trim($_POST['address']),
                     'maritalStatus' => trim($_POST['maritalStatus']),
-                    'children' =>  (isset($_POST['children']) && $_POST['children'] != NULL) ? trim($_POST['children']) : Null,
+                    'children' => (isset($_POST['children']) && $_POST['children'] != NULL) ? trim($_POST['children']) : Null,
                     'educationLevel' => trim($_POST['educationLevel']),
                     'career' => trim($_POST['career']),
-                    'departmentId' => (isset($_POST['departmentId']) && $_POST['departmentId'] != NULL) ? trim($_POST['departmentId']) : Null, 
-                    'areaId' => (isset($_POST['areaId']) && $_POST['areaId'] != NULL) ? trim($_POST['areaId']) : Null, 
-                    'superiorId' => (isset($_POST['superiorId']) && $_POST['superiorId'] != NULL) ? trim($_POST['superiorId']) : Null, 
-                    'positionId' => (isset($_POST['positionId']) && $_POST['positionId'] != NULL) ? trim($_POST['positionId']) : Null, 
+                    'departmentId' => (isset($_POST['departmentId']) && $_POST['departmentId'] != NULL) ? trim($_POST['departmentId']) : Null,
+                    'areaId' => (isset($_POST['areaId']) && $_POST['areaId'] != NULL) ? trim($_POST['areaId']) : Null,
+                    'superiorId' => (isset($_POST['superiorId']) && $_POST['superiorId'] != NULL) ? trim($_POST['superiorId']) : Null,
+                    'positionId' => (isset($_POST['positionId']) && $_POST['positionId'] != NULL) ? trim($_POST['positionId']) : Null,
                     'corporateEmail' => trim($_POST['corporateEmail']),
                     'hiredDate' => trim($_POST['hiredDate']),
-                    'contractType' => (isset($_POST['contractType']) && $_POST['contractType'] != NULL) ? trim($_POST['contractType']) : Null, 
-                    'workHours' =>  (isset($_POST['workHours']) && $_POST['workHours'] != NULL) ? trim($_POST['workHours']) : Null, 
-                    'bankId' => (isset($_POST['bankId']) && $_POST['bankId'] != NULL) ? trim($_POST['bankId']) : Null, 
+                    'contractType' => (isset($_POST['contractType']) && $_POST['contractType'] != NULL) ? trim($_POST['contractType']) : Null,
+                    'workHours' => (isset($_POST['workHours']) && $_POST['workHours'] != NULL) ? trim($_POST['workHours']) : Null,
+                    'bankId' => (isset($_POST['bankId']) && $_POST['bankId'] != NULL) ? trim($_POST['bankId']) : Null,
                     'bankAccount' => trim($_POST['bankAccount']),
-                    'afpTypeId' => (isset($_POST['afpTypeId']) && $_POST['afpTypeId'] != NULL) ? trim($_POST['afpTypeId']) : Null, 
+                    'afpTypeId' => (isset($_POST['afpTypeId']) && $_POST['afpTypeId'] != NULL) ? trim($_POST['afpTypeId']) : Null,
                     'afpNumber' => (isset($_POST['afpNumber']) && $_POST['afpNumber'] != NULL) ? trim($_POST['afpNumber']) : Null,
                     'salary' => trim($_POST['salary']),
                     'billTo' => (isset($_POST['billTo']) && $_POST['billTo'] != NULL) ? trim($_POST['billTo']) : Null,
@@ -138,7 +138,7 @@ class Employees extends Controller
                     $returnMessage = ['status' => true, 'message' => '', 'fieldError' => array()];
 
                     // Documents upload
-                    $nameFile = $newBadge . '_' . substr($data['firstName'], 0, 1) . substr($data['firstLastName'], 0, 1).'_'.date('mdyhis');
+                    $nameFile = $newBadge . '_' . substr($data['firstName'], 0, 1) . substr($data['firstLastName'], 0, 1) . '_' . date('mdyhis');
                     $dataEmployeeDocument['employeeId'] = $data['lastIdEmployee'];
                     $re = $this->uploadSaveFile($_FILES, $data['lastIdEmployee'], $nameFile);
                     //--------------------------------------------------------------------------------
@@ -158,7 +158,7 @@ class Employees extends Controller
     {
 
         if (!empty($badgeEmployee)) {
-            $data = [];            
+            $data = [];
             $data['employeeInfo'] = $this->employeeModel->getEmployeeDetailsByBadge($badgeEmployee);
             $idEmployee = $data['employeeInfo']['employeeId'];
 
@@ -171,13 +171,12 @@ class Employees extends Controller
                 $data['afps'] = $this->afpModel->getAFPs();
                 $data['areas'] = $this->areaModel->getAreas();
                 $data['bills'] = $this->billModel->getBillsTo();
-                
+
                 $data['employeeDocumentsInfo'] = $this->employeeDocumentModel->getEmployeDocument($idEmployee);
                 $data['employeeSchedule'] = $this->employeeScheduleModel->getSchedulesEmployee($idEmployee);
                 $data['employeeEmergencyContacts'] = $this->emergencyContactsModel->getEmergencyContacts($idEmployee);
                 $data['relationship'] = $this->relationshipModel->getRelationshipsEnglish();
                 $data['superiors'] = $this->usersModel->getSuperiors();
-                
             } else {
                 redirect('employees/index');
             }
@@ -193,9 +192,9 @@ class Employees extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-            $return = ['status'=>false, 'message'=>'','messageDetails'=>''];
+            $return = ['status' => false, 'message' => '', 'messageDetails' => ''];
             try {
-                $changedFields =  (isset($_POST['changedFields']) && $_POST['changedFields'] != NULL) ? json_decode($_POST['changedFields'],true) : [];
+                $changedFields =  (isset($_POST['changedFields']) && $_POST['changedFields'] != NULL) ? json_decode($_POST['changedFields'], true) : [];
                 $employeeId = base64_decode($_POST['employeeId']);
                 $badge = base64_decode($_POST['badge']);
                 $firstName = $_POST['firstName'];
@@ -218,43 +217,44 @@ class Employees extends Controller
                 }
 
                 // removed files
-                if (!empty($_POST['antecedentesPenales_delete'])){
-                    $this->employeeDocumentModel->removedEmployeeDocument($employeeId,3);
-                    $changedFields['antecedentesPenales']= 'removed';
+                if (!empty($_POST['antecedentesPenales_delete'])) {
+                    $this->employeeDocumentModel->removedEmployeeDocument($employeeId, 3);
+                    $changedFields['antecedentesPenales'] = 'removed';
                 }
-                if (!empty($_POST['solvenciaPNC_delete'])){
-                    $this->employeeDocumentModel->removedEmployeeDocument($employeeId,4);
-                    $changedFields['solvenciaPNC']= 'removed';
+                if (!empty($_POST['solvenciaPNC_delete'])) {
+                    $this->employeeDocumentModel->removedEmployeeDocument($employeeId, 4);
+                    $changedFields['solvenciaPNC'] = 'removed';
                 }
-                if (!empty($_POST['expediente_delete'])){
-                    $this->employeeDocumentModel->removedEmployeeDocument($employeeId,5);
-                    $changedFields['expediente']= 'removed';
+                if (!empty($_POST['expediente_delete'])) {
+                    $this->employeeDocumentModel->removedEmployeeDocument($employeeId, 5);
+                    $changedFields['expediente'] = 'removed';
                 }
-                if (!empty($_POST['contract_delete'])){
-                    $this->employeeDocumentModel->removedEmployeeDocument($employeeId,6);
-                    $changedFields['contract']= 'removed';
+                if (!empty($_POST['contract_delete'])) {
+                    $this->employeeDocumentModel->removedEmployeeDocument($employeeId, 6);
+                    $changedFields['contract'] = 'removed';
                 }
                 // upload files if there are.
-                $nameFile = $badge . '_' . substr($firstName, 0, 1) . substr($firstLastName, 0, 1).'_'.date('mdyhis');
+                $nameFile = $badge . '_' . substr($firstName, 0, 1) . substr($firstLastName, 0, 1) . '_' . date('mdyhis');
                 $re = $this->uploadSaveFile($_FILES, $employeeId, $nameFile); // errorFileSave - changedFields
                 $changesFinal = array_merge($changedFields, $re['changedFields']);
 
                 $return['responseFiles'] = $re;
                 $return['documentroot'] = $_SERVER['DOCUMENT_ROOT'];
+                $return['approot'] = APPROOT;
                 // $return['changedFields'] = $changedFields;
                 // $return['FILES'] = $_FILES;
 
                 // Add log
-                if (!empty($changesFinal)){
+                if (!empty($changesFinal)) {
                     $dataLog = ['userId' => $_SESSION['userId'], 'registerId' => $employeeId, 'action' => 'Edit', 'page' => 'Employee', 'fields' => json_encode($changesFinal)];
                     $this->activityLogModel->saveActivityLog($dataLog);
-                    $return['status']=true;
-                }else{
-                    $return['message']='No changes found!';
+                    $return['status'] = true;
+                } else {
+                    $return['message'] = 'No changes found!';
                 }
             } catch (Exception $e) {
-                $return['message']='An unexpected error ocurred. Please try again';
-                $return['messageDetails']=$e;
+                $return['message'] = 'An unexpected error ocurred. Please try again';
+                $return['messageDetails'] = $e;
             }
 
             echo json_encode($return);
@@ -396,14 +396,14 @@ class Employees extends Controller
         echo json_encode($return);
     }
 
-    public function getInfoCard() {
+    public function getInfoCard()
+    {
         $data = [];
         $data['TotalEmployeeActive'] = $this->employeeModel->getTotalEmployeeActive();
         $data['TotalEmployee'] = $this->employeeModel->getTotalEmployee();
         $data['CustomerServicesActive'] = $this->employeeModel->getTotalEmployeeCustomerServices();
         $data['HiredToday'] = $this->employeeModel->getTotalEmployeeHiredToday();
         echo json_encode($data);
-       
     }
 
 
@@ -434,14 +434,12 @@ class Employees extends Controller
         if (!empty($FILES['photo']['tmp_name'])) {
             $rePhoto = $this->handleFileUpload($FILES['photo'], 'photo', $nameFile . '_photo');
             $dataEmployeeDocument['photo'] = $rePhoto['nameFile'];
-            
-            if ($rePhoto['status']){
+
+            if ($rePhoto['status']) {
 
                 $this->employeeModel->updatedEmployee($dataEmployeeDocument);
-                $changedFields['photo']= $rePhoto['nameFile'];
-
-            }else $errorSave['Photo'] = $rePhoto['messageError'];
-
+                $changedFields['photo'] = $rePhoto['nameFile'];
+            } else $errorSave['Photo'] = $rePhoto['messageError'];
         } else $errorSave['Photo'] = 'Field Empty';
 
 
@@ -453,13 +451,13 @@ class Employees extends Controller
             $dataEmployeeDocument['document'] = $reantecedentesPenales['nameFile'];
 
             $errorSave['targetFilePath'] = $reantecedentesPenales['targetFilePath'];
+            $errorSave['exceprionError'] = $reantecedentesPenales['exceprionError'];
 
             if ($reantecedentesPenales['status']) {
-                $this->employeeDocumentModel->removedEmployeeDocument($IdEmployee,3);
+                $this->employeeDocumentModel->removedEmployeeDocument($IdEmployee, 3);
                 $this->employeeDocumentModel->saveEmployeeDocument($dataEmployeeDocument); // Save Documents name
-                $changedFields['antecedentesPenales']= $reantecedentesPenales['nameFile'];
-            }
-            else $errorSave['antecedentesPenales'] = $reantecedentesPenales['messageError'];
+                $changedFields['antecedentesPenales'] = $reantecedentesPenales['nameFile'];
+            } else $errorSave['antecedentesPenales'] = $reantecedentesPenales['messageError'];
         } else $errorSave['antecedentesPenales'] = 'Field Empty';
 
         // Solvencia PNC
@@ -468,11 +466,10 @@ class Employees extends Controller
             $dataEmployeeDocument['documentTypeId'] = 4;
             $dataEmployeeDocument['document'] = $resolvenciaPNC['nameFile'];
             if ($resolvenciaPNC['status']) {
-                $this->employeeDocumentModel->removedEmployeeDocument($IdEmployee,4);
+                $this->employeeDocumentModel->removedEmployeeDocument($IdEmployee, 4);
                 $this->employeeDocumentModel->saveEmployeeDocument($dataEmployeeDocument); // Save Documents name
-                $changedFields['solvenciaPNC']= $resolvenciaPNC['nameFile'];
-            }
-            else $errorSave['solvenciaPNC'] = $resolvenciaPNC['messageError'];
+                $changedFields['solvenciaPNC'] = $resolvenciaPNC['nameFile'];
+            } else $errorSave['solvenciaPNC'] = $resolvenciaPNC['messageError'];
         } else $errorSave['solvenciaPNC'] = 'Field Empty';
 
         // Expediente
@@ -481,11 +478,10 @@ class Employees extends Controller
             $dataEmployeeDocument['documentTypeId'] = 5;
             $dataEmployeeDocument['document'] = $reexpediente['nameFile'];
             if ($reexpediente['status']) {
-                $this->employeeDocumentModel->removedEmployeeDocument($IdEmployee,5);
+                $this->employeeDocumentModel->removedEmployeeDocument($IdEmployee, 5);
                 $this->employeeDocumentModel->saveEmployeeDocument($dataEmployeeDocument); // Save Documents name
-                $changedFields['expediente']= $reexpediente['nameFile'];
-            }
-            else $errorSave['expediente'] = $reexpediente['messageError'];
+                $changedFields['expediente'] = $reexpediente['nameFile'];
+            } else $errorSave['expediente'] = $reexpediente['messageError'];
         } else $errorSave['expediente'] = 'Field Empty';
 
         // contract
@@ -494,16 +490,15 @@ class Employees extends Controller
             $dataEmployeeDocument['documentTypeId'] = 6;
             $dataEmployeeDocument['document'] = $recontract['nameFile'];
             if ($recontract['status']) {
-                $this->employeeDocumentModel->removedEmployeeDocument($IdEmployee,6);
+                $this->employeeDocumentModel->removedEmployeeDocument($IdEmployee, 6);
                 $this->employeeDocumentModel->saveEmployeeDocument($dataEmployeeDocument); // Save Documents name
-                $changedFields['contract']= $recontract['nameFile'];
-            }
-            else $errorSave['contract'] = $recontract['messageError'];
+                $changedFields['contract'] = $recontract['nameFile'];
+            } else $errorSave['contract'] = $recontract['messageError'];
         } else $errorSave['contract'] = 'Field Empty';
 
         $re = [
             'changedFields' => $changedFields,
-            'errorSave'=> $errorSave,
+            'errorSave' => $errorSave,
         ];
         return $re;
     }
@@ -512,39 +507,51 @@ class Employees extends Controller
     function handleFileUpload($file, $nameDir, $nameFile, $maxFileSize = 5)
     {
 
-        $maxFileSize = $maxFileSize * 1024 * 1024; // Specify the max file size (e.g., 5MB)
-        $targetDir = $_SERVER['DOCUMENT_ROOT'] . "/app/public/documents/{$nameDir}/";
-        if (!is_dir($targetDir)) mkdir($targetDir, 0777, true); //directory exists
+        try {
+
+            $maxFileSize = $maxFileSize * 1024 * 1024; // Specify the max file size (e.g., 5MB)
+            $targetDir = $_SERVER['DOCUMENT_ROOT'] . "/app/public/documents/{$nameDir}/";
+            if (!is_dir($targetDir)) mkdir($targetDir, 0777, true); //directory exists
 
 
-        $re = ['status' => false, 'messageError' => '', 'nameFile' => '',];
+            $re = ['status' => false, 'messageError' => '', 'nameFile' => '',];
 
-        // Create a name for the file
-        $fileExtension = strtolower(pathinfo($file["name"], PATHINFO_EXTENSION));
-        $nameFinally = $nameFile . '.' . $fileExtension;
+            // Create a name for the file
+            $fileExtension = strtolower(pathinfo($file["name"], PATHINFO_EXTENSION));
+            $nameFinally = $nameFile . '.' . $fileExtension;
 
-        $targetFilePath = $targetDir . $nameFinally;
-        $re['targetFilePath'] = $targetFilePath;
+            $targetFilePath = $targetDir . $nameFinally;
+            $re['targetFilePath'] = $targetFilePath;
 
-        if (in_array($fileExtension,  array("jpg", "png", "jpeg", "pdf"))) {
-            // Validate file size
-            if ($file["size"] <= $maxFileSize) {
-                if (move_uploaded_file($file["tmp_name"], $targetFilePath)) {
-                    $re['status'] = true;
-                    $re['nameFile'] = $nameFinally;
+            if (in_array($fileExtension,  array("jpg", "png", "jpeg", "pdf"))) {
+                // Validate file size
+                if ($file["size"] <= $maxFileSize) {
+                    if (move_uploaded_file($file["tmp_name"], $targetFilePath)) {
+                        $re['status'] = true;
+                        $re['nameFile'] = $nameFinally;
+                    } else {
+                        $re['messageError'] = 'Sorry, there was an error uploading your file.';
+                    }
                 } else {
-                    $re['messageError'] = 'Sorry, there was an error uploading your file.';
+                    $re['messageError'] = 'Sorry, your file is too large. Max file size is 5MB.';
                 }
             } else {
-                $re['messageError'] = 'Sorry, your file is too large. Max file size is 5MB.';
+                $re['messageError'] = 'Sorry, only jpg, png, jpeg, pdf files are allowed.';
             }
-        } else {
-            $re['messageError'] = 'Sorry, only jpg, png, jpeg, pdf files are allowed.';
+            $re['exceprionError'] = "";
+            return $re;
+
+        } catch (Exception $e) {
+            $re['exceprionError'] = $e;
+            return $re;
         }
-        return $re;
+
+
+        
     }
 
-    public function getEmployeeByBagde($badge = null){
+    public function getEmployeeByBagde($badge = null)
+    {
         $namesEmployee = $this->employeeModel->getEmployeeByBadge($badge);
         echo json_encode($namesEmployee);
     }
