@@ -239,6 +239,9 @@ class Employees extends Controller
                 $re = $this->uploadSaveFile($_FILES, $employeeId, $nameFile); // errorFileSave - changedFields
                 $changesFinal = array_merge($changedFields, $re['changedFields']);
 
+                $return['responseFiles'] = $re;
+                $return['changedFields'] = $changedFields;
+
                 // Add log
                 if (!empty($changesFinal)){
                     $dataLog = ['userId' => $_SESSION['userId'], 'registerId' => $employeeId, 'action' => 'Edit', 'page' => 'Employee', 'fields' => json_encode($changesFinal)];
