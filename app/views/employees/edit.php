@@ -171,7 +171,7 @@ for ($i = 0; $i < count($employeeDocumentsInfo); $i++) {
                     <div class="tab-pane fade" id="general-information" role="tabpanel" aria-labelledby="tab-general-information">
 
                         <!-- Form editEmployee General Information -->
-                        <form id="editEmployee" method="POST" action="#">
+                        <form id="editEmployee" method="POST" action="#" enctype="multipart/form-data">
                             <div class="row">
                                 <div class="col-md-6 col-xl-6 col-sm-12">
                                     <div class="card">

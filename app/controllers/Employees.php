@@ -241,6 +241,7 @@ class Employees extends Controller
 
                 $return['responseFiles'] = $re;
                 $return['changedFields'] = $changedFields;
+                $return['FILES'] = $_FILES;
 
                 // Add log
                 if (!empty($changesFinal)){
@@ -445,6 +446,7 @@ class Employees extends Controller
             $reantecedentesPenales = $this->handleFileUpload($FILES['antecedentesPenales'], 'antecedentesPenales', $nameFile . '_antecedentesPenales');
             $dataEmployeeDocument['documentTypeId'] = 3;
             $dataEmployeeDocument['document'] = $reantecedentesPenales['nameFile'];
+            $errorSave['antecedentesPenalesMoveUploadFile'] = $reantecedentesPenales['responseMoveUploadFile'];
             if ($reantecedentesPenales['status']) {
                 $this->employeeDocumentModel->removedEmployeeDocument($IdEmployee,3);
                 $this->employeeDocumentModel->saveEmployeeDocument($dataEmployeeDocument); // Save Documents name
@@ -518,7 +520,9 @@ class Employees extends Controller
             // Validate file size
             if ($file["size"] <= $maxFileSize) {
 
-                if (move_uploaded_file($file["tmp_name"], $targetFilePath)) {
+                $reFile = move_uploaded_file($file["tmp_name"], $targetFilePath);
+                $re['responseMoveUploadFile'] = $reFile;
+                if ($reFile) {
                     $re['status'] = true;
                     $re['nameFile'] = $nameFinally;
                 } else {
