@@ -238,6 +238,7 @@ class Employees extends Controller
                 $nameFile = $badge . '_' . substr($firstName, 0, 1) . substr($firstLastName, 0, 1).'_'.date('mdyhis');
                 $re = $this->uploadSaveFile($_FILES, $employeeId, $nameFile); // errorFileSave - changedFields
                 $changesFinal = array_merge($changedFields, $re['changedFields']);
+
                 $return['responseFiles'] = $re;
                 $return['documentroot'] = $_SERVER['DOCUMENT_ROOT'];
                 // $return['changedFields'] = $changedFields;
@@ -433,10 +434,14 @@ class Employees extends Controller
         if (!empty($FILES['photo']['tmp_name'])) {
             $rePhoto = $this->handleFileUpload($FILES['photo'], 'photo', $nameFile . '_photo');
             $dataEmployeeDocument['photo'] = $rePhoto['nameFile'];
+            
             if ($rePhoto['status']){
+
                 $this->employeeModel->updatedEmployee($dataEmployeeDocument);
                 $changedFields['photo']= $rePhoto['nameFile'];
+
             }else $errorSave['Photo'] = $rePhoto['messageError'];
+
         } else $errorSave['Photo'] = 'Field Empty';
 
 
@@ -446,6 +451,9 @@ class Employees extends Controller
             $reantecedentesPenales = $this->handleFileUpload($FILES['antecedentesPenales'], 'antecedentesPenales', $nameFile . '_antecedentesPenales');
             $dataEmployeeDocument['documentTypeId'] = 3;
             $dataEmployeeDocument['document'] = $reantecedentesPenales['nameFile'];
+
+            $errorSave['targetFilePath'] = $reantecedentesPenales['targetFilePath'];
+
             if ($reantecedentesPenales['status']) {
                 $this->employeeDocumentModel->removedEmployeeDocument($IdEmployee,3);
                 $this->employeeDocumentModel->saveEmployeeDocument($dataEmployeeDocument); // Save Documents name
@@ -505,15 +513,18 @@ class Employees extends Controller
     {
 
         $maxFileSize = $maxFileSize * 1024 * 1024; // Specify the max file size (e.g., 5MB)
-        $targetDir = $_SERVER['DOCUMENT_ROOT'] . "/public/documents/{$nameDir}/";
+        $targetDir = $_SERVER['DOCUMENT_ROOT'] . "/app/public/documents/{$nameDir}/";
         if (!is_dir($targetDir)) mkdir($targetDir, 0777, true); //directory exists
+
+
         $re = ['status' => false, 'messageError' => '', 'nameFile' => '',];
 
         // Create a name for the file
-        $customFileName = $nameFile; // or use any logic you prefer
         $fileExtension = strtolower(pathinfo($file["name"], PATHINFO_EXTENSION));
-        $targetFilePath = $targetDir . $customFileName . '.' . $fileExtension;
         $nameFinally = $nameFile . '.' . $fileExtension;
+
+        $targetFilePath = $targetDir . $nameFinally;
+        $re['targetFilePath'] = $targetFilePath;
 
         if (in_array($fileExtension,  array("jpg", "png", "jpeg", "pdf"))) {
             // Validate file size
