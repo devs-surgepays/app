@@ -238,9 +238,9 @@ class Employees extends Controller
                 $re = $this->uploadSaveFile($_FILES, $employeeId, $nameFile); // errorFileSave - changedFields
                 $changesFinal = array_merge($changedFields, $re['changedFields']);
 
-                $return['responseFiles'] = $re;
-                $return['documentroot'] = $_SERVER['DOCUMENT_ROOT'];
-                $return['approot'] = APPROOT;
+                // $return['responseFiles'] = $re;
+                // $return['documentroot'] = $_SERVER['DOCUMENT_ROOT'];
+                // $return['approot'] = APPROOT;
                 // $return['changedFields'] = $changedFields;
                 // $return['FILES'] = $_FILES;
 
@@ -450,9 +450,6 @@ class Employees extends Controller
             $dataEmployeeDocument['documentTypeId'] = 3;
             $dataEmployeeDocument['document'] = $reantecedentesPenales['nameFile'];
 
-            $errorSave['targetFilePath'] = $reantecedentesPenales['targetFilePath'];
-            $errorSave['exceprionError'] = $reantecedentesPenales['exceprionError'];
-
             if ($reantecedentesPenales['status']) {
                 $this->employeeDocumentModel->removedEmployeeDocument($IdEmployee, 3);
                 $this->employeeDocumentModel->saveEmployeeDocument($dataEmployeeDocument); // Save Documents name
@@ -506,48 +503,36 @@ class Employees extends Controller
     // Function to handle file upload
     function handleFileUpload($file, $nameDir, $nameFile, $maxFileSize = 5)
     {
-
-        try {
-
-            $maxFileSize = $maxFileSize * 1024 * 1024; // Specify the max file size (e.g., 5MB)
-            $targetDir = $_SERVER['DOCUMENT_ROOT'] . "/app/public/documents/{$nameDir}/";
-            if (!is_dir($targetDir)) mkdir($targetDir, 0777, true); //directory exists
+        $maxFileSize = $maxFileSize * 1024 * 1024; // Specify the max file size (e.g., 5MB)
+        $targetDir = $_SERVER['DOCUMENT_ROOT'] . "/app/public/documents/{$nameDir}/";
+        if (!is_dir($targetDir)) mkdir($targetDir, 0777, true); //directory exists
 
 
-            $re = ['status' => false, 'messageError' => '', 'nameFile' => '',];
+        $re = ['status' => false, 'messageError' => '', 'nameFile' => '',];
 
-            // Create a name for the file
-            $fileExtension = strtolower(pathinfo($file["name"], PATHINFO_EXTENSION));
-            $nameFinally = $nameFile . '.' . $fileExtension;
+        // Create a name for the file
+        $fileExtension = strtolower(pathinfo($file["name"], PATHINFO_EXTENSION));
+        $nameFinally = $nameFile . '.' . $fileExtension;
 
-            $targetFilePath = $targetDir . $nameFinally;
-            $re['targetFilePath'] = $targetFilePath;
+        $targetFilePath = $targetDir . $nameFinally;
+        $re['targetFilePath'] = $targetFilePath;
 
-            if (in_array($fileExtension,  array("jpg", "png", "jpeg", "pdf"))) {
-                // Validate file size
-                if ($file["size"] <= $maxFileSize) {
-                    if (move_uploaded_file($file["tmp_name"], $targetFilePath)) {
-                        $re['status'] = true;
-                        $re['nameFile'] = $nameFinally;
-                    } else {
-                        $re['messageError'] = 'Sorry, there was an error uploading your file.';
-                    }
+        if (in_array($fileExtension,  array("jpg", "png", "jpeg", "pdf"))) {
+            // Validate file size
+            if ($file["size"] <= $maxFileSize) {
+                if (move_uploaded_file($file["tmp_name"], $targetFilePath)) {
+                    $re['status'] = true;
+                    $re['nameFile'] = $nameFinally;
                 } else {
-                    $re['messageError'] = 'Sorry, your file is too large. Max file size is 5MB.';
+                    $re['messageError'] = 'Sorry, there was an error uploading your file.';
                 }
             } else {
-                $re['messageError'] = 'Sorry, only jpg, png, jpeg, pdf files are allowed.';
+                $re['messageError'] = 'Sorry, your file is too large. Max file size is 5MB.';
             }
-            $re['exceprionError'] = "";
-            return $re;
-
-        } catch (Exception $e) {
-            $re['exceprionError'] = $e;
-            return $re;
+        } else {
+            $re['messageError'] = 'Sorry, only jpg, png, jpeg, pdf files are allowed.';
         }
-
-
-        
+        return $re;
     }
 
     public function getEmployeeByBagde($badge = null)
