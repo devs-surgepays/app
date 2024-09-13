@@ -3,7 +3,8 @@ class Pages extends Controller
 {
 
   private $employeeModel = '';
-  private $employeeScheduleModel = '';
+  private $employeeScheduleModel = ''; 
+  private $usersModel = ''; 
 
   public function __construct()
   {
@@ -14,6 +15,7 @@ class Pages extends Controller
 
     $this->employeeModel = $this->model('Employee');
     $this->employeeScheduleModel = $this->model('EmployeeSchedule');
+    $this->usersModel = $this->model('User');
   }
 
   public function index()
@@ -50,13 +52,17 @@ class Pages extends Controller
       array_push($groupedByDepartmentCount,$department['totalEmployees']);
     }
 
+    // count users
+    $countUser = $this->usersModel->getUsersActives();
+
     $data = [
       'employeeTotal' => $this->employeeModel->getTotalEmployeeActive(),
       'employeeWorkingToday' => $schedules,
       'leavesCreatedToday' => 0,
       'tickets' => 0,
       'departmentName' => $groupedByDepartment,
-      'totalEmployeesDepartment' => $groupedByDepartmentCount
+      'totalEmployeesDepartment' => $groupedByDepartmentCount,
+      'totalUsers' => $countUser
     ];
 
     $this->view('pages/index', $data);

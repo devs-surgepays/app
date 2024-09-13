@@ -1,5 +1,6 @@
 <?php require APPROOT . '/views/inc/header.php';
 $employeeWorkingToday = (isset($data['employeeWorkingToday']) && $data['employeeWorkingToday'] != null) ? $data['employeeWorkingToday'] : [];
+$totalUsers = (isset($data['totalUsers']) && $data['totalUsers'] != null) ? $data['totalUsers'] : [];
 $departmentName = (isset($data['departmentName']) && $data['departmentName'] != null) ? $data['departmentName'] : [];
 $totalEmployeesDepartment = (isset($data['totalEmployeesDepartment']) && $data['totalEmployeesDepartment'] != null) ? $data['totalEmployeesDepartment'] : [];
 $totalemployeeWorkingToday = (isset($employeeWorkingToday) && $employeeWorkingToday != null) ? count($employeeWorkingToday) : 0;
@@ -94,13 +95,13 @@ $num = 1;
                             <div class="col-icon">
                                 <div
                                     class="icon-big text-center icon-secondary bubble-shadow-small">
-                                    <i class="far fa-sticky-note"></i>
+                                    <i class="fas fa-user"></i>
                                 </div>
                             </div>
                             <div class="col col-stats ms-3 ms-sm-0">
                                 <div class="numbers">
-                                    <p class="card-category">Tickets</p>
-                                    <h4 class="card-title">0</h4>
+                                    <p class="card-category">Users</p>
+                                    <h4 class="card-title"><?php echo $totalUsers; ?></h4>
                                 </div>
                             </div>
                         </div>

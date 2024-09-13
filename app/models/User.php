@@ -129,4 +129,10 @@ class User
         left JOIN employees e ON u.employeeId = e.employeeId where u.status=1 and permissionLevelId & 12 order by userId desc;");
         return $row = $this->db->resultSetAssoc();
     }
+
+    public function getUsersActives(){
+        $this->db->query("SELECT count(*) as userCount FROM hr_surgepays.users where status = 1;");
+        $result = $this->db->resultSetFetch();
+        return $result['userCount'];
+    }
 }

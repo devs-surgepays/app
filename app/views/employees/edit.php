@@ -342,7 +342,7 @@ for ($i = 0; $i < count($employeeDocumentsInfo); $i++) {
                                                 <div class="col-6">
                                                     <div class="form-floating form-floating-custom mb-3">
                                                         <input type="number" value="<?php echo $data['employeeInfo']['ssn']; ?>" class="form-control" id="ssn" name="ssn" placeholder="ssn">
-                                                        <label for="ssn">SSN</label>
+                                                        <label for="ssn">ISSS</label>
                                                     </div>
                                                 </div>
                                                 <div class="col-6">
