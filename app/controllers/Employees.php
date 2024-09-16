@@ -79,6 +79,7 @@ class Employees extends Controller
                     'personalEmail' => trim($_POST['personalEmail']),
                     'dob' => $_POST['dob'],
                     'genderId' => (isset($_POST['genderId']) && $_POST['genderId'] != NULL) ? trim($_POST['genderId']) : Null,
+                    'documentTypeId' => intval($_POST['documentTypeId']),
                     'documentNumber' => $_POST['documentNumber'],
                     'documentExpDate' => $_POST['documentExpDate'],
                     'documentExpedDate' => (isset($_POST['documentExpedDate']) && $_POST['documentExpedDate'] != NULL) ? trim($_POST['documentExpedDate']) : Null,

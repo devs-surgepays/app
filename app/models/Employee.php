@@ -99,7 +99,7 @@ class Employee
             'areaId' => $dataSave['areaId'],
             'superiorId' => $dataSave['superiorId'],
             'documentNumber' => $dataSave['documentNumber'],
-            'documentTypeId' => 1,
+            'documentTypeId' => $dataSave['documentTypeId'],
             'documentExpDate' => $dataSave['documentExpDate'],
             'documentExpedDate' => $dataSave['documentExpedDate'],
             'documentExpedPlace' => $dataSave['documentExpedPlace'],

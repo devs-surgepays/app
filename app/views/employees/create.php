@@ -199,14 +199,31 @@ $bills = (isset($data['bills']) && $data['bills'] != NULL) ? $data['bills'] : []
                                 <!-- DUI -->
                                 <div class="row pt-3">
                                     <div class="col-6">
+                                        <label class="positionSelect" for="documentTypeId">Identification Type <span class="text-danger">*</span>
+                                            <label id="documentTypeId-error" class="error" for="documentTypeId"></label></label>
                                         <div class="form-floating form-floating-custom mb-3">
-                                            <input type="text" class="form-control" id="documentNumber" name="documentNumber" placeholder="documentNumber">
-                                            <label for="documentNumber">DUI <span class="text-danger">*</span>
-                                                <label id="documentNumber-error" class="error" for="documentNumber"></label></label>
-
+                                            <select name="documentTypeId" id="documentTypeId" class="form-select form-control js-select-basic">
+                                                <option value="" disabled selected>Select</option>
+                                                <option value="1">DUI</option>
+                                                <option value="7">Passport</option>
+                                                <option value="8">Residence card</option>
+                                            </select>
                                         </div>
                                     </div>
+
                                     <div class="col-6">
+                                        <div class="form-floating form-floating-custom mb-3">
+                                            <input type="text" value="" class="form-control" id="documentNumber" name="documentNumber" placeholder="documentNumber" disabled>
+                                            <label for="documentNumber">Identification Number <span class="text-danger">*</span>
+                                                <label id="documentNumber-error" class="error" for="documentNumber"></label></label>
+                                        </div>
+                                    </div>
+                                    
+                                    
+                                </div>
+
+                                <div class="row pt-3">
+                                <div class="col-6">
                                         <div class="form-floating form-floating-custom mb-3">
                                             <input type="date" class="form-control" id="documentExpDate" name="documentExpDate" placeholder="documentExpDate">
                                             <label for="documentExpDate">Document Exp. Date <span class="text-danger">*</span>
@@ -214,9 +231,6 @@ $bills = (isset($data['bills']) && $data['bills'] != NULL) ? $data['bills'] : []
 
                                         </div>
                                     </div>
-                                </div>
-
-                                <div class="row pt-3">
                                     <div class="col-6">
                                         <div class="form-floating form-floating-custom mb-3">
                                             <input type="date" value="" class="form-control" id="documentExpedDate" name="documentExpedDate" placeholder="documentExpedDate">
@@ -225,22 +239,17 @@ $bills = (isset($data['bills']) && $data['bills'] != NULL) ? $data['bills'] : []
 
                                         </div>
                                     </div>
-                                    <div class="col-6">
-                                        <div class="form-floating form-floating-custom mb-3">
-                                            <input type="text" value="" class="form-control" id="documentExpedPlace" name="documentExpedPlace" placeholder="documentExpedPlace">
-                                            <label for="documentExpedPlace">document Exped. Place
-                                                <label id="documentExpedPlace-error" class="error" for="documentExpedPlace"></label></label>
-
-                                        </div>
-                                    </div>
+                                    
                                 </div>
 
                                 <!-- SSN  -->
                                 <div class="row pt-3">
                                     <div class="col-6">
                                         <div class="form-floating form-floating-custom mb-3">
-                                            <input type="number" class="form-control" id="ssn" name="ssn" placeholder="ssn">
-                                            <label for="ssn">ISSS</label>
+                                            <input type="text" value="" class="form-control" id="documentExpedPlace" name="documentExpedPlace" placeholder="documentExpedPlace">
+                                            <label for="documentExpedPlace">document Exped. Place
+                                                <label id="documentExpedPlace-error" class="error" for="documentExpedPlace"></label></label>
+
                                         </div>
                                     </div>
                                     <div class="col-6">
@@ -433,7 +442,7 @@ $bills = (isset($data['bills']) && $data['bills'] != NULL) ? $data['bills'] : []
                                                 <option value="F">Full Time</option>
                                                 <option value="PT">Part Time</option>
                                             </select>
-                                            <label for="dob">contract Type</label>
+                                            <label for="dob">Contract Type</label>
                                         </div>
                                     </div>
                                     <div class="col-6">
@@ -552,6 +561,15 @@ $bills = (isset($data['bills']) && $data['bills'] != NULL) ? $data['bills'] : []
                                         <div class="form-floating form-floating-custom mb-3">
                                             <input type="number" name="afpNumber" id="afpNumber" placeholder="afpNumber" class="form-control">
                                             <label for="afpNumber">AFP Number</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row pt-3">
+                                    <div class="col-6">
+                                        <div class="form-floating form-floating-custom mb-3">
+                                            <input type="number" class="form-control" id="ssn" name="ssn" placeholder="ssn">
+                                            <label for="ssn">ISSS</label>
                                         </div>
                                     </div>
                                 </div>
@@ -681,10 +699,19 @@ $bills = (isset($data['bills']) && $data['bills'] != NULL) ? $data['bills'] : []
                 });
             });
     })
+    $("#documentTypeId").change(() => {
+        let documentTypeId = $("#documentTypeId").val();
+        if(documentTypeId == "" || documentTypeId == null) return;
+        $('#documentNumber').attr("disabled", false);
+        if(documentTypeId == 1) {
+            $('#documentNumber').mask('00000000-0');
+        } else {
+            $('#documentNumber').unmask();
+        }
+    });
     $(document).ready(function() {
 
         $('.phoneMark').mask('0000-0000');
-        $('#documentNumber').mask('00000000-0');
         $('#ssn').mask('000000000');
         $('.js-select-basic').select2();
 
@@ -781,6 +808,7 @@ $bills = (isset($data['bills']) && $data['bills'] != NULL) ? $data['bills'] : []
                 hiredDate: 'required',
                 salary: 'required',
                 billTo: 'required',
+                documentTypeId: 'required'
 
             },
             messages: {
@@ -801,6 +829,7 @@ $bills = (isset($data['bills']) && $data['bills'] != NULL) ? $data['bills'] : []
                 hiredDate: 'This field is required',
                 salary: 'This field is required',
                 billTo: 'This field is required',
+                documentTypeId: 'This field is required'
             },
             submitHandler: function(form) {
 
