@@ -149,7 +149,7 @@
                                             <th>
                                                 <select class="form-control form-control-sm searchDataChange camposserch js-select-basic" id="serch_position">
                                                     <option value="">Select</option>
-                                                    <?php for ($i = 0; $i < count($data['positions']); $i++)  echo '<option value="' . $data['positions'][$i]['positionId'] . '">' . $data['positions'][$i]['positionName'] . '</option>'; ?>
+                                                    <?php for ($i = 0; $i < count($data['positions']); $i++)  echo '<option value="' . $data['positions'][$i]['positionName'] . '">' . $data['positions'][$i]['positionName'] . '</option>'; ?>
                                                 </select>
                                             </th>
                                             <th>

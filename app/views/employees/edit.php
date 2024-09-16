@@ -608,7 +608,7 @@ for ($i = 0; $i < count($employeeDocumentsInfo); $i++) {
                                                             <option value="">Select</option>
                                                             <?php for ($i = 0; $i < count($positions); $i++) {
                                                                 $select = ($positions[$i]['positionId'] == $data['employeeInfo']['positionId']) ? 'selected' : '';
-                                                                echo '<option ' . $select . '  value="' . $positions[$i]['positionId'] . '">' . $positions[$i]['positionName'] . '</option>';
+                                                                echo '<option ' . $select . '  value="' . $positions[$i]['positionId'] . '">' . $positions[$i]['positionName'] . ' | ' . $positions[$i]['positionNameEnglish'] . ' </option>';
                                                             } ?>
                                                         </select>
                                                     </div>

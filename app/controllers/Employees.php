@@ -42,7 +42,7 @@ class Employees extends Controller
     {
         $data = [];
         $data['departments'] = $this->departmentModel->getDeparments();
-        $data['positions'] = $this->positionModel->getPositions();
+        $data['positions'] = $this->positionModel->getPositionsGroupBy();
         $data['status'] = array(array('statusId' => '1', 'statusName' => 'Active'), array('statusId' => '00', 'statusName' => 'Inactive'));
         $this->view('employees/index', $data);
     }
@@ -301,7 +301,7 @@ class Employees extends Controller
                     2 =>  array("corporateEmail", 'like'),
                     3 => array("hiredDate", 'date'),
                     4 =>  array("e.departmentId", 'equal'),
-                    5 =>  array("e.positionId", 'equal'),
+                    5 =>  array("p.positionName", 'like'),
                     6 =>  array("e.status", 'equal'),
                     // 2 =>  array("customer_id", 'equalString'),
                     // 5 =>  array("phone_number", 'phone'),

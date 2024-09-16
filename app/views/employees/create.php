@@ -394,7 +394,7 @@ $bills = (isset($data['bills']) && $data['bills'] != NULL) ? $data['bills'] : []
                                         <div class="form-floating form-floating-custom mb-3">
                                             <select name="positionId" id="positionId" class="form-select form-control js-select-basic">
                                                 <option value="">Select</option>
-                                                <?php for ($i = 0; $i < count($positions); $i++)  echo '<option value="' . $positions[$i]['positionId'] . '">' . $positions[$i]['positionName'] . '</option>'; ?>
+                                                <?php for ($i = 0; $i < count($positions); $i++)  echo '<option value="' . $positions[$i]['positionId'] . '">' . $positions[$i]['positionName'] . ' | ' . $positions[$i]['positionNameEnglish'] . ' </option>'; ?>
                                             </select>
                                         </div>
                                     </div>

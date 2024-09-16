@@ -21,7 +21,7 @@ class Employee
 
         if (!empty($searchQuery)) $query = "where " . $searchQuery;
 
-        $this->db->query('SELECT COUNT(*) AS numrows  FROM hr_surgepays.employees e ' . $query);
+        $this->db->query('SELECT COUNT(*) AS numrows  FROM hr_surgepays.employees e INNER JOIN positions p ON p.positionId = e.positionId ' . $query);
         $result = $this->db->resultSetFetch();
         return $result;
     }
@@ -53,7 +53,9 @@ class Employee
 
     public function getTotalEmployeeCustomerServices()
     {
-        $this->db->query("SELECT count(*) as 'totalCustomer' FROM hr_surgepays.employees where status=1 and positionId in (2,52,53,54,64);");
+        $this->db->query("SELECT count(*) as 'totalCustomer' FROM hr_surgepays.employees 
+        inner join positions p on employees.positionId = p.positionId
+        where employees.status=1 and positionName like '%AGENTE DE SERVICIO AL CLIENTE%';");
         $result = $this->db->resultSetFetch();
         return $result['totalCustomer'];
     }

@@ -21,4 +21,10 @@ class Position
         $result = $this->db->resultSetAssoc();
         return $result;
     }
+
+    public function getPositionsGroupBy(){
+        $this->db->query('SELECT MAX(positionName) , positionName FROM positions where status=1 GROUP BY positionName;');
+        $result = $this->db->resultSetAssoc();
+        return $result;
+    }
 }
