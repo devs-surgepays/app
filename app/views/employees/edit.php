@@ -266,7 +266,7 @@ for ($i = 0; $i < count($employeeDocumentsInfo); $i++) {
                                                             <option <?php echo ("1" == $data['employeeInfo']['genderId']) ? 'selected' : '' ?> value="1">Female</option>
                                                             <option <?php echo ("2" == $data['employeeInfo']['genderId']) ? 'selected' : '' ?> value="2">Other</option>
                                                         </select>
-                                                        <label for="dob">Gender</label>
+                                                        <label for="genderId">Gender</label>
                                                     </div>
                                                 </div>
 
@@ -302,13 +302,30 @@ for ($i = 0; $i < count($employeeDocumentsInfo); $i++) {
                                             <!-- DUI -->
                                             <div class="row pt-3">
                                                 <div class="col-6">
+                                                    <label class="positionSelect" for="documentTypeId">Identification Type <span class="text-danger">*</span>
+                                                        <label id="documentTypeId-error" class="error" for="documentTypeId"></label></label>
+                                                    <div class="form-floating form-floating-custom mb-3">
+                                                        <select name="documentTypeId" id="documentTypeId" class="form-select form-control js-select-basic">
+                                                            <option value="" disabled selected>Select</option>
+                                                            <option <?php echo ("1" == $data['employeeInfo']['documentTypeId']) ? 'selected' : '' ?>  value="1">DUI</option>
+                                                            <option <?php echo ("7" == $data['employeeInfo']['documentTypeId']) ? 'selected' : '' ?>  value="7">Passport</option>
+                                                            <option <?php echo ("8" == $data['employeeInfo']['documentTypeId']) ? 'selected' : '' ?>  value="8">Residence card</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-6">
                                                     <div class="form-floating form-floating-custom mb-3">
                                                         <input type="text" value="<?php echo $data['employeeInfo']['documentNumber']; ?>" class="form-control" id="documentNumber" name="documentNumber" placeholder="documentNumber">
-                                                        <label for="documentNumber">DUI <span class="text-danger">*</span>
+                                                        <label for="documentNumber">Identification Number <span class="text-danger">*</span>
                                                             <label id="documentNumber-error" class="error" for="documentNumber"></label></label>
 
                                                     </div>
                                                 </div>
+
+                                            </div>
+
+                                            <div class="row pt-3">
                                                 <div class="col-6">
                                                     <div class="form-floating form-floating-custom mb-3">
                                                         <input type="date" value="<?php echo $data['employeeInfo']['documentExpDate']; ?>" class="form-control" id="documentExpDate" name="documentExpDate" placeholder="documentExpDate">
@@ -317,9 +334,7 @@ for ($i = 0; $i < count($employeeDocumentsInfo); $i++) {
 
                                                     </div>
                                                 </div>
-                                            </div>
 
-                                            <div class="row pt-3">
                                                 <div class="col-6">
                                                     <div class="form-floating form-floating-custom mb-3">
                                                         <input type="date" value="<?php echo $data['employeeInfo']['documentExpedDate']; ?>" class="form-control" id="documentExpedDate" name="documentExpedDate" placeholder="documentExpedDate">
@@ -335,16 +350,7 @@ for ($i = 0; $i < count($employeeDocumentsInfo); $i++) {
                                                             <label id="documentExpedPlace-error" class="error" for="documentExpedPlace"></label></label>
                                                     </div>
                                                 </div>
-                                            </div>
 
-                                            <!-- SSN  -->
-                                            <div class="row pt-3">
-                                                <div class="col-6">
-                                                    <div class="form-floating form-floating-custom mb-3">
-                                                        <input type="number" value="<?php echo $data['employeeInfo']['ssn']; ?>" class="form-control" id="ssn" name="ssn" placeholder="ssn">
-                                                        <label for="ssn">ISSS</label>
-                                                    </div>
-                                                </div>
                                                 <div class="col-6">
                                                     <div class="form-floating form-floating-custom mb-3">
                                                         <input type="text" value="<?php echo $data['employeeInfo']['nationality']; ?>" class="form-control" id="nationality" name="nationality" placeholder="nationality">
@@ -352,6 +358,8 @@ for ($i = 0; $i < count($employeeDocumentsInfo); $i++) {
                                                     </div>
                                                 </div>
                                             </div>
+
+
                                             <!-- stateId - cityId - districtId -->
                                             <div class="row pt-3">
                                                 <div class="col-4">
@@ -789,6 +797,17 @@ for ($i = 0; $i < count($employeeDocumentsInfo); $i++) {
                                                         <label for="afpNumber">AFP Number</label>
                                                     </div>
                                                 </div>
+                                            </div>
+
+                                            <!-- SSN  -->
+                                            <div class="row pt-3">
+                                                <div class="col-6">
+                                                    <div class="form-floating form-floating-custom mb-3">
+                                                        <input type="number" value="<?php echo $data['employeeInfo']['ssn']; ?>" class="form-control" id="ssn" name="ssn" placeholder="ssn">
+                                                        <label for="ssn">ISSS</label>
+                                                    </div>
+                                                </div>
+
                                             </div>
 
                                         </div>
@@ -1433,6 +1452,17 @@ for ($i = 0; $i < count($employeeDocumentsInfo); $i++) {
             }
         });
 
+        $("#documentTypeId").change(() => {
+            let documentTypeId = $("#documentTypeId").val();
+            if (documentTypeId == "" || documentTypeId == null) return;
+            $('#documentNumber').attr("disabled", false);
+            if (documentTypeId == 1) {
+                $('#documentNumber').mask('00000000-0');
+            } else {
+                $('#documentNumber').unmask();
+            }
+        });
+
         $('.schedule-input').change(function() {
             $("#employeeScheduleStandar").val('');
         });
@@ -1551,6 +1581,7 @@ for ($i = 0; $i < count($employeeDocumentsInfo); $i++) {
                 personalEmail: 'required',
                 dob: 'required',
                 documentNumber: 'required',
+                documentTypeId: 'required',
                 documentExpDate: 'required',
                 departmentId: 'required',
                 positionId: 'required',
@@ -1568,6 +1599,7 @@ for ($i = 0; $i < count($employeeDocumentsInfo); $i++) {
                 personalEmail: 'This field is required',
                 dob: 'This field is required',
                 documentNumber: 'This field is required',
+                documentTypeId: 'This field is required',
                 documentExpDate: 'This field is required',
                 departmentId: 'This field is required',
                 positionId: 'This field is required',
