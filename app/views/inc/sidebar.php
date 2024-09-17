@@ -64,12 +64,14 @@
                         <p>Users</p>
                     </a>
                 </li>
+                <?php if ($_SESSION['permissionLevelId']==128) { ?>
                 <li class="nav-item">
                     <a href="<?php echo URLROOT; ?>/aps">
                         <i class="fa fa-solid fa-list-alt"></i>
                         <p>Leaves</p>
                     </a>
                 </li>
+                <?php } ?>
                 <li class="nav-item">
                     <a href="<?php echo URLROOT; ?>/reports">
                         <i class="fa fa-file" aria-hidden="true"></i>
