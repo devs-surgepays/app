@@ -81,7 +81,7 @@ $num = 1;
                             <div class="col col-stats ms-3 ms-sm-0">
                                 <div class="numbers">
                                     <p class="card-category">Leaves Created Today</p>
-                                    <h4 class="card-title">2</h4>
+                                    <h4 class="card-title">0</h4>
                                 </div>
                             </div>
                         </div>

@@ -17,7 +17,7 @@
         </li>
       </ul>
     </nav> -->
-    <div class="  copyright"><?php echo date('Y'); ?>, made with <i class="fa fa-heart heart text-danger"></i> by
+    <div class="copyright"><?php echo date('Y'); ?>,
       <a href="#">SurgePays SV</a>
     </div>
     <!-- <div>
