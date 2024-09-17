@@ -189,14 +189,26 @@
                     <span class="text">Users</span>
                   </div>
                 </a>
-                <a class="col-6 col-md-4 p-0" href="<?php echo URLROOT; ?>/aps">
-                  <div class="quick-actions-item">
-                    <div class="avatar-item bg-info rounded-circle">
-                      <i class="fa fa-solid fa-list-alt"></i>
+                <?php if ($_SESSION['permissionLevelId']&128) { ?>
+                  <a class="col-6 col-md-4 p-0" href="<?php echo URLROOT; ?>/aps">
+                    <div class="quick-actions-item">
+                      <div class="avatar-item bg-info rounded-circle">
+                        <i class="fa fa-solid fa-list-alt"></i>
+                      </div>
+                      <span class="text">Leaves</span>
                     </div>
-                    <span class="text">Leaves</span>
-                  </div>
-                </a>
+                  </a>
+                <?php }else{ ?>
+                  
+                  <a class="col-6 col-md-4 p-0" href="<?php echo URLROOT; ?>/reports">
+                    <div class="quick-actions-item">
+                      <div class="avatar-item bg-info rounded-circle">
+                        <i class="fa fa-solid fa fa-file"></i>
+                      </div>
+                      <span class="text">Reports</span>
+                    </div>
+                  </a>
+                <?php } ?>
                 <!-- <a class="col-6 col-md-4 p-0" href="#">
                   <div class="quick-actions-item">
                     <div class="avatar-item bg-success rounded-circle">
