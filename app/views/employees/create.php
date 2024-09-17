@@ -91,8 +91,7 @@ $bills = (isset($data['bills']) && $data['bills'] != NULL) ? $data['bills'] : []
                                     <div class="col-4">
                                         <div class="form-floating form-floating-custom mb-3">
                                             <input type="text" class="form-control check-changes" id="secondName" name="secondName" placeholder="Second Name">
-                                            <label for="secondName">Second Name <span class="text-danger">*</span>
-                                                <label id="secondName-error" class="error" for="secondName"></label></label>
+                                            <label for="secondName">Second Name</label>
                                         </div>
                                     </div>
                                     <div class="col-4">
@@ -792,7 +791,7 @@ $bills = (isset($data['bills']) && $data['bills'] != NULL) ? $data['bills'] : []
                     min: 0,
                     max: 10
                 },
-                secondName: 'required',
+                // secondName: 'required',
                 firstLastName: 'required',
                 secondLastName: 'required',
                 contactPhone: 'required',
@@ -813,7 +812,7 @@ $bills = (isset($data['bills']) && $data['bills'] != NULL) ? $data['bills'] : []
             },
             messages: {
                 firstName: 'This field is required',
-                secondName: 'This field is required',
+                // secondName: 'This field is required',
                 firstLastName: 'This field is required',
                 secondLastName: 'This field is required',
                 contactPhone: 'This field is required',

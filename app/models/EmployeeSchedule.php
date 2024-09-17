@@ -26,7 +26,8 @@ class EmployeeSchedule
         $this->db->query("SELECT 
                             em.employeeId, 
                             em.badge, 
-                            em.firstName, 
+                            em.firstName,
+                            concat_ws(' ', firstName, secondName,thirdName,firstLastName,secondLastName ) as 'fullName',
                             em.firstLastName, 
                             es.$dayToday, 
                             es.createdAt,

@@ -137,7 +137,7 @@ $num = 1;
                                 <?php for ($i = 0; $i < count($employeeWorkingToday); $i++) { ?>
                                     <tr class="dataexp">
                                         <th scope="row"><?php echo $num++; ?></th>
-                                        <td><?php echo $employeeWorkingToday[$i]['firstName'] . ' ' . $employeeWorkingToday[$i]['firstLastName']; ?></td>
+                                        <td><?php echo $employeeWorkingToday[$i]['fullName']; ?></td>
                                         <td><?php echo $employeeWorkingToday[$i]['deparmentName']; ?></td>
                                         <td><?php echo $employeeWorkingToday[$i]['positionName']; ?></td>
                                         <td><?php echo $employeeWorkingToday[$i]['clockIn']; ?></td>
