@@ -210,58 +210,8 @@ class Employee
 
     public function getEmployeesByStatus($status)
     {
-
-        $query = "SELECT 
-                    e.badge as Badge,
-                    e.firstName as 'First Name',
-                    e.secondName as 'Second Name',
-                    e.thirdName as 'Third Name',
-                    e.firstLastName as 'First Last Name',
-                    e.secondLastName as 'Second Last Name',
-                    e.thirdLastName as 'Third Last Name',
-                    e.personalEmail as 'Personal Email',
-                    e.contactPhone as 'Contact Phone',
-                    e.dob as 'DOB',
-                    e.address as 'Address',
-                    s.stateName as 'State',
-                    c.cityName as 'City',
-                    d.districtName as 'District',
-                    CASE
-                        WHEN e.genderId = 0 THEN 'M'
-                        WHEN e.genderId = 1 THEN 'F'
-                        WHEN e.genderId = 2 THEN 'Other'
-                        ELSE 'Unknown'
-                    END AS 'Gender',
-                    e.corporateEmail as 'Corporate Email',
-                    p.positionName as 'Position',
-                    CONCAT(ee.firstName, ' ', ee.firstLastName) AS 'Superior',
-                    de.name AS 'Department',
-                    e.documentNumber as 'Document Number'
-                FROM
-                    employees e
-                        LEFT JOIN
-                    states s ON s.stateId = e.stateId
-                        LEFT JOIN
-                    cities c ON c.cityId = e.cityId
-                        INNER JOIN
-                    departments de ON de.departmentId = e.departmentId
-                        LEFT JOIN
-                    districts d ON d.districtId = e.districtId
-                        INNER JOIN
-                    users u ON u.userId = e.superiorId
-                        INNER JOIN
-                    employees ee ON ee.employeeId = u.employeeId
-                        INNER JOIN
-                    positions p ON p.positionId = e.positionId";
-
-        if ($status != 2) {
-            $query .= " WHERE e.status=:status";
-            $this->db->query($query);
-            $this->db->bind('status', $status);
-        } else {
-            $this->db->query($query);
-        }
-
+        $this->db->query("CALL getAllEmployeesByStatus(:status)");
+        $this->db->bind('status', $status);
         $result = $this->db->resultSetAssoc();
         return $result;
     }

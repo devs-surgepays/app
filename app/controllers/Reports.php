@@ -30,7 +30,8 @@ class Reports extends Controller
     public function exportEmployeesByStatus()
     {
         $status = $_POST["employee_status"];
-        $employees = $this->employeeModel->getEmployeesByStatus($status);
+        $s = ($status==2) ? null : $status;
+        $employees = $this->employeeModel->getEmployeesByStatus($s);
         echo json_encode($employees);
     }
 }
