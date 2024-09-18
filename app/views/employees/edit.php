@@ -20,14 +20,14 @@ $employeeDocumentsInfo = (isset($data['employeeDocumentsInfo']) && $data['employ
 $antecedentesPenalesPreview = '';
 $solvenciaPNCPreview = '';
 $contractPreview = '';
-$expedientePreview = '';
+$govIdPreview = '';
 
 for ($i = 0; $i < count($employeeDocumentsInfo); $i++) {
     $documentTypeId = $employeeDocumentsInfo[$i]['documentTypeId'];
     $document = $employeeDocumentsInfo[$i]['document'];
     if ($documentTypeId == 3) $antecedentesPenalesPreview .= '<a href="' . URLROOT . '/public/documents/antecedentesPenales/' . $document . '" target="_BLANK" ><i class="fa fa-file-pdf"></i> Antecedentes Penales</a>  <button onClick="removeFile(3)" type="button" class="btn">X</button>';
     if ($documentTypeId == 4) $solvenciaPNCPreview .= '<a href="' . URLROOT . '/public/documents/solvenciaPNC/' . $document . '" target="_BLANK" ><i class="fa fa-file-pdf"></i> Solvencia PNC</a>  <button onClick="removeFile(4)" type="button" class="btn">X</button>';
-    if ($documentTypeId == 5) $expedientePreview .= '<a href="' . URLROOT . '/public/documents/expediente/' . $document . '" target="_BLANK" ><i class="fa fa-file-pdf"></i> Expediente</a>  <button onClick="removeFile(5)" type="button" class="btn">X</button>';
+    if ($documentTypeId == 5) $govIdPreview .= '<a href="' . URLROOT . '/public/documents/govId/' . $document . '" target="_BLANK" ><i class="fa fa-file-pdf"></i> govId</a>  <button onClick="removeFile(5)" type="button" class="btn">X</button>';
     if ($documentTypeId == 6) $contractPreview .= '<a href="' . URLROOT . '/public/documents/contract/' . $document . '" target="_BLANK" ><i class="fa fa-file-pdf"></i> Contract</a>  <button onClick="removeFile(6)" type="button" class="btn">X</button>';
 }
 
@@ -474,11 +474,11 @@ for ($i = 0; $i < count($employeeDocumentsInfo); $i++) {
                                                         <div id="contract-preview" class="preview"><?php echo $contractPreview; ?></div>
                                                     </div>
                                                     <div class="file-input">
-                                                        <label for="expediente">Expediente:</label><br>
-                                                        <input type="file" id="expediente" name="expediente" accept="application/pdf">
-                                                        <button type="button" class="file-button" onclick="document.getElementById('expediente').click();">Select File <i class="fa fa-upload"></i></button>
-                                                        <input type="hidden" id="expediente_delete" name="expediente_delete">
-                                                        <div id="expediente-preview" class="preview"><?php echo $expedientePreview; ?></div>
+                                                        <label for="govId">Gov ID:</label><br>
+                                                        <input type="file" id="govId" name="govId" accept="application/pdf">
+                                                        <button type="button" class="file-button" onclick="document.getElementById('govId').click();">Select File <i class="fa fa-upload"></i></button>
+                                                        <input type="hidden" id="govId_delete" name="govId_delete">
+                                                        <div id="govId-preview" class="preview"><?php echo $govIdPreview; ?></div>
                                                     </div>
 
                                                 </div>
@@ -793,7 +793,7 @@ for ($i = 0; $i < count($employeeDocumentsInfo); $i++) {
                                                 <div class="col-6">
                                                     <div class="form-floating form-floating-custom mb-3">
                                                         <input type="number" value="<?php echo $data['employeeInfo']['afpNumber']; ?>" name="afpNumber" id="afpNumber" placeholder="afpNumber" class="form-control">
-                                                        <label for="afpNumber">AFP Number</label>
+                                                        <label for="afpNumber">AFP Number <label id="afpNumber-error" class="error" for="corporateEmail"></label> </label><small class="form-text text-muted" >No Hyphens.</small>
                                                     </div>
                                                 </div>
                                             </div>
@@ -1487,8 +1487,8 @@ for ($i = 0; $i < count($employeeDocumentsInfo); $i++) {
         $('#contract').on('change', function() {
             previewFile(this, '#contract-preview');
         });
-        $('#expediente').on('change', function() {
-            previewFile(this, '#expediente-preview');
+        $('#govId').on('change', function() {
+            previewFile(this, '#govId-preview');
         });
         $('#modalEditEmergency').on('shown.bs.modal', function() {
             initialEmergeEdit = captureDataFields('EditEmergContact', initialEmergeEdit);
@@ -1886,11 +1886,11 @@ for ($i = 0; $i < count($employeeDocumentsInfo); $i++) {
             'antecedentesPenales_delete',
             'solvenciaPNC_delete',
             'contract_delete',
-            'expediente_delete',
+            'govId_delete',
             'antecedentesPenales',
             'solvenciaPNC',
             'contract',
-            'expediente',
+            'govId',
             'hiredDateOld',
             'salary',
             'endDate',
@@ -2022,8 +2022,8 @@ for ($i = 0; $i < count($employeeDocumentsInfo); $i++) {
             $("#solvenciaPNC_delete").val(1)
         }
         if (elem == 5) {
-            $("#expediente-preview").html("");
-            $("#expediente_delete").val(1)
+            $("#govId-preview").html("");
+            $("#govId_delete").val(1)
         }
         if (elem == 6) {
             $("#contract-preview").html("");

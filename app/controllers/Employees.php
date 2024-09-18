@@ -226,9 +226,9 @@ class Employees extends Controller
                     $this->employeeDocumentModel->removedEmployeeDocument($employeeId, 4);
                     $changedFields['solvenciaPNC'] = 'removed';
                 }
-                if (!empty($_POST['expediente_delete'])) {
+                if (!empty($_POST['govId_delete'])) {
                     $this->employeeDocumentModel->removedEmployeeDocument($employeeId, 5);
-                    $changedFields['expediente'] = 'removed';
+                    $changedFields['govId'] = 'removed';
                 }
                 if (!empty($_POST['contract_delete'])) {
                     $this->employeeDocumentModel->removedEmployeeDocument($employeeId, 6);
@@ -470,17 +470,17 @@ class Employees extends Controller
             } else $errorSave['solvenciaPNC'] = $resolvenciaPNC['messageError'];
         } else $errorSave['solvenciaPNC'] = 'Field Empty';
 
-        // Expediente
-        if (!empty($FILES['expediente']['tmp_name'])) {
-            $reexpediente = $this->handleFileUpload($FILES['expediente'], 'expediente', $nameFile . '_expediente');
+        // govId
+        if (!empty($FILES['govId']['tmp_name'])) {
+            $regovId = $this->handleFileUpload($FILES['govId'], 'govId', $nameFile . '_govId');
             $dataEmployeeDocument['documentTypeId'] = 5;
-            $dataEmployeeDocument['document'] = $reexpediente['nameFile'];
-            if ($reexpediente['status']) {
+            $dataEmployeeDocument['document'] = $regovId['nameFile'];
+            if ($regovId['status']) {
                 $this->employeeDocumentModel->removedEmployeeDocument($IdEmployee, 5);
                 $this->employeeDocumentModel->saveEmployeeDocument($dataEmployeeDocument); // Save Documents name
-                $changedFields['expediente'] = $reexpediente['nameFile'];
-            } else $errorSave['expediente'] = $reexpediente['messageError'];
-        } else $errorSave['expediente'] = 'Field Empty';
+                $changedFields['govId'] = $regovId['nameFile'];
+            } else $errorSave['govId'] = $regovId['messageError'];
+        } else $errorSave['govId'] = 'Field Empty';
 
         // contract
         if (!empty($FILES['contract']['tmp_name'])) {

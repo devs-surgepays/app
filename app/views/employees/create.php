@@ -559,7 +559,7 @@ $bills = (isset($data['bills']) && $data['bills'] != NULL) ? $data['bills'] : []
                                     <div class="col-6">
                                         <div class="form-floating form-floating-custom mb-3">
                                             <input type="number" name="afpNumber" id="afpNumber" placeholder="afpNumber" class="form-control">
-                                            <label for="afpNumber">AFP Number</label>
+                                            <label for="afpNumber">AFP Number <label id="afpNumber-error" class="error" for="corporateEmail"></label> </label><small class="form-text text-muted" >No Hyphens.</small>
                                         </div>
                                     </div>
                                 </div>
@@ -608,10 +608,10 @@ $bills = (isset($data['bills']) && $data['bills'] != NULL) ? $data['bills'] : []
                                             <div id="contract-preview" class="preview"></div>
                                         </div>
                                         <div class="file-input">
-                                            <label for="expediente">Expediente:</label><br>
-                                            <input type="file" id="expediente" name="expediente" accept="application/pdf">
-                                            <button type="button" class="file-button" onclick="document.getElementById('expediente').click();">Select File <i class="fa fa-upload"></i></button>
-                                            <div id="expediente-preview" class="preview"></div>
+                                            <label for="govId">Gov ID:</label><br>
+                                            <input type="file" id="govId" name="govId" accept="application/pdf">
+                                            <button type="button" class="file-button" onclick="document.getElementById('govId').click();">Select File <i class="fa fa-upload"></i></button>
+                                            <div id="govId-preview" class="preview"></div>
                                         </div>
 
                                     </div>
@@ -738,8 +738,8 @@ $bills = (isset($data['bills']) && $data['bills'] != NULL) ? $data['bills'] : []
         $('#contract').on('change', function() {
             previewFile(this, '#contract-preview');
         });
-        $('#expediente').on('change', function() {
-            previewFile(this, '#expediente-preview');
+        $('#govId').on('change', function() {
+            previewFile(this, '#govId-preview');
         });
 
         // Function to get changed fields
@@ -958,7 +958,7 @@ $bills = (isset($data['bills']) && $data['bills'] != NULL) ? $data['bills'] : []
         $("#antecedentesPenales-preview").html('');
         $("#solvenciaPNC-preview").html('');
         $("#contract-preview").html('');
-        $("#expediente-preview").html('');
+        $("#govId-preview").html('');
 
         // focus
         $("#firstName").focus();
