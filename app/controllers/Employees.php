@@ -16,6 +16,7 @@ class Employees extends Controller
     private $usersModel = '';
     private $areaModel = '';
     private $billModel = '';
+    private $financialDependentModel = '';
 
     public function __construct()
     {
@@ -36,6 +37,7 @@ class Employees extends Controller
         $this->usersModel = $this->model('User');
         $this->areaModel = $this->model('Area');
         $this->billModel = $this->model('Bill');
+        $this->financialDependentModel = $this->model('FinancialDependent');
     }
 
     public function index()
@@ -178,6 +180,9 @@ class Employees extends Controller
                 $data['employeeEmergencyContacts'] = $this->emergencyContactsModel->getEmergencyContacts($idEmployee);
                 $data['relationship'] = $this->relationshipModel->getRelationshipsEnglish();
                 $data['superiors'] = $this->usersModel->getSuperiors();
+                $data['financialDependents'] = $this->financialDependentModel->getFinancialDependents($idEmployee);
+
+
             } else {
                 redirect('employees/index');
             }
@@ -214,7 +219,6 @@ class Employees extends Controller
                     if (isset($changedFields['contactPhone']) && $changedFields['contactPhone'] != NULL) $changedFields['contactPhone'] =  preg_replace('/[^0-9]/', '', $_POST['contactPhone']);
 
                     $this->employeeModel->updatedEmployee($changedFields);
-                    // unset($changedFields['employeeId']);
                 }
 
                 // removed files
@@ -244,6 +248,10 @@ class Employees extends Controller
                 // $return['approot'] = APPROOT;
                 // $return['changedFields'] = $changedFields;
                 // $return['FILES'] = $_FILES;
+
+
+                // Remove the element with the key 'employeeId'
+                unset($changesFinal['employeeId']);
 
                 // Add log
                 if (!empty($changesFinal)) {

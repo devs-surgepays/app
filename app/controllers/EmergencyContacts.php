@@ -127,6 +127,9 @@ class EmergencyContacts extends Controller
                 ];
                 $this->emergencyContactModel->updateEmergeContact($dataUpdate);
 
+                // Remove the element with the key 'emergencyContactId'
+                unset($dataUpdate['emergencyContactId']);
+
                 // save log
                 $dataLog = ['userId' => $_SESSION['userId'], 'registerId' => $emergencyContactId, 'action' => 'Delete', 'page' => 'Emerg. Contacts', 'fields' => json_encode($dataUpdate)];
                 $this->activityLogModel->saveActivityLog($dataLog);

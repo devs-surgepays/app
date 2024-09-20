@@ -14,6 +14,7 @@ $employeeSchedule = (isset($data['employeeSchedule']) && $data['employeeSchedule
 $employeeEmergencyContacts = (isset($data['employeeEmergencyContacts']) && $data['employeeEmergencyContacts'] != NULL) ? $data['employeeEmergencyContacts'] : [];
 $data['employeeInfo']['contactPhone'] = (isset($data['employeeInfo']['contactPhone']) && $data['employeeInfo']['contactPhone'] != NULL) ? preg_replace('/^(.{4})/', '$1' . "-", $data['employeeInfo']['contactPhone']) : '';
 $relationship = (isset($data['relationship']) && $data['relationship'] != NULL) ? $data['relationship'] : [];
+$financialDependents = (isset($data['financialDependents']) && $data['financialDependents'] != NULL) ? $data['financialDependents'] : [];
 
 $employeeDocumentsInfo = (isset($data['employeeDocumentsInfo']) && $data['employeeDocumentsInfo'] != NULL) ? $data['employeeDocumentsInfo'] : [];
 
@@ -166,8 +167,14 @@ for ($i = 0; $i < count($employeeDocumentsInfo); $i++) {
                     <li class="nav-item submenu" role="presentation">
                         <a class="nav-link " id="tab-emergency-contacts" data-bs-toggle="pill" href="#emergency-contacts" role="tab" aria-controls="emergency-contacts" aria-selected="true">Emergency Contacts</a>
                     </li>
+                    <li class="nav-item submenu" role="presentation">
+                        <a class="nav-link " id="tab-financial-dependents" data-bs-toggle="pill" href="#financial-dependents" role="tab" aria-controls="financial-dependents" aria-selected="true">Financial Dependents</a>
+                    </li>
+
                 </ul>
                 <div class="tab-content mt-2 mb-3" id="pills-without-border-tabContent">
+
+                    <!-- General Information -->
                     <div class="tab-pane fade" id="general-information" role="tabpanel" aria-labelledby="tab-general-information">
 
                         <!-- Form editEmployee General Information -->
@@ -306,9 +313,9 @@ for ($i = 0; $i < count($employeeDocumentsInfo); $i++) {
                                                     <div class="form-floating form-floating-custom mb-3">
                                                         <select name="documentTypeId" id="documentTypeId" class="form-select form-control js-select-basic">
                                                             <option value="" disabled selected>Select</option>
-                                                            <option <?php echo ("1" == $data['employeeInfo']['documentTypeId']) ? 'selected' : '' ?>  value="1">DUI</option>
-                                                            <option <?php echo ("7" == $data['employeeInfo']['documentTypeId']) ? 'selected' : '' ?>  value="7">Passport</option>
-                                                            <option <?php echo ("8" == $data['employeeInfo']['documentTypeId']) ? 'selected' : '' ?>  value="8">Residence card</option>
+                                                            <option <?php echo ("1" == $data['employeeInfo']['documentTypeId']) ? 'selected' : '' ?> value="1">DUI</option>
+                                                            <option <?php echo ("7" == $data['employeeInfo']['documentTypeId']) ? 'selected' : '' ?> value="7">Passport</option>
+                                                            <option <?php echo ("8" == $data['employeeInfo']['documentTypeId']) ? 'selected' : '' ?> value="8">Residence card</option>
                                                         </select>
                                                     </div>
                                                 </div>
@@ -793,7 +800,7 @@ for ($i = 0; $i < count($employeeDocumentsInfo); $i++) {
                                                 <div class="col-6">
                                                     <div class="form-floating form-floating-custom mb-3">
                                                         <input type="number" value="<?php echo $data['employeeInfo']['afpNumber']; ?>" name="afpNumber" id="afpNumber" placeholder="afpNumber" class="form-control">
-                                                        <label for="afpNumber">AFP Number <label id="afpNumber-error" class="error" for="corporateEmail"></label> </label><small class="form-text text-muted" >No Hyphens.</small>
+                                                        <label for="afpNumber">AFP Number <label id="afpNumber-error" class="error" for="corporateEmail"></label> </label><small class="form-text text-muted">No Hyphens.</small>
                                                     </div>
                                                 </div>
                                             </div>
@@ -832,6 +839,8 @@ for ($i = 0; $i < count($employeeDocumentsInfo); $i++) {
 
 
                     </div>
+
+                    <!-- Schedule -->
                     <div class="tab-pane fade" id="schedule" role="tabpanel" aria-labelledby="tab-schedule">
                         <!-- form editEmployee Schedule -->
                         <form id="addEmployeeSchedule" method="POST" action="#">
@@ -1058,6 +1067,8 @@ for ($i = 0; $i < count($employeeDocumentsInfo); $i++) {
                         </form>
                         <!-- end / form editEmployee Schedule -->
                     </div>
+
+                    <!-- Emergency Contacts -->
                     <div class="tab-pane fade " id="emergency-contacts" role="tabpanel" aria-labelledby="tab-emergency-contacts">
                         <!-- form Emergency contact -->
                         <div class="row">
@@ -1067,7 +1078,7 @@ for ($i = 0; $i < count($employeeDocumentsInfo); $i++) {
                                         <h5>Emergency Contacts</h5>
                                     </div>
                                     <div class="card-body" style="min-height: 880px;">
-                                        <!-- schedule -->
+                                        <!-- Emergency contact -->
                                         <div class="row">
                                             <div class="d-flex justify-content-between">
                                                 <button id="btn-add-emEmergencyCon" class="btn btn-primary btn-round ms-auto" data-bs-toggle="modal" data-bs-target="#modalAddEmergency"><i class="fa fa-plus"></i> Add Emergency Contact</button>
@@ -1124,10 +1135,78 @@ for ($i = 0; $i < count($employeeDocumentsInfo); $i++) {
                         </div>
                         <!-- </form> -->
                     </div>
+
+                    <!-- financial-dependents -->
+                    <div class="tab-pane fade " id="financial-dependents" role="tabpanel" aria-labelledby="tab-financial-dependents">
+                        <!-- form financial-dependents -->
+                        <div class="row">
+                            <div class="col-md-6 col-xl-12 col-sm-12">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5>Financial Dependents</h5>
+                                    </div>
+                                    <div class="card-body" style="min-height: 880px;">
+                                        <div class="row">
+                                            <div class="d-flex justify-content-between">
+                                                <button id="btn-add-dependent" class="btn btn-primary btn-round ms-auto" data-bs-toggle="modal" data-bs-target="#modalAddDependents"><i class="fa fa-plus"></i> Add Dependent</button>
+                                            </div>
+                                            <div class="col-12 pt-5">
+                                                <div class="table-responsive">
+                                                    <table id="tb-EmergencyContact" class="table table-hover mt-5">
+                                                        <thead>
+                                                            <tr>
+                                                                <th scope="col">#</th>
+                                                                <th scope="col">FullName</th>
+                                                                <th scope="col">Relationship</th>
+                                                                <th scope="col">DOB</th>
+                                                                <th scope="col">Managment</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <?php if (!empty($financialDependents)) {
+                                                                $n = 1;
+                                                                for ($i = 0; $i < count($financialDependents); $i++) {
+                                                                    echo '<tr>';
+                                                                    echo '<th scope="row">' . $n++ . '</th>';
+                                                                    echo '<td>' . $financialDependents[$i]['fullName'] . '</td>';
+                                                                    echo '<td>' . $financialDependents[$i]['relationshipNameEnglish'] . '</td>';
+                                                                    echo '<td>' . date('m/d/Y', strtotime($financialDependents[$i]['dob'])) . '</td>';
+                                                                    echo '<td>
+                                                                        <button onclick="getInfoDependent(' . $financialDependents[$i]['financialDependentId'] . ')" class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#modalEditDependents"><i class="fa fa-edit"></i></button>
+                                                                        
+                                                                        <button id="delete_' . $financialDependents[$i]['financialDependentId'] . '_dependent" type="button" 
+                                                                        data-fullnameDependent="' . $financialDependents[$i]['fullName'] . '" 
+                                                                        onclick="removeFinancialDependent(' . $financialDependents[$i]['financialDependentId'] . ')"
+                                                                        class="btn btn-sm btn-danger"><i class="fa fa-times"></i></button>
+
+                                                                        </td>';
+                                                                    echo '</tr>';
+                                                                }
+                                                            } else {
+                                                                echo '<tr><td class="text-center" colspan="6">No data</td></tr>';
+                                                            }
+
+                                                            ?>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
                 </div>
             </div>
         </div>
 
+
+        <!-- MODAL -->
 
         <!-- Create Emerg. Contact -->
         <div class="modal fade" id="modalAddEmergency" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalAddEmergencyLabel" aria-hidden="true">
@@ -1249,8 +1328,137 @@ for ($i = 0; $i < count($employeeDocumentsInfo); $i++) {
         </div>
         <!-- // Edit Emerg. Contact -->
 
+
+        <!-- Create Financial Dependents -->
+        <div class="modal fade" id="modalAddDependents" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalAddDependentsLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="modalAddDependentsLabel">Add Financial Dependent</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form id="createdependent" method="POST" action="">
+                        <div class="modal-body">
+                            <div class="row pt-3">
+                                <div class="col-6">
+                                    <div class="form-group form-group-default">
+                                        <label>FullName <span class="text-danger">*</span> </label>
+                                        <input type="text" class="form-control" id="fullNameDependent" name="fullNameDependent" placeholder="">
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group form-group-default">
+                                        <label>Relationship <span class="text-danger">*</span> </label>
+                                        <select class="form-control" id="relationshipIdDependent" name="relationshipIdDependent" placeholder="">
+                                            <option value="">Select</option>
+                                            <?php
+                                            for ($i = 0; $i < count($relationship); $i++) {
+                                                echo '<option value="' . $relationship[$i]['relationshipId'] . '">' . $relationship[$i]['relationshipName'] . '</option>';
+                                            }
+                                            ?>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row pt-3">
+                                <div class="col-6">
+                                    <div class="form-group form-group-default">
+                                        <label>DOB </label>
+                                        <input onchange="calculateAge('dobdependent')" id="dobdependent" name="dobdependent" type="date" class="form-control" placeholder="">
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group form-group-default">
+                                        <label>Age </label>
+                                        <input type="text" id="dobdependent-age" disabled class="form-control" placeholder="">
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group form-group-default">
+                                        <label>Address </label>
+                                        <textarea class="form-control" name="addressDependet" id="addressDependet"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <input type="hidden" id="idEmpDependents" name="idEmpDependents" value="<?php echo base64_encode($data['employeeInfo']['employeeId']) ?>">
+                            <button type="button" id="btn-cancelAddFinancialDe" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-success">Create Financial Dependent</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- // create Financial Dependents -->
+
+        <!-- Edit Financial Dependents -->
+        <div class="modal fade" id="modalEditDependents" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalEditDependentsLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="modalEditDependentsLabel">Edit Financial Dependent</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form id="editDependents" method="POST" action="">
+                        <div class="modal-body">
+                            <div class="row pt-3">
+                                <div class="col-6">
+                                    <div class="form-group form-group-default">
+                                        <label>FullName <span class="text-danger">*</span> </label>
+                                        <input type="text" class="form-control" id="fullName_dependentEdit" name="fullName_dependentEdit" placeholder="">
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group form-group-default">
+                                        <label>Relationship <span class="text-danger">*</span> </label>
+                                        <select class="form-control" id="relationshipId_dependentEdit" name="relationshipId_dependentEdit" placeholder="">
+                                            <option value="">Select</option>
+                                            <?php
+                                            for ($i = 0; $i < count($relationship); $i++) {
+                                                echo '<option value="' . $relationship[$i]['relationshipId'] . '">' . $relationship[$i]['relationshipName'] . '</option>';
+                                            }
+                                            ?>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row pt-3">
+                                <div class="col-6">
+                                    <div class="form-group form-group-default">
+                                        <label>DOB </label>
+                                        <input  onchange="calculateAge('dob_dependentEdit')" id="dob_dependentEdit" name="dob_dependentEdit" type="date" class="form-control" placeholder="">
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group form-group-default">
+                                        <label>Age </label>
+                                        <input  id="dob_dependentEdit-age"  type="number" disabled class="form-control" placeholder="">
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group form-group-default">
+                                        <label>Address </label>
+                                        <textarea class="form-control" name="address_dependentEdit" id="address_dependentEdit"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <input type="hidden" id="financialDependentId_dependentEdit" name="financialDependentId_dependentEdit">
+                            <button type="button" id="btn-cancelEditFinancialDe" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-success">Edit Financial Dependent</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- // Edit Emerg. Contact -->
+
+
+
         <!-- Preview Photo -->
-        <div class="modal fade" id="modalPhotoPreview" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalEditEmergencyLabel" aria-hidden="true">
+        <div class="modal fade" id="modalPhotoPreview" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalPhotoPreviewLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -1265,6 +1473,8 @@ for ($i = 0; $i < count($employeeDocumentsInfo); $i++) {
         </div>
         <!-- // Preview Photo -->
 
+        <!-- END-MODAL -->
+
 
         <?php require APPROOT . '/views/inc/footer.php'; ?>
     </div> <!-- end/page-inner -->
@@ -1273,26 +1483,15 @@ for ($i = 0; $i < count($employeeDocumentsInfo); $i++) {
 <script>
     $(document).ready(function() {
 
-        $('#togglePassword').on('click', function() {
-            // Get the input field
-            var input = $('#Name');
-
-            // Check the current type of the input field
-            if (input.attr('type') === 'password') {
-                input.attr('type', 'text'); // Show the value
-                $(this).removeClass('fa-eye').addClass('fa-eye-slash'); // Toggle the icon
-            } else {
-                input.attr('type', 'password'); // Hide the value
-                $(this).removeClass('fa-eye-slash').addClass('fa-eye'); // Toggle the icon
-            }
-        });
+        var initialEmployeeEdit = {};
+        var initialEmergeEdit = {};
+        var initialDependentEdit = {};
 
         // table Emerge. Contact
         // $("#tb-EmergencyContact").DataTable();
 
-        //$(document).ready(function() {
+        // show tab selected ---------------------------------------------------------------------------------------------
 
-        // show tab selected
         $('.nav-link').on('click', function() {
             var tabID = $(this).attr('href').substring(1); // Get href without #
             var newURL = window.location.protocol + "//" + window.location.host + window.location.pathname + '?tab=' + tabID;
@@ -1302,7 +1501,7 @@ for ($i = 0; $i < count($employeeDocumentsInfo); $i++) {
         });
 
         // Valid tab names
-        var validTabs = ['general-information', 'schedule', 'emergency-contacts'];
+        var validTabs = ['general-information', 'schedule', 'emergency-contacts', 'financial-dependents'];
 
         // Check if there's a tab parameter in the URL when the page loads
         var urlParams = new URLSearchParams(window.location.search);
@@ -1323,15 +1522,12 @@ for ($i = 0; $i < count($employeeDocumentsInfo); $i++) {
         // Add active classes to the last selected tab and its pane
         $lastTab.addClass('active');
         $lastTabPane.addClass('active show');
-        // });
 
-        var initialEmployeeEdit = {};
-        var initialEmergeEdit = {};
-
+        // ---------------------------------------------------------------------------------------------------------
 
         // Capture the initial state for Employee edit
         initialEmployeeEdit = captureDataFields('editEmployee', initialEmployeeEdit);
-        console.log(initialEmployeeEdit);
+        // console.log(initialEmployeeEdit);
 
         $('.phoneMark').mask('0000-0000');
         $('#contactPhoneEmerContact').mask('0000-0000');
@@ -1492,7 +1688,11 @@ for ($i = 0; $i < count($employeeDocumentsInfo); $i++) {
         });
         $('#modalEditEmergency').on('shown.bs.modal', function() {
             initialEmergeEdit = captureDataFields('EditEmergContact', initialEmergeEdit);
-            console.log('initialEmergeEdit:', initialEmergeEdit);
+            // console.log('initialEmergeEdit:', initialEmergeEdit);
+        });
+        $('#modalEditDependents').on('shown.bs.modal', function() {
+            initialDependentEdit = captureDataFields('editDependents', initialDependentEdit);
+            // console.log('initialDependentEdit:', initialDependentEdit);
         });
         // Form ADD Employee
         $('#addEmployeeSchedule').on('submit', function(e) {
@@ -1563,7 +1763,6 @@ for ($i = 0; $i < count($employeeDocumentsInfo); $i++) {
 
         });
         //  /Form ADD Employee
-
 
         // Form Edit Employee
         $('#editEmployee').validate({
@@ -1856,9 +2055,168 @@ for ($i = 0; $i < count($employeeDocumentsInfo); $i++) {
             }
         });
 
+        // Finance Dependents 
+        $('#createdependent').validate({
+            rules: {
+                fullNameDependent: 'required',
+                relationshipIdDependent: 'required'
+            },
+            messages: {
+                fullNameDependent: 'This field is required',
+                relationshipIdDependent: 'This field is required'
+            },
+            submitHandler: function(form) {
+
+                $.ajax({
+                    url: '<?php echo URLROOT; ?>/FinancialDependents/addFinancialDependent',
+                    method: 'POST',
+                    data: $("#createdependent").serialize(),
+                    beforeSend: function() {
+                        //wait
+                    },
+                    success: function(data) {
+                        console.log(data)
+                        var obj = JSON.parse(data);
+
+                        if (obj.status) {
+
+                            $("#btn-cancelAddFinancialDe").click();
+
+                            swal(obj.message, {
+                                icon: "success",
+                                buttons: {
+                                    confirm: {
+                                        className: "btn btn-success",
+                                    },
+                                },
+                            }).then((willReload) => {
+                                if (willReload) {
+                                    location.reload();
+                                }
+                            });
+
+                        } else {
+
+                            swal('Error', obj.message, {
+                                icon: "error",
+                                buttons: {
+                                    confirm: {
+                                        className: "btn btn-danger",
+                                    },
+                                },
+                            });
+                        }
+
+                    }
+                })
+            }
+        });
+
+        $('#editDependents').validate({
+            rules: {
+                fullName_dependentEdit: 'required',
+                relationshipId_dependentEdit: 'required'
+            },
+            messages: {
+                fullName_dependentEdit: 'This field is required',
+                relationshipId_dependentEdit: 'This field is required'
+            },
+            submitHandler: function(form) {
+                swal({
+                    title: "Are you sure?",
+                    text: "This record will be updated",
+                    type: "warning",
+                    buttons: {
+                        cancel: {
+                            visible: true,
+                            text: "No, cancel!",
+                            className: "btn btn-danger",
+                        },
+                        confirm: {
+                            text: "Yes, Change it!",
+                            className: "btn btn-success",
+                        },
+                    },
+
+                }).then((willChange) => {
+
+                    if (willChange) {
+
+                        var formData = new FormData(form);
+                        var changedFields = getChangedFields('editDependents', initialDependentEdit);
+                        var jsonChangedFields = JSON.stringify(changedFields);
+                        formData.append('changedFields', jsonChangedFields);
+
+                        $.ajax({
+                            url: '<?php echo URLROOT; ?>/FinancialDependents/editFinancialDependent',
+                            method: 'POST',
+                            data: formData,
+                            processData: false,
+                            contentType: false,
+                            beforeSend: function() {
+                                //wait
+                            },
+                            success: function(data) {
+                                console.log(data)
+
+                                var obj = JSON.parse(data);
+                                if (obj.status) {
+
+                                    // click
+                                    $("#btn-cancelEditFinancialDe").click();
+
+                                    swal(obj.message, {
+                                        icon: "success",
+                                        buttons: {
+                                            confirm: {
+                                                className: "btn btn-success",
+                                            },
+                                        },
+                                    }).then((willReload) => {
+                                        if (willReload) {
+                                            location.reload();
+                                        }
+                                    });
+
+                                } else {
+
+                                    swal('Error', obj.message, {
+                                        icon: "error",
+                                        buttons: {
+                                            confirm: {
+                                                className: "btn btn-danger",
+                                            },
+                                        },
+                                    });
+
+                                }
+
+                            }
+                        })
+                    }
+
+                });
 
 
-    }); // ready
+            }
+        });
+
+        $('#togglePassword').on('click', function() {
+            // Get the input field
+            var input = $('#Name');
+
+            // Check the current type of the input field
+            if (input.attr('type') === 'password') {
+                input.attr('type', 'text'); // Show the value
+                $(this).removeClass('fa-eye').addClass('fa-eye-slash'); // Toggle the icon
+            } else {
+                input.attr('type', 'password'); // Hide the value
+                $(this).removeClass('fa-eye-slash').addClass('fa-eye'); // Toggle the icon
+            }
+        });
+
+
+    }); // End-ready
 
     function getPhotoInfo(Badge, Fullname, photo) {
         var link = '<?php echo URLROOT; ?>/public/documents/photo/' + photo;
@@ -1916,10 +2274,9 @@ for ($i = 0; $i < count($employeeDocumentsInfo); $i++) {
                 }
             }
         });
-        console.log(changedFields)
+        // console.log(changedFields)
         return changedFields;
     }
-
 
     function previewFile(input, previewDiv) {
         var file = input.files[0];
@@ -1944,7 +2301,6 @@ for ($i = 0; $i < count($employeeDocumentsInfo); $i++) {
             $(previewDiv).html('');
         }
     }
-
 
     function getCities(value) {
         var stateId = value;
@@ -2037,8 +2393,6 @@ for ($i = 0; $i < count($employeeDocumentsInfo); $i++) {
         let fullname = div.dataset.fullname;
         var text = "The record * " + fullname + " will be delete";
 
-        // // var username = article.dataset.username;
-
         swal({
             title: "Are you sure?",
             text: text,
@@ -2078,9 +2432,93 @@ for ($i = 0; $i < count($employeeDocumentsInfo); $i++) {
 
                         if (obj.status) {
 
-                            $("#btn-cancel").click();
+                            // $("#btn-cancel").click();
 
                             swal("The User has been delete successfully.", {
+                                icon: "success",
+                                buttons: {
+                                    confirm: {
+                                        className: "btn btn-success",
+                                    },
+                                },
+                            }).then((willReload) => {
+                                if (willReload) {
+                                    location.reload();
+                                }
+                            });
+
+                        } else {
+
+                            $.notify(content, {
+                                type: 'danger',
+                                placement: {
+                                    from: 'top',
+                                    align: 'right',
+                                },
+                                time: 1000,
+                                delay: 0,
+                            });
+
+
+                        }
+
+
+                    }
+                })
+            }
+
+        });
+
+    }
+
+    function removeFinancialDependent(idFinancialDependent) {
+        let div = document.getElementById("delete_" + idFinancialDependent + "_dependent");
+        let fullname = div.dataset.fullnamedependent;
+        var text = "The record * " + fullname + " will be delete";
+
+        swal({
+            title: "Are you sure?",
+            text: text,
+            type: "warning",
+            buttons: {
+                cancel: {
+                    visible: true,
+                    text: "No, cancel!",
+                    className: "btn btn-danger",
+                },
+                confirm: {
+                    text: "Yes, Delete it!",
+                    className: "btn btn-success",
+                },
+            },
+
+        }).then((willChange) => {
+
+            if (willChange) {
+
+                var param = {
+                    'idFinancialDependent': idFinancialDependent
+                };
+
+                $.ajax({
+                    url: '<?php echo URLROOT; ?>/FinancialDependents/removeFinancialDependent',
+                    method: 'POST',
+                    data: param,
+                    beforeSend: function() {},
+                    success: function(data) {
+                        console.log("SUCCESS");
+                        console.log(data);
+                        var obj = JSON.parse(data);
+                        var content = {};
+                        content.message = obj.message;
+                        content.title = "Employee";
+                        content.icon = "fa fa-bell";
+
+                        if (obj.status) {
+
+                            // $("#btn-cancel").click();
+
+                            swal("The Financial Dependent has been delete successfully.", {
                                 icon: "success",
                                 buttons: {
                                     confirm: {
@@ -2142,5 +2580,46 @@ for ($i = 0; $i < count($employeeDocumentsInfo); $i++) {
             }
 
         })
+    }
+
+    function getInfoDependent(id) {
+        var param = {
+            'financialDependentId': id
+        };
+        $.ajax({
+            url: '<?php echo URLROOT; ?>/FinancialDependents/getFinancialDependentId',
+            method: 'POST',
+            data: param,
+            beforeSend: function() {
+                //
+            },
+            success: function(data) {
+                // console.log(data);
+                var obj = JSON.parse(data);
+                $("#financialDependentId_dependentEdit").val(obj.financialDependentId);
+                $("#fullName_dependentEdit").val(obj.fullName);
+                $("#relationshipId_dependentEdit").val(obj.relationshipId);
+                $("#dob_dependentEdit").val(obj.dob);
+                $("#address_dependentEdit").val(obj.address);
+                calculateAge('dob_dependentEdit');
+            }
+
+        })
+    }
+
+    function calculateAge(field) {
+        const dob = document.getElementById(field).value; // Obtener la fecha de nacimiento
+        const fechaNacimiento = new Date(dob);
+        const hoy = new Date();
+        let edad = hoy.getFullYear() - fechaNacimiento.getFullYear();
+        const mesDiff = hoy.getMonth() - fechaNacimiento.getMonth();
+
+        // Ajustar la edad si no ha cumplido años este año
+        if (mesDiff < 0 || (mesDiff === 0 && hoy.getDate() < fechaNacimiento.getDate())) {
+            edad--;
+        }
+
+        $("#"+field+"-age").val(edad)
+
     }
 </script>
