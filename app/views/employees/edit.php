@@ -1158,7 +1158,7 @@ for ($i = 0; $i < count($employeeDocumentsInfo); $i++) {
                                                                 <th scope="col">#</th>
                                                                 <th scope="col">FullName</th>
                                                                 <th scope="col">Relationship</th>
-                                                                <th scope="col">DOB</th>
+                                                                <th scope="col">Age</th>
                                                                 <th scope="col">Managment</th>
                                                             </tr>
                                                         </thead>
@@ -1170,7 +1170,7 @@ for ($i = 0; $i < count($employeeDocumentsInfo); $i++) {
                                                                     echo '<th scope="row">' . $n++ . '</th>';
                                                                     echo '<td>' . $financialDependents[$i]['fullName'] . '</td>';
                                                                     echo '<td>' . $financialDependents[$i]['relationshipNameEnglish'] . '</td>';
-                                                                    echo '<td>' . date('m/d/Y', strtotime($financialDependents[$i]['dob'])) . '</td>';
+                                                                    echo '<td>' . $financialDependents[$i]['age'] . '</td>';
                                                                     echo '<td>
                                                                         <button onclick="getInfoDependent(' . $financialDependents[$i]['financialDependentId'] . ')" class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#modalEditDependents"><i class="fa fa-edit"></i></button>
                                                                         
