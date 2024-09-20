@@ -37,8 +37,9 @@ class FinancialDependents extends Controller
                 'employeeId' => (isset($_POST['idEmpDependents']) && $_POST['idEmpDependents'] != null) ? base64_decode($_POST['idEmpDependents']) : null,
                 'fullName' => (isset($_POST['fullNameDependent']) && $_POST['fullNameDependent'] != null) ? $_POST['fullNameDependent'] : null,
                 'relationshipId' => (isset($_POST['relationshipIdDependent']) && $_POST['relationshipIdDependent'] != null) ? $_POST['relationshipIdDependent'] : null,
-                'dob' => (isset($_POST['dobdependent']) && $_POST['dobdependent'] != null) ? $_POST['dobdependent'] : null,
+                // 'dob' => (isset($_POST['dobdependent']) && $_POST['dobdependent'] != null) ? $_POST['dobdependent'] : null,
                 'address' => (isset($_POST['addressDependet']) && $_POST['addressDependet'] != null) ? $_POST['addressDependet'] : null,
+                'age' => (isset($_POST['ageDependent']) && $_POST['ageDependent'] != null) ? $_POST['ageDependent'] : null,
             ];
 
             $lastInsert = $this->financialDependentModel->saveFinancialDependent($datasave);
@@ -73,8 +74,9 @@ class FinancialDependents extends Controller
                         'financialDependentId' => $financialDependentId,
                         'fullName' => $_POST['fullName_dependentEdit'],
                         'relationshipId' => $_POST['relationshipId_dependentEdit'],
-                        'dob' => $_POST['dob_dependentEdit'],
+                        // 'dob' => $_POST['dob_dependentEdit'],
                         'address' => $_POST['address_dependentEdit'],
+                        'age' => $_POST['age_dependentEdit'],
                         'changedFields' => $_POST['changedFields']
                     ];
 
@@ -82,8 +84,9 @@ class FinancialDependents extends Controller
                         'financialDependentId' => $data['financialDependentId'],
                         'fullName' => $data['fullName'],
                         'relationshipId' => $data['relationshipId'],
-                        'dob' => $data['dob'],
-                        'address' => $data['address']
+                        // 'dob' => $data['dob'],
+                        'address' => $data['address'],
+                        'age' => $data['age'],
                     ];
                     // clean fields for log
                     $aChangeFields = json_decode($data['changedFields'], true);

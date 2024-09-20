@@ -1361,16 +1361,16 @@ for ($i = 0; $i < count($employeeDocumentsInfo); $i++) {
                                 </div>
                             </div>
                             <div class="row pt-3">
-                                <div class="col-6">
+                                <!-- <div class="col-6">
                                     <div class="form-group form-group-default">
                                         <label>DOB </label>
                                         <input onchange="calculateAge('dobdependent')" id="dobdependent" name="dobdependent" type="date" class="form-control" placeholder="">
                                     </div>
-                                </div>
+                                </div> -->
                                 <div class="col-6">
                                     <div class="form-group form-group-default">
                                         <label>Age </label>
-                                        <input type="text" id="dobdependent-age" disabled class="form-control" placeholder="">
+                                        <input type="number" id="ageDependent" name="ageDependent" class="form-control" placeholder="">
                                     </div>
                                 </div>
                                 <div class="col-12">
@@ -1424,16 +1424,16 @@ for ($i = 0; $i < count($employeeDocumentsInfo); $i++) {
                                 </div>
                             </div>
                             <div class="row pt-3">
-                                <div class="col-6">
+                                <!-- <div class="col-6">
                                     <div class="form-group form-group-default">
                                         <label>DOB </label>
                                         <input  onchange="calculateAge('dob_dependentEdit')" id="dob_dependentEdit" name="dob_dependentEdit" type="date" class="form-control" placeholder="">
                                     </div>
-                                </div>
+                                </div> -->
                                 <div class="col-6">
                                     <div class="form-group form-group-default">
                                         <label>Age </label>
-                                        <input  id="dob_dependentEdit-age"  type="number" disabled class="form-control" placeholder="">
+                                        <input  id="age_dependentEdit" name="age_dependentEdit"  type="number" class="form-control" placeholder="">
                                     </div>
                                 </div>
                                 <div class="col-12">
@@ -2598,6 +2598,7 @@ for ($i = 0; $i < count($employeeDocumentsInfo); $i++) {
                 var obj = JSON.parse(data);
                 $("#financialDependentId_dependentEdit").val(obj.financialDependentId);
                 $("#fullName_dependentEdit").val(obj.fullName);
+                $("#age_dependentEdit").val(obj.age);
                 $("#relationshipId_dependentEdit").val(obj.relationshipId);
                 $("#dob_dependentEdit").val(obj.dob);
                 $("#address_dependentEdit").val(obj.address);
