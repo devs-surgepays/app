@@ -243,11 +243,11 @@ class Employees extends Controller
                 $re = $this->uploadSaveFile($_FILES, $employeeId, $nameFile); // errorFileSave - changedFields
                 $changesFinal = array_merge($changedFields, $re['changedFields']);
 
-                // $return['responseFiles'] = $re;
+                $return['responseFiles'] = $re;
                 // $return['documentroot'] = $_SERVER['DOCUMENT_ROOT'];
                 // $return['approot'] = APPROOT;
                 // $return['changedFields'] = $changedFields;
-                // $return['FILES'] = $_FILES;
+                $return['FILES'] = $_FILES;
 
 
                 // Remove the element with the key 'employeeId'
