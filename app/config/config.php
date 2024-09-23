@@ -1,5 +1,5 @@
 <?php
-define('ENVIRONMENT', 'dev');
+define('ENVIRONMENT', 'prod');
 
 if (ENVIRONMENT == 'development' || ENVIRONMENT == 'dev') {
  
