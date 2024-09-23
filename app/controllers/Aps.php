@@ -155,6 +155,38 @@ class Aps extends Controller
         echo json_encode($row);
     }
 
+    public function approveAP(){
+        if($_SERVER['REQUEST_METHOD']=='POST'){
+            $_POST= filter_input_array(INPUT_POST,FILTER_SANITIZE_STRING);
+            $data=[
+                "apDetailsId"=>$_POST['id'],
+                "status"=>$_POST['status']
+            ];
+            $permissionLevel = $_SESSION['permissionLevelId'];
+            if($permissionLevel&8){
+                $data['aprovedByM']=$_POST['status'];
+                $data['byMUser']=$_SESSION['userId'];
+            }else if($permissionLevel&16){
+                $data['aprovedByHR']=$_POST['status'];
+                $data['byHRUser']=$_SESSION['userId'];
+            }else if($permissionLevel&32){
+                $data['aprovedByWf']=$_POST['status'];
+                $data['byWfUSer']=$_SESSION['userId'];
+            }else if($permissionLevel&4){
+                $data['aprovedBySup']=$_POST['status'];
+                $data['bySupUser']=$_SESSION['userId'];
+            } 
+            $this->apModel->updateLeave($data);
+            $data['status']="success";
+            $data['message']="you gave approval to this leave";
+            echo json_encode($data);
+        }else{
+            // Forbidden Access
+            http_response_code(403);
+            echo "Access forbidden";
+        }
+    }
+
     public function read(){
         if($_SERVER['REQUEST_METHOD']=='POST'){
     //if($_POST){
@@ -202,19 +234,50 @@ class Aps extends Controller
         //print_r($data['arrayCampos']);
         $count=0;
         $addWhere="";
-        $camposBase=array("apDetailsId","fullName","badge","createdAt","username","name","status");
+        $camposBase=array("fullName","e.badge","bydate","u.username","t.apTypeId","a.aprovedByM","a.aprovedByHR","a.aprovedByWf","a.aprovedBySup","a.printed");
+        $fieldSearch=array("e.firstName", "e.secondName", "e.thirdName", "e.firstLastName", "e.secondLastName", "e.thirdLastName");
+        $fields = array(
+            0=>array("name"=>"fullname","type"=>"multifield","values"=>$fieldSearch),
+            1=>array("name"=>"e.badge","type"=>"equal"),
+            2=>array("name"=>"bydate","type"=>"range"),
+            3=>array("name"=>"u.username","type"=>"like"),
+            4=>array("name"=>"t.apTypeId","type"=>"equal"),
+            5=>array("name"=>"a.aprovedByM","type"=>"equal"),
+            6=>array("name"=>"a.aprovedByHR","type"=>"equal"),
+            7=>array("name"=>"a.aprovedByWf","type"=>"equal"),
+            8=>array("name"=>"a.aprovedBySup","type"=>"equal")
+        );
         if($data['arrayCampos']){
             for($index=0;$index<sizeof($data['arrayCampos']);$index++){
                 $count += ($data['arrayCampos'][$index]!='')?1:0;
                 
                     if(!empty($data['arrayCampos'][$index])){
-
-                            if($count<=1){
-                                $addWhere.=" ".$camposBase[$index]." LIKE '%".$data['arrayCampos'][$index]."%'";
-                            }else{
-                                $addWhere.=" and ".$camposBase[$index]." LIKE '%".$data['arrayCampos'][$index]."%'";
+                        if($fields[$index]['name']=="fullname"){//$index==0
+                            if(strlen($data['arrayCampos'][$index])>0){
+                                $addWhere .= $this->build_search_query($data['arrayCampos'][$index],$fields[$index]['values']);//$fieldSearch
                             }
-
+                        }else if($fields[$index]['name']=="bydate"){
+                            list($start,$end) = explode('-', $data['arrayCampos'][$index]);
+                            $startDate=date("Y-m-d",strtotime(trim($start)));
+                            $endDate=date("Y-m-d",strtotime(trim($end)));
+                            if($count<=1){
+                                $addWhere.="date(a.createdAt)>='".$startDate."' and date(a.createdAt)<='".$endDate."'";
+                            }else{
+                                $addWhere.=" AND (date(a.createdAt)>='".$startDate."' and date(a.createdAt)<='".$endDate."')";
+                            }
+                        }else if($fields[$index]['type']=="equal"){
+                            if($count>1){
+                                $addWhere.=" and ".$camposBase[$index]." = ".$data['arrayCampos'][$index];
+                            }else{
+                                $addWhere.=" ".$camposBase[$index]." = ".$data['arrayCampos'][$index];  
+                            }
+                        }else{
+                            if($count>1){
+                                $addWhere.=" and ".$camposBase[$index]." LIKE '%".$data['arrayCampos'][$index]."%'";
+                            }else{
+                                $addWhere.=" ".$camposBase[$index]." LIKE '%".$data['arrayCampos'][$index]."%'";    
+                            }
+                        }
 
                     }
                 }
@@ -247,8 +310,8 @@ class Aps extends Controller
         
         $getOrders = $this->apModel->getData($data['offset'],$data['per_page'],$addWhere,$data['order_by']);
 
-        $data['fields']=$getOrders;
-    
+        $data['fields']=($getOrders)?$getOrders:0;
+        //print_r($data);
         echo json_encode($data);
         //return $getOrders;
         
@@ -326,6 +389,23 @@ class Aps extends Controller
 			$out.= "</ul>";
 			return $out;
 		}
+
+        function build_search_query($search_terms, $fieldsArray)
+        {
+            $terms = explode(' ', $search_terms);
+            $conditions = array();
+            $term_conditions = [];
+
+            foreach ($terms as $term) {
+
+                for ($i = 0; $i < count($fieldsArray); $i++)
+                    array_push($term_conditions, "" . $fieldsArray[$i] . " LIKE '%" . addslashes($term) . "%'"); // create the query for each field Ex. firstName LIKE '%test%'
+
+                $conditions[] = "(" . implode(" OR ", $term_conditions) . ")";
+            }
+
+            return implode(" AND ", $conditions);
+        }
 
         public function getApTypes(){
            $row = $this->apModel->getAllApTypes();

@@ -18,6 +18,11 @@ class Ap {
         return $response;
         }
 
+    public function updateLeave($data){
+        $response = $this->db->updateQuery("hr_surgepays.ap_details",$data,"apDetailsId=:apDetailsId");
+        return $response;
+    }
+
     public function searchEmployeeByBadge($badge){
         $this->db->query("SELECT e.employeeId,CONCAT(COALESCE(e.firstName, ''), ' ', COALESCE(e.secondName, ''), ' ', COALESCE(e.firstLastName, ''), ' ', COALESCE(e.secondLastName, '')) AS fullname,p.positionName,d.name as departmentName,p.positionId,d.departmentId FROM hr_surgepays.employees e
             JOIN hr_surgepays.positions p ON p.positionId = e.positionId
@@ -108,21 +113,51 @@ class Ap {
     public function getData($offset,$per_page,$search,$orderby){
 		$date_now = date('Y-m-d').'%';
 		//echo "select firstname,lastname,email_address,email_status,CAST(email_open_datetime AS DATE) as date_opened,delivered,received,unsubscribe from mailCampaigns.contacts  ORDER BY $orderby limit $offset,$per_page;";
-			
+		//echo "SELECT a.apDetailsId,concat(e.firstName,' ',e.firstLastName) as fullName,a.badge,date(a.createdAt) as createdAt,u.username,t.name,a.status FROM hr_surgepays.ap_details a JOIN hr_surgepays.employees e ON e.badge=a.badge JOIN hr_surgepays.users u ON u.userId=a.createdBy JOIN hr_surgepays.ap_types t ON t.apTypeId = a.apTypeId WHERE ".$search."   ORDER BY ".$orderby;
 
 				if ($search!="") {
-					$this->db->query("SELECT a.apDetailsId,concat(e.firstName,' ',e.firstLastName) as fullName,a.badge,date(a.createdAt) as createdAt,u.username,t.name,a.status
-                                FROM hr_surgepays.ap_details a
-                                JOIN hr_surgepays.employees e ON e.badge=a.badge
-                                JOIN hr_surgepays.users u ON u.userId=a.createdBy
-                                JOIN hr_surgepays.ap_types t ON t.apTypeId = a.apTypeId WHERE $search   ORDER BY $orderby  limit $offset,$per_page;");
+					$this->db->query("SELECT 
+    a.apDetailsId,
+    CONCAT(e.firstName, ' ', e.firstLastName) AS fullName,
+    a.badge,
+    DATE(a.createdAt) AS createdAt,
+    u.username,
+    t.name,
+    a.aprovedByM,
+    a.aprovedByHR,
+    a.aprovedByWf,
+    a.aprovedBySup,
+    a.printed
+FROM
+    hr_surgepays.ap_details a
+        JOIN
+    hr_surgepays.employees e ON e.badge = a.badge
+        JOIN
+    hr_surgepays.users u ON u.userId = a.createdBy
+        JOIN
+    hr_surgepays.ap_types t ON t.apTypeId = a.apTypeId WHERE $search   ORDER BY $orderby  limit $offset,$per_page;");
 					
 				}else{
-					$this->db->query("SELECT a.apDetailsId,concat(e.firstName,' ',e.firstLastName) as fullName,a.badge,date(a.createdAt) as createdAt,u.username,t.name,a.status
-                                FROM hr_surgepays.ap_details a
-                                JOIN hr_surgepays.employees e ON e.badge=a.badge
-                                JOIN hr_surgepays.users u ON u.userId=a.createdBy
-                                JOIN hr_surgepays.ap_types t ON t.apTypeId = a.apTypeId ORDER BY $orderby limit $offset,$per_page;");
+					$this->db->query("SELECT 
+    a.apDetailsId,
+    CONCAT(e.firstName, ' ', e.firstLastName) AS fullName,
+    a.badge,
+    DATE(a.createdAt) AS createdAt,
+    u.username,
+    t.name,
+    a.aprovedByM,
+    a.aprovedByHR,
+    a.aprovedByWf,
+    a.aprovedBySup,
+    a.printed
+FROM
+    hr_surgepays.ap_details a
+        JOIN
+    hr_surgepays.employees e ON e.badge = a.badge
+        JOIN
+    hr_surgepays.users u ON u.userId = a.createdBy
+        JOIN
+    hr_surgepays.ap_types t ON t.apTypeId = a.apTypeId ORDER BY $orderby limit $offset,$per_page;");
 					
 				}				
 			

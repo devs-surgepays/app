@@ -1,5 +1,12 @@
 <?php require APPROOT . '/views/inc/header.php'; ?>
-
+<style>
+.list-inline{
+  list-style-type: none; /* Remove bullets */
+}
+.list-inline li {
+  display: inline-block;
+}
+</style>
 <div class="container">
   <div class="page-inner">
     <div class="row">
@@ -10,12 +17,71 @@
               <h4 class="card-title">Manage Leaves</h4>
               <button class="btn btn-primary btn-round ms-auto" data-bs-toggle="modal" data-bs-target="#addRowModal">
                 <i class="fa fa-plus"></i>
-                Crear AP
+                Create New Leave
               </button>
             </div>
           </div>
           <div class="card-body">
-            <!-- Modal -->
+          
+            <div class="modal fade" id="approveModal" tabindex="-1" role="dialog" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header border-0">
+                    <h5 class="modal-title">
+                      <span class="fw-mediumbold"> Leave</span>
+                      <span class="fw-light"> Approval </span>
+                      </h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <form action="#" id="approveForm" method="POST" enctype>
+                  <div class="modal-body">
+                  <p class="small">Give your approval feedback for this Leave</p>
+                  <p>Leave #: <span id="showId"></span></p>
+                    <ul class="list-inline text-center">
+                      <li>
+                        <div class="form-check">
+                          <input class="form-check-input" type="radio" name="approval" id="apApproved" value="1">
+                          <label class="form-check-label" for="apApproved">
+                          <span class="badge text-bg-success"><i class="fa fa-check"></i> Approve</span>
+                          </label>
+                        </div>
+                      </li>
+                      <li>
+                        <div class="form-check">
+                          <input class="form-check-input" type="radio" name="approval" id="apReject" value="2">
+                          <label class="form-check-label" for="apReject">
+                          <span class="badge text-bg-danger"><i class="fa fa-times"></i> Reject</span>
+                          </label>
+                        </div>
+                      </li>
+                      <li>
+                        <div class="form-check">
+                          <input class="form-check-input" type="radio" name="approval" id="apCancel" value="3">
+                          <label class="form-check-label" for="apCancel">
+                          <span class="badge text-bg-secondary"><i class="fa fa-ban"></i> Cancel</span>
+                          </label>
+                        </div>
+                      </li>
+                    </ul>
+                    <label id="approval-error" class="error" for="approval"></label>
+                      <?php //echo $_SESSION['permissionLevelId']; ?> 
+                  </div>
+                  <div class="modal-footer border-0">
+                    <button type="submit" id="saveApApproval" class="btn btn-primary">
+                      Save
+                    </button>
+                    <button type="button" class="btn btn-danger closeModal" data-dismiss="modal">
+                      Close
+                    </button>
+                  </div>
+                  <input type="hidden" id="leave_id" name="leave_id">
+                  </form>
+                </div>
+              </div>
+            </div>
+            <!--Add Modal -->
             <div class="modal fade" id="addRowModal" tabindex="-1" role="dialog" aria-hidden="true">
               <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
@@ -37,7 +103,7 @@
                       <div class="row">
                         <div class="col-sm-12">
                           <div id="badgeDiv" class="form-floating  form-floating-custom mb-3">
-                            <input id="addbadge" name="addbadge" type="text" class="form-control" placeholder="Badge" onchange="getData()" />
+                            <input id="addbadge" name="addbadge" type="text" class="form-control" placeholder="Badge" onkeyup="getData()" />
                             <label for="addbadge">Badge</label>
                             <div id="msgArea"></div>
                           </div>
@@ -427,41 +493,6 @@
                               <label>Motivo</label>
                             </div>
                           </div>
-							   <!-- <div class="col-sm-12">
-								   <p>Razón por la que solicita el cambio de día libre</p>
-							   		<div class="form-check">	
-										<input type="checkbox" class="form-check-input" value="Consulta Medica/Motivos de salud" id="dnotes1" name="dnotes1"> 
-										<label  class="form-check-label" for="dnotes1"> Consulta Medica/Motivos de salud </label>
-									</div>
-								   <div class="form-check">	
-										<input type="checkbox" class="form-check-input" value="Motivos Académicos" id="dnotes2" name="dnotes2"> 
-										<label  class="form-check-label" for="dnotes2">Motivos Académicos</label>
-									</div>
-								   <div class="form-check">	
-										<input type="checkbox" class="form-check-input" value="Emergencia Familiar" id="dnotes3" name="dnotes3"> 
-										<label  class="form-check-label" for="dnotes3">Emergencia Familiar</label>
-									</div>
-								   <div class="form-check">	
-										<input type="checkbox" class="form-check-input" value="Enfermedad de Familiar" id="dnotes4" name="dnotes4"> 
-										<label  class="form-check-label" for="dnotes4">Enfermedad de Familiar</label>
-									</div>
-								   <div class="form-check">	
-										<input type="checkbox" class="form-check-input" value="Requerimiento del trabajo" id="dnotes5" name="dnotes5"> 
-										<label  class="form-check-label" for="dnotes5">Requerimiento del trabajo</label>
-									</div>
-								   <div class="form-check">	
-										<input type="checkbox" class="form-check-input" value="Cambio Temporal" id="dnotes6" name="dnotes6"> 
-										<label  class="form-check-label" for="dnotes6">Cambio Temporal</label>
-									</div>
-								   <div class="form-check">	
-										<input type="checkbox" class="form-check-input" value="Motivos Legales" id="dnotes7" name="dnotes7"> 
-										<label  class="form-check-label" for="dnotes7">Motivos Legales</label>
-									</div>
-								   <div class="form-check">	
-										<input type="checkbox" class="form-check-input" value="Otros" id="dnotes8" name="dnotes8"> 
-										<label  class="form-check-label" for="dnotes8">Otros</label>
-									</div>
-							   </div> -->
 						  </div>
 						  <div id="ausencia" class="toggleable">
 							   <div class="col-sm-12">
@@ -597,13 +628,16 @@
               <table id="add-row" class="display table table-striped table-hover">
                 <thead>
                   <tr>
-                    <th>#</th>
+                    <th>Leave #</th>
                     <th>Employee Name</th>
                     <th>Badge</th>
                     <th>Created At</th>
                     <th>Created By</th>
                     <th>Leave Type</th>
-                    <th>Status</th>
+                    <th>By M</th>
+                    <th>By HR</th>
+                    <th>By WF</th>
+                    <th>By Sup</th>
                     <th style="width: 10%">Action</th>
                   </tr>
                   <tr>
@@ -623,89 +657,47 @@
                       </select>
                     </td>
                     <td>
-                      <select id="searchStatus" type="text" class="form-control grid-filter">
+                      <select id="searchByM" type="text" class="form-control grid-filter">
                         <option value="">Select...</option>
                         <option value="0">Pending</option>
                         <option value="1">Approved</option>
                         <option value="3">Rejected</option>
                       </select>
-                    </td> 
+                    </td>
+                    <td>
+                      <select id="searchByHR" type="text" class="form-control grid-filter">
+                        <option value="">Select...</option>
+                        <option value="0">Pending</option>
+                        <option value="1">Approved</option>
+                        <option value="3">Rejected</option>
+                      </select>
+                    </td>
+                    <td>
+                      <select id="searchByWF" type="text" class="form-control grid-filter">
+                        <option value="">Select...</option>
+                        <option value="0">Pending</option>
+                        <option value="1">Approved</option>
+                        <option value="3">Rejected</option>
+                      </select>
+                    </td>
+                    <td>
+                      <select id="searchBySup" type="text" class="form-control grid-filter">
+                        <option value="">Select...</option>
+                        <option value="0">Pending</option>
+                        <option value="1">Approved</option>
+                        <option value="3">Rejected</option>
+                      </select>
+                    </td>
                     <td style="text-align:center;">
                     <img style="cursor: pointer;" onclick="resetform()" src="http://localhost/surge-hr/assets/img/clear-filter.png" width="25" height="25">
                     </td>                 
                   </tr>
                 </thead>
-                <!-- <tfoot>
-                          <tr>
-                            <th>Name</th>
-                            <th>Position</th>
-                            <th>Office</th>
-                            <th>Action</th>
-                          </tr>
-                        </tfoot> -->
                         <tbody id="gridBody">
                                             
 											
 											</tbody>
-                <!-- <tbody>
-                  <tr>
-                    <td>Tiger Nixon</td>
-                    <td>12345</td>
-                    <td>02/02/1994</td>
-                    <td>jlinares</td>
-                    <td>Permiso con Goce</td>
-                    <td><span class="badge badge-warning">Pending</span></td>
-                    <td>
-                      <div class="form-button-action">
-                        <button type="button" data-bs-target="tooltip" title="" class="btn btn-link btn-primary btn-lg" data-originall-title="check"><i class="fas fa-check-double"></i></button>
-                        <button type="button" data-bs-toggle="tooltip" title="" class="btn btn-link btn-primary btn-lg" data-original-title="Edit Task">
-                          <i class="fa fa-edit"></i>
-                        </button>
-                        <button type="button" data-bs-toggle="tooltip" title="" class="btn btn-link btn-danger" data-original-title="Remove">
-                          <i class="fa fa-times"></i>
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>Charles Mingus</td>
-                    <td>12345</td>
-                    <td>02/02/1994</td>
-                    <td>jlinares</td>
-                    <td>Permiso con Goce</td>
-                    <td><span class="badge badge-danger">Reject</span></td>
-                    <td>
-                      <div class="form-button-action">
-                        <button type="button" data-bs-target="tooltip" title="" class="btn btn-link btn-primary btn-lg" data-originall-title="check"><i class="fas fa-check-double"></i></button>
-                        <button type="button" data-bs-toggle="tooltip" title="" class="btn btn-link btn-primary btn-lg" data-original-title="Edit Task">
-                          <i class="fa fa-edit"></i>
-                        </button>
-                        <button type="button" data-bs-toggle="tooltip" title="" class="btn btn-link btn-danger" data-original-title="Remove">
-                          <i class="fa fa-times"></i>
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>Charles Mingus</td>
-                    <td>12345</td>
-                    <td>02/02/1994</td>
-                    <td>jlinares</td>
-                    <td>Permiso con Goce</td>
-                    <td><span class="badge badge-success">Approved</span></td>
-                    <td>
-                      <div class="form-button-action">
-                        <button type="button" data-bs-target="tooltip" title="" class="btn btn-link btn-primary btn-lg" data-originall-title="check"><i class="fas fa-check-double"></i></button>
-                        <button type="button" data-bs-toggle="tooltip" title="" class="btn btn-link btn-primary btn-lg" data-original-title="Edit Task">
-                          <i class="fa fa-edit"></i>
-                        </button>
-                        <button type="button" data-bs-toggle="tooltip" title="" class="btn btn-link btn-danger" data-original-title="Remove">
-                          <i class="fa fa-times"></i>
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                </tbody> -->
+               
               </table>
             </div>
 
@@ -733,6 +725,12 @@
 
 function resetform(){
   $(".grid-filter").val("");
+  $('#searchCreatedAt').daterangepicker({
+      opens: 'left'
+    // }, function(start, end, label) {
+    //   console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+    // });
+  });
 }
 
 $(".grid-filter").on("change",function(){
@@ -743,21 +741,23 @@ $(".grid-filter").on("change",function(){
 })
 
   $(function() {
-  $('#searchCreatedAt').daterangepicker({
-    opens: 'left'
-  }, function(start, end, label) {
-    console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+    $('#searchCreatedAt').daterangepicker({
+      opens: 'left'
+    // }, function(start, end, label) {
+    //   console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+    // });
   });
 });
 
   $('.money2').mask("#,##0.00", {reverse: true});
 	const addForm = $("#createApForm")
+  const approveForm = $("#approveForm")
 	const initialState = {};
   $(document).ready(function() {
 
     setleaveTime()
     hideAllAndShow("")
-    var nowhere = "";
+    var nowhere = camposValue();
     var example_length = 10;
     var camposAscDesc = "";
 	  var	firstload='YES';
@@ -779,6 +779,8 @@ $(".grid-filter").on("change",function(){
       if ($(this).data('dismiss') == "modal") {
         $(".modal").modal("hide");
         $('#createApForm')[0].reset();
+        $('#approveForm')[0].reset();
+        $("#approval-error").html('');
 		  hideAllAndShow("")
       }
 
@@ -787,6 +789,8 @@ $(".grid-filter").on("change",function(){
     $(".close").click(function() {
       $(".modal").modal("hide");
       $('#createApForm')[0].reset();
+      $('#approveForm')[0].reset();
+      $("#approval-error").html('');
     });
 	  
 	  
@@ -1405,14 +1409,17 @@ function load(page,where='',example_length,camposAscDesc,firstload=''){
 
 		success:function(data){
 			
-			//console.log(data);
+			
 			$("#gridBody").empty();
 			const result = document.getElementById('gridBody');
 			
 			var resultObj = JSON.parse(data);
-			
-			if(resultObj.fields.lentgh<1){
-				result.innerHTML = "NO RECORDS FOUND";
+			console.log(resultObj.fields==0);
+			if(resultObj.fields==0){
+        row = result.insertRow(0);
+				cell= row.insertCell(0);
+				cell.innerHTML = "<p>NO RECORDS FOUND</p>";
+        cell.colSpan = 11
 			}else{
 				
 			
@@ -1422,6 +1429,8 @@ function load(page,where='',example_length,camposAscDesc,firstload=''){
 			var f,cnum;
 			var i = 0;
 			var c = 1;
+      var printButton="";
+      var enable="";
 			$.each(resultObj.fields, function(k, v) {
 				
 				//console.log(v);
@@ -1436,42 +1445,101 @@ function load(page,where='',example_length,camposAscDesc,firstload=''){
 				cell5 = row.insertCell(5);
 				cell6 = row.insertCell(6);
 				cell7 = row.insertCell(7);
-				/*cell8 = row.insertCell(8);
+				cell8 = row.insertCell(8);
 				cell9 = row.insertCell(9);
 				cell10 = row.insertCell(10);
-				cell11 = row.insertCell(11);
+				/*cell11 = row.insertCell(11);
 				cell12 = row.insertCell(12);
 				cell13 = row.insertCell(13);
 				cell14 = row.insertCell(14);
 				cell15 = row.insertCell(15);
 				cell15 = row.insertCell(15);*/
 				
-				cell.innerHTML = cnum;
+				//cell.innerHTML = cnum;
+        cell.innerHTML = v.apDetailsId
 				cell1.innerHTML = v.fullName;
 				cell2.innerHTML = v.badge;
 				cell3.innerHTML = v.createdAt;
 				cell4.innerHTML = v.username;
 				cell5.innerHTML = v.name;
-        switch(v.status){
+        switch(v.aprovedByM){
           case 1:
             cell6.innerHTML = '<span class="badge badge-success">Approved</span>';
+            printButton = `<button type="button" class="btn btn-link btn-info">
+                          <i class="fa fa-print"></i>
+                        </button>`;
             break;
           case 2:
-            cell6.innerHTML = '<span class="badge badge-danger">Reject</span>';
+            cell6.innerHTML = '<span class="badge badge-danger">Rejected</span>';
+            break;
+          case 3:
+            cell6.innerHTML = '<span class="badge badge-secondary">Cancelled</span>';
             break;
           default:
             cell6.innerHTML = '<span class="badge badge-warning">Pending</span>';
+        
             break;
         }
+        switch(v.aprovedByHR){
+          case 1:
+            cell7.innerHTML = '<span class="badge badge-success">Approved</span>';
+            printButton = `<button type="button" class="btn btn-link btn-info">
+                         <i class="fa fa-print"></i>
+                        </button>`;
+            
+            break;
+          case 2:
+            cell7.innerHTML = '<span class="badge badge-danger">Rejected</span>';
+            break;
+          case 3:
+            cell7.innerHTML = '<span class="badge badge-secondary">Cancelled</span>';
+            break;
+          default:
+            cell7.innerHTML = '<span class="badge badge-warning">Pending</span>';
+            
+            break;
+        }
+        switch(v.aprovedByWF){
+          case 1:
+            cell8.innerHTML = '<span class="badge badge-success">Approved</span>';
+            break;
+          case 2:
+            cell8.innerHTML = '<span class="badge badge-danger">Rejected</span>';
+            break;
+          case 3:
+            cell8.innerHTML = '<span class="badge badge-secondary">Cancelled</span>';
+            break;
+          default:
+            cell8.innerHTML = '<span class="badge badge-warning">Pending</span>';
+            
+            break;
+        }
+        switch(v.aprovedBySup){
+          case 1:
+            cell9.innerHTML = '<span class="badge badge-success">Approved</span>';
+            break;
+          case 2:
+            cell9.innerHTML = '<span class="badge badge-danger">Rejected</span>';
+            break;
+          case 3:
+            cell9.innerHTML = '<span class="badge badge-secondary">Cancelled</span>';
+            break;
+          default:
+            cell9.innerHTML = '<span class="badge badge-warning">Pending</span>';
+            
+            break;
+        }
+
+        if(v.aprovedByM>=1 || v.aprovedByHR>=1){
+          enable="disabled";
+        }
 				
-				cell7.innerHTML = `<div class="form-button-action">
-                        <button type="button" data-bs-target="tooltip" title="" class="btn btn-link btn-primary btn-lg" data-originall-title="check"><i class="fas fa-check-double"></i></button>
-                        <button type="button" data-bs-toggle="tooltip" title="" class="btn btn-link btn-primary btn-lg" data-original-title="Edit Task">
+				cell10.innerHTML = `<div class="form-button-action">
+                        <button type="button" title="" class="btn btn-link btn-lg aproveModal" data-leaveId="${v.apDetailsId}" data-bs-toggle="modal" data-bs-target="#approveModal" ${enable}><i class="fas fa-check-double"></i></button>
+                        <button type="button" class="btn btn-link btn-warning btn-lg">
                           <i class="fa fa-edit"></i>
                         </button>
-                        <button type="button" data-bs-toggle="tooltip" title="" class="btn btn-link btn-danger" data-original-title="Remove">
-                          <i class="fa fa-times"></i>
-                        </button>
+                        ${printButton}
                       </div>`;
 				/*cell8.innerHTML = v.address2;
 				cell7.innerHTML = v.city;
@@ -1488,67 +1556,130 @@ function load(page,where='',example_length,camposAscDesc,firstload=''){
 				
 				i++;
 				c++;
+        printButton="";
+        enable="";
 			})
 				
 				$("#toShow").html('<p>Showing '+resultObj.offsetToShow+' to '+ cnum + ' of '+resultObj.numrows+'</p>');
 			
 			$("#pagination").html(resultObj.pagination);
 			}
-			
-			// if(where!=""){
-
-			// 	document.getElementById("customer_id").value = where[0];
-
-			// 	document.getElementById("first_name").value = where[1];
-				
-			// 	document.getElementById("second_name").value = where[2];
-				
-			// 	document.getElementById("phone_number").value = where[3];
-				
-			// 	document.getElementById("email").value = where[4];
-				
-			// 	document.getElementById("dob").value = where[5];
-				
-			// 	document.getElementById("city").value = where[6];
-				
-			// 	document.getElementById("state").value = where[7];
-			// 	document.getElementById("zipcode").value = where[8];
-			// 	document.getElementById("order_id").value = where[9];
-			// 	document.getElementById("program_benefit").value = where[10];
-			// 	document.getElementById("date_create").value = where[11];
-			// 	document.getElementById("source").value = where[12];
-
-			// }
 
 		}
 
 	})
 
 }
-/*function getChangedFields() {
-    var changedFields = {};
-    var ignoredFields = [
-        'antecedentesPenales_delete',
-        'solvenciaPNC_delete',
-        'contract_delete',
-        'expediente_delete',
-        'antecedentesPenales',
-        'solvenciaPNC',
-        'contract',
-        'expediente',
-    ]; // Lista de campos a ignorar
 
 
-    $('#addAPButton').find('input, select, textarea').each(function() {
-        var name = $(this).attr('name');
-        if (name && initialState.hasOwnProperty(name) && !ignoredFields.includes(name)) {
-            var currentValue = $(this).val();
-            var initialValue = initialState[name] == null ? '' : initialState[name];
-            if (currentValue !== initialValue) {
-                changedFields[name] = currentValue;
-            }
+function camposValue(){
+		var ArrayCampos=[];
+
+		var name = $( "#searchFullname" ).val();
+		var badge = $( "#searchBadge" ).val();
+		var bydate = $( "#searchCreatedAt" ).val();
+    var spltDate = bydate.split("-")
+  var start,end;
+   start = spltDate[0].trim()
+   end = spltDate[1].trim()
+	var user = $( "#searchCreatedBy" ).val();
+	var aptype = $( "#searchLeaveType" ).val();
+	var status_m = $( "#searchByM" ).val();
+  var status_hr = $( "#searchByHR" ).val();
+  var status_wf = $( "#searchByWF" ).val();
+  var status_sup = $( "#searchBySup" ).val();
+
+		var ArrayCampos = [
+			name,
+			badge,
+      bydate,
+			user,
+			aptype,
+			status_m,
+      status_hr,
+      status_wf,
+      status_sup
+		];
+
+		return ArrayCampos;
+	}
+	
+	$( ".grid-filter" ).change(function() {
+	var myArray = camposValue();
+	console.log(myArray);
+	var camposAscDesc = '';
+    var example_length = 10;
+    load(1,myArray,example_length,camposAscDesc,'');
+	
+});
+
+$(document).on('click', '.aproveModal', function(){
+  var leaveId = $(this).data("leaveid");
+  $("#showId").html(leaveId)
+  $("#leave_id").val(leaveId)
+  //console.log(leaveId)
+})
+
+approveForm.validate({
+  rules:{
+    approval:{
+      required:true
+    }
+  },
+  messages:{
+    approval:"This field is required, please select one status"
+  }
+});
+
+$("#saveApApproval").on("click",function(e){
+  e.preventDefault();
+  if (approveForm.valid()) {
+		  //var changedFields = getChangedFields();
+      //var jsonChangedFields = JSON.stringify(changedFields);
+      //console.table(changedFields)
+      var approveValue=$("input[type='radio'][name='approval']:checked").val();
+      var leaveId = $("#leave_id").val();
+      console.log(approveValue);
+      $.ajax({
+        url:"<?php echo URLROOT; ?>/aps/approveAP",
+        type:"POST",
+        data:{status:approveValue,id:leaveId},
+        success:function(data){
+          console.log(data)
+          var myObj = JSON.parse(data)
+          if(myObj.status=="success"){
+            swal(myObj.message, {
+                                icon: "success",
+                               buttons: {
+                                   confirm: {
+                                       className: "btn btn-success",
+                                   },
+                               },
+                           }).then((willReload) => {
+                               if (willReload) {
+                                 $(".modal").modal("hide");
+                                 $('#approveForm')[0].reset();
+		                             //hideAllAndShow("")
+                                   //location.reload();
+                                   var myArray = camposValue();
+                                    console.log(myArray);
+                                    var camposAscDesc = '';
+                                      var example_length = 10;
+                                      load(1,myArray,example_length,camposAscDesc,'');
+                               }
+                           });
+          }else{
+           swal('Error', obj.message, {
+                                icon: "error",
+                                buttons: {
+                                    confirm: {
+                                        className: "btn btn-danger",
+                                    },
+                                },
+                            }); 
+          }
         }
-    });
-    return changedFields;
-}*/
+      })
+		}
+})
 </script>

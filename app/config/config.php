@@ -1,10 +1,10 @@
 <?php
-define('ENVIRONMENT', 'prod');
+define('ENVIRONMENT', 'dev');
 
 if (ENVIRONMENT == 'development' || ENVIRONMENT == 'dev') {
  
-  error_reporting(E_ALL);
-  ini_set("display_errors", 1);
+  //error_reporting(E_ALL);
+  //ini_set("display_errors", 1);
 
   $host = 'localhost';
   $user = 'root';
