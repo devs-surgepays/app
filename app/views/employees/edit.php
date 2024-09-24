@@ -8,6 +8,7 @@ $banks = (isset($data['banks']) && $data['banks'] != NULL) ? $data['banks'] : []
 $afps = (isset($data['afps']) && $data['afps'] != NULL) ? $data['afps'] : [];
 $areas = (isset($data['areas']) && $data['areas'] != NULL) ? $data['areas'] : [];
 $bills = (isset($data['bills']) && $data['bills'] != NULL) ? $data['bills'] : [];
+$typesDocuments = (isset($data['typesDocuments']) && $data['typesDocuments'] != NULL) ? $data['typesDocuments'] : [];
 $employeeInfo = (isset($data['employeeInfo']) && $data['employeeInfo'] != NULL) ? $data['employeeInfo'] : [];
 $superiors = (isset($data['superiors']) && $data['superiors'] != NULL) ? $data['superiors'] : [];
 $employeeSchedule = (isset($data['employeeSchedule']) && $data['employeeSchedule'] != NULL) ? $data['employeeSchedule'] : [];
@@ -15,22 +16,7 @@ $employeeEmergencyContacts = (isset($data['employeeEmergencyContacts']) && $data
 $data['employeeInfo']['contactPhone'] = (isset($data['employeeInfo']['contactPhone']) && $data['employeeInfo']['contactPhone'] != NULL) ? preg_replace('/^(.{4})/', '$1' . "-", $data['employeeInfo']['contactPhone']) : '';
 $relationship = (isset($data['relationship']) && $data['relationship'] != NULL) ? $data['relationship'] : [];
 $financialDependents = (isset($data['financialDependents']) && $data['financialDependents'] != NULL) ? $data['financialDependents'] : [];
-
 $employeeDocumentsInfo = (isset($data['employeeDocumentsInfo']) && $data['employeeDocumentsInfo'] != NULL) ? $data['employeeDocumentsInfo'] : [];
-
-$antecedentesPenalesPreview = '';
-$solvenciaPNCPreview = '';
-$contractPreview = '';
-$govIdPreview = '';
-
-for ($i = 0; $i < count($employeeDocumentsInfo); $i++) {
-    $documentTypeId = $employeeDocumentsInfo[$i]['documentTypeId'];
-    $document = $employeeDocumentsInfo[$i]['document'];
-    if ($documentTypeId == 3) $antecedentesPenalesPreview .= '<a href="' . URLROOT . '/public/documents/antecedentesPenales/' . $document . '" target="_BLANK" ><i class="fa fa-file-pdf"></i> Antecedentes Penales</a>  <button onClick="removeFile(3)" type="button" class="btn">X</button>';
-    if ($documentTypeId == 4) $solvenciaPNCPreview .= '<a href="' . URLROOT . '/public/documents/solvenciaPNC/' . $document . '" target="_BLANK" ><i class="fa fa-file-pdf"></i> Solvencia PNC</a>  <button onClick="removeFile(4)" type="button" class="btn">X</button>';
-    if ($documentTypeId == 5) $govIdPreview .= '<a href="' . URLROOT . '/public/documents/govId/' . $document . '" target="_BLANK" ><i class="fa fa-file-pdf"></i> govId</a>  <button onClick="removeFile(5)" type="button" class="btn">X</button>';
-    if ($documentTypeId == 6) $contractPreview .= '<a href="' . URLROOT . '/public/documents/contract/' . $document . '" target="_BLANK" ><i class="fa fa-file-pdf"></i> Contract</a>  <button onClick="removeFile(6)" type="button" class="btn">X</button>';
-}
 
 ?>
 <style>
@@ -131,11 +117,18 @@ for ($i = 0; $i < count($employeeDocumentsInfo); $i++) {
         padding-top: 12px !important;
         margin: 0 0 0 6px !important;
     }
+
     .hr-color {
         color: #cfcfcf;
     }
+
     .cursor-unset {
         cursor: unset;
+    }
+
+    .dropzoneMax {
+        max-width: 96%;
+        margin-left: 2%;
     }
 </style>
 
@@ -162,6 +155,10 @@ for ($i = 0; $i < count($employeeDocumentsInfo); $i++) {
                         <a class="nav-link" id="tab-general-information" data-bs-toggle="pill" href="#general-information" role="tab" aria-controls="general-information" aria-selected="false" tabindex="-1">General Information</a>
                     </li>
                     <li class="nav-item submenu" role="presentation">
+                        <a class="nav-link" id="tab-employee-documents" data-bs-toggle="pill" href="#employee-documents" role="tab" aria-controls="employee-documents" aria-selected="false" tabindex="-1">Documents</a>
+                    </li>
+
+                    <li class="nav-item submenu" role="presentation">
                         <a class="nav-link" id="tab-schedule" data-bs-toggle="pill" href="#schedule" role="tab" aria-controls="schedule" aria-selected="false" tabindex="-1">Schedule</a>
                     </li>
                     <li class="nav-item submenu" role="presentation">
@@ -176,8 +173,6 @@ for ($i = 0; $i < count($employeeDocumentsInfo); $i++) {
 
                     <!-- General Information -->
                     <div class="tab-pane fade" id="general-information" role="tabpanel" aria-labelledby="tab-general-information">
-
-                        <!-- Form editEmployee General Information -->
                         <form id="editEmployee" method="POST" action="#" enctype="multipart/form-data">
                             <div class="row">
                                 <div class="col-md-6 col-xl-6 col-sm-12">
@@ -185,7 +180,7 @@ for ($i = 0; $i < count($employeeDocumentsInfo); $i++) {
                                         <div class="card-header">
                                             <h5>Personal Detail</h5>
                                         </div>
-                                        <div class="card-body" style="min-height: 880px;">
+                                        <div class="card-body">
                                             <!-- Name -->
                                             <div class="row">
                                                 <div class="col-4">
@@ -248,7 +243,6 @@ for ($i = 0; $i < count($employeeDocumentsInfo); $i++) {
                                                         <input type="text" value="<?php echo $data['employeeInfo']['homePhone']; ?>" class="form-control phoneMark" id="homePhone" name="homePhone" placeholder="Contact Phone">
                                                         <label for="homePhone">Home Phone
                                                             <label id="homePhone-error" class="error" for="homePhone"></label></label>
-
                                                     </div>
                                                 </div>
                                             </div>
@@ -431,8 +425,8 @@ for ($i = 0; $i < count($employeeDocumentsInfo); $i++) {
                                                     </div>
                                                 </div>
                                             </div>
-                                            <!-- BACKGROUND -->
-                                            <div class="row pt-3">
+                                            <!-- Education Level -->
+                                            <div class="row pt-3" style="min-height: 135px;">
                                                 <div class="col-6">
                                                     <div class="form-floating form-floating-custom mb-3">
                                                         <input type="text" value="<?php echo $data['employeeInfo']['educationLevel']; ?>" class="form-control" id="educationLevel" name="educationLevel" placeholder="educationLevel">
@@ -449,50 +443,71 @@ for ($i = 0; $i < count($employeeDocumentsInfo); $i++) {
                                         </div>
                                     </div>
 
-                                    <!-- documents -->
                                     <div class="card">
                                         <div class="card-header">
-                                            <h5>Document</h5>
+                                            <h5>Bank Account Detail / AFP</h5>
                                         </div>
-                                        <div class="card-body">
-                                            <div class="row">
+                                        <div class="card-body" style="min-height: 317px;">
+                                            <!-- Bank -->
+                                            <div class="row ">
                                                 <div class="col-6">
-                                                    <div class="file-input">
-                                                        <label for="antecedentesPenales">Antecedentes Penales:</label><br>
-                                                        <input type="file" id="antecedentesPenales" name="antecedentesPenales" accept="application/pdf">
-                                                        <button type="button" class="file-button" onclick="document.getElementById('antecedentesPenales').click();">Select File <i class="fa fa-upload"></i></button>
-                                                        <input type="hidden" id="antecedentesPenales_delete" name="antecedentesPenales_delete">
-                                                        <div id="antecedentesPenales-preview" class="preview"><?php echo $antecedentesPenalesPreview; ?></div>
-                                                    </div>
-                                                    <div class="file-input">
-                                                        <label for="solvenciaPNC">Solvencia PNC:</label><br>
-                                                        <input type="file" id="solvenciaPNC" name="solvenciaPNC" accept="application/pdf">
-                                                        <button type="button" class="file-button" onclick="document.getElementById('solvenciaPNC').click();">Select File <i class="fa fa-upload"></i></button>
-                                                        <input type="hidden" id="solvenciaPNC_delete" name="solvenciaPNC_delete">
-                                                        <div id="solvenciaPNC-preview" class="preview"><?php echo $solvenciaPNCPreview; ?></div>
+                                                    <div class="form-floating form-floating-custom mb-3">
+                                                        <select name="bankId" id="bankId" class="form-control">
+                                                            <option value="">Select</option>
+                                                            <?php for ($i = 0; $i < count($banks); $i++) {
+                                                                $select = ($banks[$i]['bankId'] == $data['employeeInfo']['bankId']) ? 'selected' : '';
+                                                                echo '<option ' . $select . ' value="' . $banks[$i]['bankId'] . '">' . $banks[$i]['name'] . '</option>';
+                                                            } ?>
+                                                        </select>
+                                                        <label for="bankId">Bank</label>
                                                     </div>
                                                 </div>
                                                 <div class="col-6">
-                                                    <div class="file-input">
-                                                        <label for="contract">Contract:</label><br>
-                                                        <input type="file" id="contract" name="contract" accept="application/pdf">
-                                                        <button type="button" class="file-button" onclick="document.getElementById('contract').click();">Select File <i class="fa fa-upload"></i></button>
-                                                        <input type="hidden" id="contract_delete" name="contract_delete">
-                                                        <div id="contract-preview" class="preview"><?php echo $contractPreview; ?></div>
+                                                    <div class="form-floating form-floating-custom mb-3">
+                                                        <input type="number" value="<?php echo $data['employeeInfo']['bankAccount']; ?>" class="form-control" id="bankAccount" name="bankAccount">
+                                                        <label for="bankAccount">Bank Account</label>
                                                     </div>
-                                                    <div class="file-input">
-                                                        <label for="govId">Gov ID:</label><br>
-                                                        <input type="file" id="govId" name="govId" accept="application/pdf">
-                                                        <button type="button" class="file-button" onclick="document.getElementById('govId').click();">Select File <i class="fa fa-upload"></i></button>
-                                                        <input type="hidden" id="govId_delete" name="govId_delete">
-                                                        <div id="govId-preview" class="preview"><?php echo $govIdPreview; ?></div>
-                                                    </div>
-
                                                 </div>
                                             </div>
+                                            <!-- AFP -->
+                                            <div class="row pt-3">
+                                                <div class="col-6">
+                                                    <div class="form-floating form-floating-custom mb-3">
+                                                        <select name="afpTypeId" id="afpTypeId" class="form-control">
+                                                            <option value="">Select</option>
+                                                            <?php for ($i = 0; $i < count($afps); $i++) {
+                                                                $select = ($afps[$i]['afpId'] == $data['employeeInfo']['afpTypeId']) ? 'selected' : '';
+                                                                echo '<option ' . $select . ' value="' . $afps[$i]['afpId'] . '">' . $afps[$i]['name'] . '</option>';
+                                                            } ?>
+                                                        </select>
+                                                        <label for="afpTypeId">AFP Type</label>
+
+                                                    </div>
+                                                </div>
+                                                <div class="col-6">
+                                                    <div class="form-floating form-floating-custom mb-3">
+                                                        <input type="number" value="<?php echo $data['employeeInfo']['afpNumber']; ?>" name="afpNumber" id="afpNumber" placeholder="afpNumber" class="form-control">
+                                                        <label for="afpNumber">AFP Number <label id="afpNumber-error" class="error" for="corporateEmail"></label> </label><small class="form-text text-muted">No Hyphens.</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- SSN  -->
+                                            <div class="row pt-3">
+                                                <div class="col-6">
+                                                    <div class="form-floating form-floating-custom mb-3">
+                                                        <input type="number" value="<?php echo $data['employeeInfo']['ssn']; ?>" class="form-control" id="ssn" name="ssn" placeholder="ssn">
+                                                        <label for="ssn">ISSS</label>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
                                         </div>
                                     </div>
-                                    <!-- end documents -->
+
+
+
 
                                 </div>
                                 <div class="col-md-6 col-xl-6 col-sm-12">
@@ -500,7 +515,7 @@ for ($i = 0; $i < count($employeeDocumentsInfo); $i++) {
                                         <div class="card-header">
                                             <h5>Company Detail</h5>
                                         </div>
-                                        <div class="card-body" style="min-height: 470px;">
+                                        <div class="card-body">
                                             <!-- Photo -->
                                             <div class="row">
                                                 <?php if (!empty($data['employeeInfo']['photo'])) {
@@ -733,7 +748,7 @@ for ($i = 0; $i < count($employeeDocumentsInfo); $i++) {
                                                 </div>
 
                                             </div>
-                                            <div class="row pt-3">
+                                            <div class="row pt-3" style="min-height: 147px;">
 
                                                 <div class="col-md-6 col-sm-6">
                                                     <div class="form-check">
@@ -756,68 +771,7 @@ for ($i = 0; $i < count($employeeDocumentsInfo); $i++) {
                                         </div>
                                     </div>
 
-                                    <div class="card">
-                                        <div class="card-header">
-                                            <h5>Bank Account Detail / AFP</h5>
-                                        </div>
-                                        <div class="card-body" style="min-height: 317px;">
-                                            <!-- Bank -->
-                                            <div class="row ">
-                                                <div class="col-6">
-                                                    <div class="form-floating form-floating-custom mb-3">
-                                                        <select name="bankId" id="bankId" class="form-control">
-                                                            <option value="">Select</option>
-                                                            <?php for ($i = 0; $i < count($banks); $i++) {
-                                                                $select = ($banks[$i]['bankId'] == $data['employeeInfo']['bankId']) ? 'selected' : '';
-                                                                echo '<option ' . $select . ' value="' . $banks[$i]['bankId'] . '">' . $banks[$i]['name'] . '</option>';
-                                                            } ?>
-                                                        </select>
-                                                        <label for="bankId">Bank</label>
-                                                    </div>
-                                                </div>
-                                                <div class="col-6">
-                                                    <div class="form-floating form-floating-custom mb-3">
-                                                        <input type="number" value="<?php echo $data['employeeInfo']['bankAccount']; ?>" class="form-control" id="bankAccount" name="bankAccount">
-                                                        <label for="bankAccount">Bank Account</label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <!-- AFP -->
-                                            <div class="row pt-3">
-                                                <div class="col-6">
-                                                    <div class="form-floating form-floating-custom mb-3">
-                                                        <select name="afpTypeId" id="afpTypeId" class="form-control">
-                                                            <option value="">Select</option>
-                                                            <?php for ($i = 0; $i < count($afps); $i++) {
-                                                                $select = ($afps[$i]['afpId'] == $data['employeeInfo']['afpTypeId']) ? 'selected' : '';
-                                                                echo '<option ' . $select . ' value="' . $afps[$i]['afpId'] . '">' . $afps[$i]['name'] . '</option>';
-                                                            } ?>
-                                                        </select>
-                                                        <label for="afpTypeId">AFP Type</label>
 
-                                                    </div>
-                                                </div>
-                                                <div class="col-6">
-                                                    <div class="form-floating form-floating-custom mb-3">
-                                                        <input type="number" value="<?php echo $data['employeeInfo']['afpNumber']; ?>" name="afpNumber" id="afpNumber" placeholder="afpNumber" class="form-control">
-                                                        <label for="afpNumber">AFP Number <label id="afpNumber-error" class="error" for="corporateEmail"></label> </label><small class="form-text text-muted">No Hyphens.</small>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <!-- SSN  -->
-                                            <div class="row pt-3">
-                                                <div class="col-6">
-                                                    <div class="form-floating form-floating-custom mb-3">
-                                                        <input type="number" value="<?php echo $data['employeeInfo']['ssn']; ?>" class="form-control" id="ssn" name="ssn" placeholder="ssn">
-                                                        <label for="ssn">ISSS</label>
-                                                    </div>
-                                                </div>
-
-                                            </div>
-
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
 
@@ -834,15 +788,70 @@ for ($i = 0; $i < count($employeeDocumentsInfo); $i++) {
                                 </div>
                             </div>
                         </form>
-                        <!-- and/Form editEmployee General Information -->
+                    </div>
 
+                    <!-- Employee Documents -->
+                    <div class="tab-pane fade " id="employee-documents" role="tabpanel" aria-labelledby="tab-employee-documents">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5>Employee Documents</h5>
+                                    </div>
+                                    <div class="card-body" style="min-height: 880px;">
+                                        <div class="row">
+                                            <div class="d-flex justify-content-between pb-5">
+                                                <button id="btn-add-emEmergencyCon" class="btn btn-primary btn-round ms-auto" data-bs-toggle="modal" data-bs-target="#modalAddDocument"><i class="fa fa-plus"></i> Upload Document</button>
+                                            </div>
 
+                                            <div class="col-12">
+                                                <div class="table-responsive">
+                                                    <table id="tb-EmergencyContact" class="table table-hover mt-5">
+                                                        <thead>
+                                                            <tr>
+                                                                <th scope="col">#</th>
+                                                                <th scope="col">Name</th>
+                                                                <th style="width: 30%;" scope="col">Type</th>
+                                                                <th scope="col">Managment</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <?php if (!empty($employeeDocumentsInfo)) {
+                                                                $n = 1;
+                                                                for ($i = 0; $i < count($employeeDocumentsInfo); $i++) {
+                                                                    echo '<tr>';
+                                                                    echo '<th scope="row">' . $n++ . '</th>';
+                                                                    echo '<td> <a href="' . URLROOT . '/public/documents/' . $employeeDocumentsInfo[$i]['folderName'] . '/' . $employeeDocumentsInfo[$i]['document'] . '" target="_BLANK" >' . $employeeDocumentsInfo[$i]['document'] . '</a></td>';
+                                                                    echo '<td> ' . $employeeDocumentsInfo[$i]['name'] . '</td>';
+                                                                    echo '<td>
+                                                                        
+                                                                        <button id="delete_' . $employeeDocumentsInfo[$i]['employeeDocumentId'] . '_document" type="button" 
+                                                                        data-documentName="' . $employeeDocumentsInfo[$i]['document'] . '" data-nameDirDocument="' . $employeeDocumentsInfo[$i]['folderName'] . '/' . $employeeDocumentsInfo[$i]['document'] . '" 
+                                                                        onclick="removeDocument(' . $employeeDocumentsInfo[$i]['employeeDocumentId'] . ')"
+                                                                        class="btn btn-sm btn-danger"><i class="fa fa-times"></i></button>
 
+                                                                        <a href="' . URLROOT . '/public/documents/' . $employeeDocumentsInfo[$i]['folderName'] . '/' . $employeeDocumentsInfo[$i]['document'] . '" target="_BLANK"  class="btn btn-sm btn-info"><i class="fa fa-eye"></i></a>
+
+                                                                        </td>';
+                                                                    echo '</tr>';
+                                                                }
+                                                            } else {
+                                                                echo '<tr><td class="text-center" colspan="6">No data</td></tr>';
+                                                            }
+                                                            ?>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Schedule -->
                     <div class="tab-pane fade" id="schedule" role="tabpanel" aria-labelledby="tab-schedule">
-                        <!-- form editEmployee Schedule -->
                         <form id="addEmployeeSchedule" method="POST" action="#">
                             <div class="row">
                                 <div class="col-12">
@@ -1065,20 +1074,17 @@ for ($i = 0; $i < count($employeeDocumentsInfo); $i++) {
 
 
                         </form>
-                        <!-- end / form editEmployee Schedule -->
                     </div>
 
                     <!-- Emergency Contacts -->
                     <div class="tab-pane fade " id="emergency-contacts" role="tabpanel" aria-labelledby="tab-emergency-contacts">
-                        <!-- form Emergency contact -->
                         <div class="row">
-                            <div class="col-md-6 col-xl-12 col-sm-12">
+                            <div class="col-12">
                                 <div class="card">
                                     <div class="card-header">
                                         <h5>Emergency Contacts</h5>
                                     </div>
                                     <div class="card-body" style="min-height: 880px;">
-                                        <!-- Emergency contact -->
                                         <div class="row">
                                             <div class="d-flex justify-content-between">
                                                 <button id="btn-add-emEmergencyCon" class="btn btn-primary btn-round ms-auto" data-bs-toggle="modal" data-bs-target="#modalAddEmergency"><i class="fa fa-plus"></i> Add Emergency Contact</button>
@@ -1138,9 +1144,8 @@ for ($i = 0; $i < count($employeeDocumentsInfo); $i++) {
 
                     <!-- financial-dependents -->
                     <div class="tab-pane fade " id="financial-dependents" role="tabpanel" aria-labelledby="tab-financial-dependents">
-                        <!-- form financial-dependents -->
                         <div class="row">
-                            <div class="col-md-6 col-xl-12 col-sm-12">
+                            <div class="col-12">
                                 <div class="card">
                                     <div class="card-header">
                                         <h5>Financial Dependents</h5>
@@ -1185,7 +1190,6 @@ for ($i = 0; $i < count($employeeDocumentsInfo); $i++) {
                                                             } else {
                                                                 echo '<tr><td class="text-center" colspan="6">No data</td></tr>';
                                                             }
-
                                                             ?>
                                                         </tbody>
                                                     </table>
@@ -1197,9 +1201,6 @@ for ($i = 0; $i < count($employeeDocumentsInfo); $i++) {
                             </div>
                         </div>
                     </div>
-
-
-
 
                 </div>
             </div>
@@ -1267,8 +1268,52 @@ for ($i = 0; $i < count($employeeDocumentsInfo); $i++) {
                 </div>
             </div>
         </div>
-        <!-- // create Emerg. Contact -->
+        <!-- Upload Document -->
+        <div class="modal fade" id="modalAddDocument" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalAddDocumentLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="modalAddDocumentLabel">Upload Emp. Document</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form id="formUploadFile">
+                        <div class="modal-body">
+                            <div class="row pt-3">
+                                <div class="col-12">
+                                    <div class="form-group form-group-default">
+                                        <label>Document Type <span class="text-danger">*</span> </label>
+                                        <select class="form-control" id="docType" name="docType" placeholder="">
+                                            <option value="">Select</option>
+                                            <?php
+                                            for ($i = 0; $i < count($typesDocuments); $i++) {
+                                                echo '<option value="' . $typesDocuments[$i]['documentTypeId'] . '">' . $typesDocuments[$i]['name'] . '</option>';
+                                            }
+                                            ?>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-6 docNameOther" style="display: none;">
+                                    <div class="form-group form-group-default">
+                                        <label>Document Name <span class="text-danger">*</span> </label>
+                                        <input class="form-control" type="text" name="nameDocumentOther" id="nameDocumentOther">
+                                    </div>
+                                </div>
 
+                                <div id="fileDropzone" class="dropzone dropzoneMax" class="dropzone mb-3"></div>
+                                <span class="msg-dropzone text-danger"></span>
+                            </div>
+
+
+                        </div>
+                        <div class="modal-footer">
+                            <input type="hidden" id="idEmpUpload" name="idEmpUpload" value="<?php echo base64_encode($data['employeeInfo']['employeeId']) ?>">
+                            <button type="button" id="btn-cancelUpload" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" id="uploadButton" class="btn btn-success">Add Document</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
         <!-- Edit Emerg. Contact -->
         <div class="modal fade" id="modalEditEmergency" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalEditEmergencyLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
@@ -1326,9 +1371,6 @@ for ($i = 0; $i < count($employeeDocumentsInfo); $i++) {
                 </div>
             </div>
         </div>
-        <!-- // Edit Emerg. Contact -->
-
-
         <!-- Create Financial Dependents -->
         <div class="modal fade" id="modalAddDependents" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalAddDependentsLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
@@ -1390,8 +1432,6 @@ for ($i = 0; $i < count($employeeDocumentsInfo); $i++) {
                 </div>
             </div>
         </div>
-        <!-- // create Financial Dependents -->
-
         <!-- Edit Financial Dependents -->
         <div class="modal fade" id="modalEditDependents" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalEditDependentsLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
@@ -1433,7 +1473,7 @@ for ($i = 0; $i < count($employeeDocumentsInfo); $i++) {
                                 <div class="col-6">
                                     <div class="form-group form-group-default">
                                         <label>Age </label>
-                                        <input  id="age_dependentEdit" name="age_dependentEdit"  type="number" class="form-control" placeholder="">
+                                        <input id="age_dependentEdit" name="age_dependentEdit" type="number" class="form-control" placeholder="">
                                     </div>
                                 </div>
                                 <div class="col-12">
@@ -1453,10 +1493,6 @@ for ($i = 0; $i < count($employeeDocumentsInfo); $i++) {
                 </div>
             </div>
         </div>
-        <!-- // Edit Emerg. Contact -->
-
-
-
         <!-- Preview Photo -->
         <div class="modal fade" id="modalPhotoPreview" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalPhotoPreviewLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
@@ -1471,7 +1507,7 @@ for ($i = 0; $i < count($employeeDocumentsInfo); $i++) {
                 </div>
             </div>
         </div>
-        <!-- // Preview Photo -->
+
 
         <!-- END-MODAL -->
 
@@ -1481,6 +1517,31 @@ for ($i = 0; $i < count($employeeDocumentsInfo); $i++) {
 </div> <!-- end/container2 -->
 
 <script>
+    Dropzone.autoDiscover = false; // IMPORTANT: Disable auto discovery to prevent Dropzone from automatically attaching to all elements with class "dropzone"
+    var myDropzone = new Dropzone("#fileDropzone", {
+        url: '#',
+        autoProcessQueue: false, // Prevent auto-upload
+        addRemoveLinks: true,
+        maxFilesize: 5, // MB
+        maxFiles: 1, // Maximum number of files
+        acceptedFiles: '.pdf', // Allowed file types
+        init: function() {
+            this.on("addedfile", function(file) {
+                $(".msg-dropzone").html("");
+
+                if (this.files.length > this.options.maxFiles) {
+                    this.removeFile(file);
+                    $(".msg-dropzone").html("You can only upload one file.");
+                }
+            });
+            this.on("error", function(file, errorMessage) {
+                this.removeFile(file); // Remove the file if there's an error
+                $(".msg-dropzone").html(errorMessage);
+            });
+        }
+    });
+
+
     $(document).ready(function() {
 
         var initialEmployeeEdit = {};
@@ -1491,7 +1552,6 @@ for ($i = 0; $i < count($employeeDocumentsInfo); $i++) {
         // $("#tb-EmergencyContact").DataTable();
 
         // show tab selected ---------------------------------------------------------------------------------------------
-
         $('.nav-link').on('click', function() {
             var tabID = $(this).attr('href').substring(1); // Get href without #
             var newURL = window.location.protocol + "//" + window.location.host + window.location.pathname + '?tab=' + tabID;
@@ -1499,26 +1559,21 @@ for ($i = 0; $i < count($employeeDocumentsInfo); $i++) {
                 path: newURL
             }, '', newURL);
         });
-
         // Valid tab names
-        var validTabs = ['general-information', 'schedule', 'emergency-contacts', 'financial-dependents'];
+        var validTabs = ['general-information', 'schedule', 'emergency-contacts', 'financial-dependents', 'employee-documents'];
 
         // Check if there's a tab parameter in the URL when the page loads
         var urlParams = new URLSearchParams(window.location.search);
         var selectedTab = urlParams.get('tab');
-
         // If the selected tab is invalid or doesn't exist, default to "general-information"
         if (!selectedTab || !validTabs.includes(selectedTab)) {
             selectedTab = 'general-information';
         }
-
         var $lastTab = $('a[href="#' + selectedTab + '"]');
         var $lastTabPane = $('#' + selectedTab);
-
         // Remove active classes from all tabs and panes
         $('.nav-link').removeClass('active');
         $('.tab-pane').removeClass('active show');
-
         // Add active classes to the last selected tab and its pane
         $lastTab.addClass('active');
         $lastTabPane.addClass('active show');
@@ -1674,18 +1729,16 @@ for ($i = 0; $i < count($employeeDocumentsInfo); $i++) {
         $('#photo').on('change', function() {
             previewFile(this, '#photo-preview');
         });
-        $('#antecedentesPenales').on('change', function() {
-            previewFile(this, '#antecedentesPenales-preview');
-        });
-        $('#solvenciaPNC').on('change', function() {
-            previewFile(this, '#solvenciaPNC-preview');
-        });
-        $('#contract').on('change', function() {
-            previewFile(this, '#contract-preview');
-        });
-        $('#govId').on('change', function() {
-            previewFile(this, '#govId-preview');
-        });
+
+        $('#docType').on('change', function(){
+            if(this.value == 9){
+                $(".docNameOther").show(1000)
+            }else{
+                $(".docNameOther").hide(1000)
+                
+            }
+        })
+
         $('#modalEditEmergency').on('shown.bs.modal', function() {
             initialEmergeEdit = captureDataFields('EditEmergContact', initialEmergeEdit);
             // console.log('initialEmergeEdit:', initialEmergeEdit);
@@ -1854,7 +1907,7 @@ for ($i = 0; $i < count($employeeDocumentsInfo); $i++) {
 
                                 if (obj.status) {
 
-                                    swal("It has been successfully changed!", {
+                                    swal("It has been changed successfully! ", {
                                         icon: "success",
                                         buttons: {
                                             confirm: {
@@ -1898,6 +1951,93 @@ for ($i = 0; $i < count($employeeDocumentsInfo); $i++) {
             }
         });
         //  /Form Edit Employee
+
+        $("#formUploadFile").validate({
+            rules: {
+                docType: {
+                    required: true,
+                },
+                nameDocumentOther: {
+                    required: true,
+                    maxlength: 25,
+                }
+            },
+            messages: {
+                docType: {
+                    required: "Please select a document type."
+                }
+            },
+            submitHandler: function(form) {
+                // This function is called when the form is valid
+                var docType = $('#docType').val();
+                var idEmpUpload = $('#idEmpUpload').val();
+                var nameDocumentOther = $('#nameDocumentOther').val();
+                var myDropzone = Dropzone.forElement("#fileDropzone");
+
+                if (myDropzone.files.length === 0) {
+                    $(".msg-dropzone").html("This field is required");
+                    return;
+                }
+
+                // Create a FormData object
+                var formData = new FormData();
+                formData.append('docType', docType);
+                formData.append('idEmpUpload', idEmpUpload);
+                formData.append('nameDocumentOther', nameDocumentOther);
+
+                console.log(myDropzone.files)
+
+                // Add all files from Dropzone
+                myDropzone.files.forEach(function(file) {
+                    formData.append('files[]', file);
+                });
+
+                console.log(formData)
+                // SEND
+                $.ajax({
+                    url: '<?php echo URLROOT; ?>/EmployeesDocuments/uploadDocument',
+                    method: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    beforeSend: function() {
+                        //wait
+                    },
+                    success: function(data) {
+                        console.log(data)
+                        var obj = JSON.parse(data);
+
+                        if (obj.status) {
+                            myDropzone.removeAllFiles(); // Clear files after successful upload
+                            $("#docType").val("");
+                            swal(obj.message, {
+                                icon: "success",
+                                buttons: {
+                                    confirm: {
+                                        className: "btn btn-success",
+                                    },
+                                },
+                            }).then((willReload) => {
+                                if (willReload) {
+                                    location.reload();
+                                }
+                            });
+
+                        } else {
+                            swal('Error', obj.message, {
+                                icon: "error",
+                                buttons: {
+                                    confirm: {
+                                        className: "btn btn-danger",
+                                    },
+                                },
+                            });
+                        }
+
+                    }
+                })
+            }
+        });
 
         $('#createEmergContact').validate({
             rules: {
@@ -2241,14 +2381,6 @@ for ($i = 0; $i < count($employeeDocumentsInfo); $i++) {
     function getChangedFields(formId, varNameConst) {
         var changedFields = {};
         var ignoredFields = [
-            'antecedentesPenales_delete',
-            'solvenciaPNC_delete',
-            'contract_delete',
-            'govId_delete',
-            'antecedentesPenales',
-            'solvenciaPNC',
-            'contract',
-            'govId',
             'hiredDateOld',
             'salary',
             'endDate',
@@ -2367,26 +2499,6 @@ for ($i = 0; $i < count($employeeDocumentsInfo); $i++) {
             });
     }
 
-    function removeFile(elem) {
-
-        if (elem == 3) {
-            $("#antecedentesPenales-preview").html("");
-            $("#antecedentesPenales_delete").val(1)
-        }
-        if (elem == 4) {
-            $("#solvenciaPNC-preview").html("");
-            $("#solvenciaPNC_delete").val(1)
-        }
-        if (elem == 5) {
-            $("#govId-preview").html("");
-            $("#govId_delete").val(1)
-        }
-        if (elem == 6) {
-            $("#contract-preview").html("");
-            $("#contract_delete").val(1)
-        }
-    }
-
     function removeEmergeContact(idEmergencyContact) {
 
         let div = document.getElementById("delete_" + idEmergencyContact);
@@ -2432,8 +2544,6 @@ for ($i = 0; $i < count($employeeDocumentsInfo); $i++) {
 
                         if (obj.status) {
 
-                            // $("#btn-cancel").click();
-
                             swal("The User has been delete successfully.", {
                                 icon: "success",
                                 buttons: {
@@ -2458,11 +2568,7 @@ for ($i = 0; $i < count($employeeDocumentsInfo); $i++) {
                                 time: 1000,
                                 delay: 0,
                             });
-
-
                         }
-
-
                     }
                 })
             }
@@ -2516,8 +2622,6 @@ for ($i = 0; $i < count($employeeDocumentsInfo); $i++) {
 
                         if (obj.status) {
 
-                            // $("#btn-cancel").click();
-
                             swal("The Financial Dependent has been delete successfully.", {
                                 icon: "success",
                                 buttons: {
@@ -2542,11 +2646,88 @@ for ($i = 0; $i < count($employeeDocumentsInfo); $i++) {
                                 time: 1000,
                                 delay: 0,
                             });
-
-
                         }
+                    }
+                })
+            }
+
+        });
+
+    }
+
+    function removeDocument(employeeDocumentId) {
+        let div = document.getElementById("delete_" + employeeDocumentId + "_document");
+        let fullname = div.dataset.documentname;
+        let namedirdocument = div.dataset.namedirdocument;
+        var text = "" + fullname + " file  will be delete.";
+
+        swal({
+            title: "Are you sure?",
+            text: text,
+            type: "warning",
+            buttons: {
+                cancel: {
+                    visible: true,
+                    text: "No, cancel!",
+                    className: "btn btn-danger",
+                },
+                confirm: {
+                    text: "Yes, Delete it!",
+                    className: "btn btn-success",
+                },
+            },
+
+        }).then((willChange) => {
+
+            if (willChange) {
 
 
+                var param = {
+                    'employeeDocumentId': employeeDocumentId,
+                    'nameDir': namedirdocument
+                };
+
+                $.ajax({
+                    url: '<?php echo URLROOT; ?>/EmployeesDocuments/removeDocument',
+                    method: 'POST',
+                    data: param,
+                    beforeSend: function() {},
+                    success: function(data) {
+                        console.log("SUCCESS");
+                        console.log(data);
+                        var obj = JSON.parse(data);
+                        var content = {};
+                        content.message = obj.message;
+                        content.title = "Employee Document";
+                        content.icon = "fa fa-bell";
+
+                        if (obj.status) {
+
+                            swal("The document has been delete successfully.", {
+                                icon: "success",
+                                buttons: {
+                                    confirm: {
+                                        className: "btn btn-success",
+                                    },
+                                },
+                            }).then((willReload) => {
+                                if (willReload) {
+                                    location.reload();
+                                }
+                            });
+
+                        } else {
+
+                            $.notify(content, {
+                                type: 'danger',
+                                placement: {
+                                    from: 'top',
+                                    align: 'right',
+                                },
+                                time: 1000,
+                                delay: 0,
+                            });
+                        }
                     }
                 })
             }
@@ -2620,7 +2801,7 @@ for ($i = 0; $i < count($employeeDocumentsInfo); $i++) {
             edad--;
         }
 
-        $("#"+field+"-age").val(edad)
+        $("#" + field + "-age").val(edad)
 
     }
 </script>

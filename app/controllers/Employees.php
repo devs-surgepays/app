@@ -174,6 +174,7 @@ class Employees extends Controller
                 $data['afps'] = $this->afpModel->getAFPs();
                 $data['areas'] = $this->areaModel->getAreas();
                 $data['bills'] = $this->billModel->getBillsTo();
+                $data['typesDocuments'] = $this->employeeDocumentModel->getTypesDocuments();
 
                 $data['employeeDocumentsInfo'] = $this->employeeDocumentModel->getEmployeDocument($idEmployee);
                 $data['employeeSchedule'] = $this->employeeScheduleModel->getSchedulesEmployee($idEmployee);
@@ -220,35 +221,12 @@ class Employees extends Controller
 
                     $this->employeeModel->updatedEmployee($changedFields);
                 }
-
-                // removed files
-                if (!empty($_POST['antecedentesPenales_delete'])) {
-                    $this->employeeDocumentModel->removedEmployeeDocument($employeeId, 3);
-                    $changedFields['antecedentesPenales'] = 'removed';
-                }
-                if (!empty($_POST['solvenciaPNC_delete'])) {
-                    $this->employeeDocumentModel->removedEmployeeDocument($employeeId, 4);
-                    $changedFields['solvenciaPNC'] = 'removed';
-                }
-                if (!empty($_POST['govId_delete'])) {
-                    $this->employeeDocumentModel->removedEmployeeDocument($employeeId, 5);
-                    $changedFields['govId'] = 'removed';
-                }
-                if (!empty($_POST['contract_delete'])) {
-                    $this->employeeDocumentModel->removedEmployeeDocument($employeeId, 6);
-                    $changedFields['contract'] = 'removed';
-                }
                 // upload files if there are.
                 $nameFile = $badge . '_' . substr($firstName, 0, 1) . substr($firstLastName, 0, 1) . '_' . date('mdyhis');
                 $re = $this->uploadSaveFile($_FILES, $employeeId, $nameFile); // errorFileSave - changedFields
                 $changesFinal = array_merge($changedFields, $re['changedFields']);
-
                 $return['responseFiles'] = $re;
-                // $return['documentroot'] = $_SERVER['DOCUMENT_ROOT'];
-                // $return['approot'] = APPROOT;
-                // $return['changedFields'] = $changedFields;
                 $return['FILES'] = $_FILES;
-
 
                 // Remove the element with the key 'employeeId'
                 unset($changesFinal['employeeId']);
@@ -439,7 +417,6 @@ class Employees extends Controller
         $changedFields = [];
         $dataEmployeeDocument['employeeId'] = $IdEmployee;
 
-        // Photo is difference because updated field in the table employeeDetails 
         if (!empty($FILES['photo']['tmp_name'])) {
             $rePhoto = $this->handleFileUpload($FILES['photo'], 'photo', $nameFile . '_photo');
             $dataEmployeeDocument['photo'] = $rePhoto['nameFile'];
@@ -450,57 +427,6 @@ class Employees extends Controller
                 $changedFields['photo'] = $rePhoto['nameFile'];
             } else $errorSave['Photo'] = $rePhoto['messageError'];
         } else $errorSave['Photo'] = 'Field Empty';
-
-
-        // antecedentes Penales
-        if (!empty($FILES['antecedentesPenales']['tmp_name'])) {
-
-            $reantecedentesPenales = $this->handleFileUpload($FILES['antecedentesPenales'], 'antecedentesPenales', $nameFile . '_antecedentesPenales');
-            $dataEmployeeDocument['documentTypeId'] = 3;
-            $dataEmployeeDocument['document'] = $reantecedentesPenales['nameFile'];
-
-            if ($reantecedentesPenales['status']) {
-                $this->employeeDocumentModel->removedEmployeeDocument($IdEmployee, 3);
-                $this->employeeDocumentModel->saveEmployeeDocument($dataEmployeeDocument); // Save Documents name
-                $changedFields['antecedentesPenales'] = $reantecedentesPenales['nameFile'];
-            } else $errorSave['antecedentesPenales'] = $reantecedentesPenales['messageError'];
-        } else $errorSave['antecedentesPenales'] = 'Field Empty';
-
-        // Solvencia PNC
-        if (!empty($FILES['solvenciaPNC']['tmp_name'])) {
-            $resolvenciaPNC = $this->handleFileUpload($FILES['solvenciaPNC'], 'solvenciaPNC', $nameFile . '_solvenciaPNC');
-            $dataEmployeeDocument['documentTypeId'] = 4;
-            $dataEmployeeDocument['document'] = $resolvenciaPNC['nameFile'];
-            if ($resolvenciaPNC['status']) {
-                $this->employeeDocumentModel->removedEmployeeDocument($IdEmployee, 4);
-                $this->employeeDocumentModel->saveEmployeeDocument($dataEmployeeDocument); // Save Documents name
-                $changedFields['solvenciaPNC'] = $resolvenciaPNC['nameFile'];
-            } else $errorSave['solvenciaPNC'] = $resolvenciaPNC['messageError'];
-        } else $errorSave['solvenciaPNC'] = 'Field Empty';
-
-        // govId
-        if (!empty($FILES['govId']['tmp_name'])) {
-            $regovId = $this->handleFileUpload($FILES['govId'], 'govId', $nameFile . '_govId');
-            $dataEmployeeDocument['documentTypeId'] = 5;
-            $dataEmployeeDocument['document'] = $regovId['nameFile'];
-            if ($regovId['status']) {
-                $this->employeeDocumentModel->removedEmployeeDocument($IdEmployee, 5);
-                $this->employeeDocumentModel->saveEmployeeDocument($dataEmployeeDocument); // Save Documents name
-                $changedFields['govId'] = $regovId['nameFile'];
-            } else $errorSave['govId'] = $regovId['messageError'];
-        } else $errorSave['govId'] = 'Field Empty';
-
-        // contract
-        if (!empty($FILES['contract']['tmp_name'])) {
-            $recontract = $this->handleFileUpload($FILES['contract'], 'contract', $nameFile . '_contract');
-            $dataEmployeeDocument['documentTypeId'] = 6;
-            $dataEmployeeDocument['document'] = $recontract['nameFile'];
-            if ($recontract['status']) {
-                $this->employeeDocumentModel->removedEmployeeDocument($IdEmployee, 6);
-                $this->employeeDocumentModel->saveEmployeeDocument($dataEmployeeDocument); // Save Documents name
-                $changedFields['contract'] = $recontract['nameFile'];
-            } else $errorSave['contract'] = $recontract['messageError'];
-        } else $errorSave['contract'] = 'Field Empty';
 
         $re = [
             'changedFields' => $changedFields,
@@ -515,7 +441,6 @@ class Employees extends Controller
         $maxFileSize = $maxFileSize * 1024 * 1024; // Specify the max file size (e.g., 5MB)
         $targetDir = $_SERVER['DOCUMENT_ROOT'] . "/app/public/documents/{$nameDir}/";
         if (!is_dir($targetDir)) mkdir($targetDir, 0777, true); //directory exists
-
 
         $re = ['status' => false, 'messageError' => '', 'nameFile' => '',];
 

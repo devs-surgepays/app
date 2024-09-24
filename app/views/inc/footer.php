@@ -68,6 +68,9 @@
 <!-- Kaiadmin JS -->
 <script src="<?php echo URLROOT ?>/assets/js/kaiadmin.min.js"></script>
 
+<!-- DropZone -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.2/min/dropzone.min.js"></script>
+
 <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 

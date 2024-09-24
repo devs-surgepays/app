@@ -217,12 +217,12 @@ $bills = (isset($data['bills']) && $data['bills'] != NULL) ? $data['bills'] : []
                                                 <label id="documentNumber-error" class="error" for="documentNumber"></label></label>
                                         </div>
                                     </div>
-                                    
-                                    
+
+
                                 </div>
 
                                 <div class="row pt-3">
-                                <div class="col-6">
+                                    <div class="col-6">
                                         <div class="form-floating form-floating-custom mb-3">
                                             <input type="date" class="form-control" id="documentExpDate" name="documentExpDate" placeholder="documentExpDate">
                                             <label for="documentExpDate">Document Exp. Date <span class="text-danger">*</span>
@@ -238,7 +238,7 @@ $bills = (isset($data['bills']) && $data['bills'] != NULL) ? $data['bills'] : []
 
                                         </div>
                                     </div>
-                                    
+
                                 </div>
 
                                 <!-- SSN  -->
@@ -318,7 +318,7 @@ $bills = (isset($data['bills']) && $data['bills'] != NULL) ? $data['bills'] : []
                                     </div>
                                 </div>
                                 <!-- BACKGROUND -->
-                                <div class="row pt-3">
+                                <div class="row pt-3" style="min-height: 109px;">
                                     <div class="col-6">
                                         <div class="form-floating form-floating-custom mb-3">
                                             <input type="text" class="form-control" id="educationLevel" name="educationLevel" placeholder="educationLevel">
@@ -559,7 +559,7 @@ $bills = (isset($data['bills']) && $data['bills'] != NULL) ? $data['bills'] : []
                                     <div class="col-6">
                                         <div class="form-floating form-floating-custom mb-3">
                                             <input type="number" name="afpNumber" id="afpNumber" placeholder="afpNumber" class="form-control">
-                                            <label for="afpNumber">AFP Number <label id="afpNumber-error" class="error" for="corporateEmail"></label> </label><small class="form-text text-muted" >No Hyphens.</small>
+                                            <label for="afpNumber">AFP Number <label id="afpNumber-error" class="error" for="corporateEmail"></label> </label><small class="form-text text-muted">No Hyphens.</small>
                                         </div>
                                     </div>
                                 </div>
@@ -578,51 +578,6 @@ $bills = (isset($data['bills']) && $data['bills'] != NULL) ? $data['bills'] : []
                     </div>
                 </div>
 
-                <div class="row">
-                    <div class="col-md-6 col-xl-6 col-sm-12">
-                        <div class="card">
-                            <div class="card-header">
-                                <h5>Document</h5>
-                            </div>
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-6">
-                                        <div class="file-input">
-                                            <label for="antecedentesPenales">Antecedentes Penales:</label><br>
-                                            <input type="file" id="antecedentesPenales" name="antecedentesPenales" accept="application/pdf">
-                                            <button type="button" class="file-button" onclick="document.getElementById('antecedentesPenales').click();">Select File <i class="fa fa-upload"></i></button>
-                                            <div id="antecedentesPenales-preview" class="preview"></div>
-                                        </div>
-                                        <div class="file-input">
-                                            <label for="solvenciaPNC">Solvencia PNC:</label><br>
-                                            <input type="file" id="solvenciaPNC" name="solvenciaPNC" accept="application/pdf">
-                                            <button type="button" class="file-button" onclick="document.getElementById('solvenciaPNC').click();">Select File <i class="fa fa-upload"></i></button>
-                                            <div id="solvenciaPNC-preview" class="preview"></div>
-                                        </div>
-                                    </div>
-                                    <div class="col-6">
-                                        <div class="file-input">
-                                            <label for="contract">Contract:</label><br>
-                                            <input type="file" id="contract" name="contract" accept="application/pdf">
-                                            <button type="button" class="file-button" onclick="document.getElementById('contract').click();">Select File <i class="fa fa-upload"></i></button>
-                                            <div id="contract-preview" class="preview"></div>
-                                        </div>
-                                        <div class="file-input">
-                                            <label for="govId">Gov ID:</label><br>
-                                            <input type="file" id="govId" name="govId" accept="application/pdf">
-                                            <button type="button" class="file-button" onclick="document.getElementById('govId').click();">Select File <i class="fa fa-upload"></i></button>
-                                            <div id="govId-preview" class="preview"></div>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-xl-6 col-sm-12">
-
-                    </div>
-                </div>
 
                 <div class="row d-flex justify-content-end">
                     <div class="col-2 d-flex justify-content-end"><button type="submit" class="btn btn-primary">Create Employee</button></div>
@@ -700,9 +655,9 @@ $bills = (isset($data['bills']) && $data['bills'] != NULL) ? $data['bills'] : []
     })
     $("#documentTypeId").change(() => {
         let documentTypeId = $("#documentTypeId").val();
-        if(documentTypeId == "" || documentTypeId == null) return;
+        if (documentTypeId == "" || documentTypeId == null) return;
         $('#documentNumber').attr("disabled", false);
-        if(documentTypeId == 1) {
+        if (documentTypeId == 1) {
             $('#documentNumber').mask('00000000-0');
         } else {
             $('#documentNumber').unmask();
@@ -728,18 +683,6 @@ $bills = (isset($data['bills']) && $data['bills'] != NULL) ? $data['bills'] : []
 
         $('#photo').on('change', function() {
             previewFile(this, '#photo-preview');
-        });
-        $('#antecedentesPenales').on('change', function() {
-            previewFile(this, '#antecedentesPenales-preview');
-        });
-        $('#solvenciaPNC').on('change', function() {
-            previewFile(this, '#solvenciaPNC-preview');
-        });
-        $('#contract').on('change', function() {
-            previewFile(this, '#contract-preview');
-        });
-        $('#govId').on('change', function() {
-            previewFile(this, '#govId-preview');
         });
 
         // Function to get changed fields
@@ -932,7 +875,7 @@ $bills = (isset($data['bills']) && $data['bills'] != NULL) ? $data['bills'] : []
 
             if (input.type === 'checkbox') {
                 input.checked = false; // Reset checkbox inputs
-            }else {
+            } else {
                 input.value = '';
             }
         });
@@ -955,11 +898,6 @@ $bills = (isset($data['bills']) && $data['bills'] != NULL) ? $data['bills'] : []
 
         // preview clean
         $("#photo-preview").html('');
-        $("#antecedentesPenales-preview").html('');
-        $("#solvenciaPNC-preview").html('');
-        $("#contract-preview").html('');
-        $("#govId-preview").html('');
-
         // focus
         $("#firstName").focus();
     }
