@@ -74,6 +74,22 @@
 <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 
+<script>
+  // Check Session
+  setInterval(function() {
+    fetch('<?php echo URLROOT; ?>/Auths/checkSession')
+      .then(response => response.json())
+      .then(data => {
+        // console.log(data)
+        // console.log(data.session_active)
+        if (data.session_active == 'inactivity') {
+          window.location.href = '<?php echo URLROOT; ?>/auths/login?inactivity=true'; // Redirigir si la sesión no está activa
+        }
+      });
+  }, 60000); // Comprueba cada minuto
+</script>
+
+
 <!-- Kaiadmin DEMO methods, don't include it in your project! NOTIFICATION -->
 <!-- <script src="<?php echo URLROOT ?>/assets/js/setting-demo.js"></script> -->
 <!-- <script src="<?php echo URLROOT ?>/assets/js/demo.js"></script> -->

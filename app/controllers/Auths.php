@@ -167,6 +167,7 @@ class Auths extends Controller
         $name =  (!empty($names)) ? $names[0] : '-';
         $_SESSION['name'] = $name;
         $_SESSION['permissionLevelId'] = $user->permissionLevelId;
+        $_SESSION['LAST_ACTIVITY'] = time();
 
         if ($redirect) redirect('pages/index');
     }
@@ -179,5 +180,22 @@ class Auths extends Controller
         unset($_SESSION['employeeId']);
         session_destroy();
         redirect('auths/login');
+    }
+
+    /*  Cada vez que el usuario interactúe con la aplicación (controladores/constructor), se actualizará LAST_ACTIVITY. 
+        La función checkSession se llamará cada minuto para verificar la actividad de la sesión.
+        Si el usuario deja de usar la aplicación durante más de 30 minutos, se les redirigirá a la página de inicio de sesión.
+    */
+    public function checkSession()
+    {
+        if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY'] >= 3600)) { // 1800 segundos - 30 minutos
+            $LAST_ACTIVITY = $_SESSION['LAST_ACTIVITY'];
+
+            session_unset(); // Elimina las variables de sesión
+            session_destroy();
+            echo json_encode(['session_active' => 'inactivity', 'timeInactivity' => time() - $LAST_ACTIVITY]); // Indicar que la sesión no está activa
+            exit();
+        }
+        echo json_encode(['session_active' => 'active', 'timeInactivity' => time() - $_SESSION['LAST_ACTIVITY']]);
     }
 }

@@ -25,6 +25,7 @@
 
     function isLoggedIn(){
         if(isset($_SESSION['userId'])){
+            $_SESSION['LAST_ACTIVITY'] = time(); // Actualiza el tiempo de la última actividad
             return true;
         }else{
             return false;
