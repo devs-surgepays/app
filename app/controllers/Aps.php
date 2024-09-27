@@ -12,8 +12,15 @@ class Aps extends Controller
     }
 
     public function index(){
+       
         $data['apTypes'] = $this->apModel->getAllApTypes();
         $this->view('ap/index', $data);
+    }
+
+    public function getLeave($leaveId){
+        $data=$this->apModel->getSingleLeave($leaveId);
+
+        echo json_encode($data);
     }
 	
 	public function saveAP(){
@@ -21,6 +28,7 @@ class Aps extends Controller
             $_POST= filter_input_array(INPUT_POST,FILTER_SANITIZE_STRING);
             // print_r($_POST);
             // exit();
+            $action=$_POST['Action'];
             $comments = (isset($_POST['addComments']))?trim($_POST['addComments']):"";
             $data=[
                 "apTypeId" => $_POST['addLeaveType'],
@@ -33,18 +41,21 @@ class Aps extends Controller
             switch($data['apTypeId']){
                 case 1:
                     $data['reason1']=$_POST["motivo_permiso"];
+                    $data['reason2']=$_POST['tiempopermiso'];
                     $data['apDate1']=$_POST["dia1"];
-                    if($_POST['tiempopermiso']=="Horas"){
+                    if($data['reason2']=="Horas"){
                         $data['startTime']=$_POST['hora_inicio'];
                         $data['endTime']=$_POST['hora_final'];
+                        
                     }else{
                         $data['apDate2']=$_POST['dia2'];
                     }
                     break;
                 case 2:
                     $data['reason1']=$_POST["motivo_permiso"];
+                    $data['reason2']=$_POST['tiempopermiso'];
                     $data['apDate1']=$_POST["dia1"];
-                    if($_POST['tiempopermiso']=="Horas"){
+                    if($data['reason2']=="Horas"){
                         $data['startTime']=$_POST['hora_inicio'];
                         $data['endTime']=$_POST['hora_final'];
                     }else{
@@ -108,10 +119,16 @@ class Aps extends Controller
                     break;
                 case 11:
                     $data['withdrawalType']=$_POST['tipoRetiro'];
-                    $attrition = $this->apModel->getAttritionsResons($_POST['attritions']);
-                    $reasonsDetails = $this->apModel->getAttritionsResonsDetails($_POST['reasonsDetails']);
+                    $data['attritionsId1']=$_POST['attritions'];
+                    $attrition = $this->apModel->getAttritionsResons($data['attritionsId1']);
                     $data['reason1']=$attrition['name'];
-                    $data['reason2']=$reasonsDetails['name'];
+                    
+                    if(isset($_POST['reasonsDetails'])){
+                        $data['attritionsId2']=$_POST['reasonsDetails'];
+                        $reasonsDetails = $this->apModel->getAttritionsResonsDetails($data['attritionsId2']);
+                        $data['reason2']=$reasonsDetails['name'];
+                        
+                    }
                     $data['apDate1']=$_POST['fechaRetiro'];
                     break;
                 case 12:
@@ -125,7 +142,13 @@ class Aps extends Controller
 
 
             }
-            $this->apModel->insertLeave($data);
+            if($action=="Insert"){
+                $this->apModel->insertLeave($data);
+            }else if($action=="Update"){
+                $data['apDetailsId']=$_POST['apId'];
+                $this->apModel->updateLeave($data);
+            }
+            
             $data['status']="success";
             $data['message']="your leave has been saved succesfully";
             echo json_encode($data);

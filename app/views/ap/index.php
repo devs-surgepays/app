@@ -15,7 +15,7 @@
           <div class="card-header">
             <div class="d-flex align-items-center">
               <h4 class="card-title">Manage Leaves</h4>
-              <button class="btn btn-primary btn-round ms-auto" data-bs-toggle="modal" data-bs-target="#addRowModal">
+              <button id="createModal" class="btn btn-primary btn-round ms-auto" data-bs-toggle="modal" data-bs-target="#addRowModal">
                 <i class="fa fa-plus"></i>
                 Create New Leave
               </button>
@@ -77,6 +77,7 @@
                     </button>
                   </div>
                   <input type="hidden" id="leave_id" name="leave_id">
+                  
                   </form>
                 </div>
               </div>
@@ -87,8 +88,8 @@
                 <div class="modal-content">
                   <div class="modal-header border-0">
                     <h5 class="modal-title">
-                      <span class="fw-mediumbold"> Create</span>
-                      <span class="fw-light"> New Leave </span>
+                      <span class="fw-mediumbold" id="actionspan"> Create</span>
+                      <span class="fw-light"> Leave </span>
                     </h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                       <span aria-hidden="true">&times;</span>
@@ -96,10 +97,6 @@
                   </div>
 					        <form id="createApForm" action="index.php" method="POST" enctype="application/x-www-form-urlencoded">
                     <div class="modal-body">
-                      <p class="small">
-                        Create a new leave using this form, make sure you
-                        fill them all
-                      </p>
                       <div class="row">
                         <div class="col-sm-12">
                           <div id="badgeDiv" class="form-floating  form-floating-custom mb-3">
@@ -302,7 +299,7 @@
                                   </div>
                                 </div>
 
-                                <div class="d-flex">
+                                <!-- <div class="d-flex">
                                   
                                   <div class="form-check">
                                     <input class="form-check-input" type="checkbox" name="septimo" id="septimo" onclick="ischecked('septimo')">
@@ -310,7 +307,7 @@
                                       Descuento de septimo
                                     </label>
                                   </div>
-                                </div>
+                                </div> -->
                                 <div id="diasSuspension" style="display:none">
                                 <div class="col-sm-12">
                                     <div class="form-floating form-floating-custom mb-3">
@@ -619,6 +616,8 @@
                       Close
                     </button>
                   </div>
+                  <input type="hidden" id="Action" name="Action">
+                  <input type="hidden" id="apId" name="apId">
 					  </form>
                 </div>
               </div>
@@ -689,7 +688,7 @@
                       </select>
                     </td>
                     <td style="text-align:center;">
-                    <img style="cursor: pointer;" onclick="resetform()" src="http://localhost/surge-hr/assets/img/clear-filter.png" width="25" height="25">
+                    <img style="cursor: pointer;" onclick="resetform()" src="<?Php echo URLROOT; ?>/assets/img/clear-filter.png" width="25" height="25">
                     </td>                 
                   </tr>
                 </thead>
@@ -715,14 +714,19 @@
         </div>
       </div>
     </div>
+    <?php require APPROOT . '/views/inc/footer.php'; ?>
   </div>
 </div>
 
 
-<?php require APPROOT . '/views/inc/footer.php'; ?>
+
 
 <script>
-
+$("#createModal").click(function(){
+  $("#Action").val("Insert");
+  $("#actionspan").text("Create");
+  $("#addAPButton").text("Create")
+})
 function resetform(){
   $(".grid-filter").val("");
   $('#searchCreatedAt').daterangepicker({
@@ -761,7 +765,7 @@ $(".grid-filter").on("change",function(){
     var example_length = 10;
     var camposAscDesc = "";
 	  var	firstload='YES';
-		load(1,nowhere,example_length,camposAscDesc,firstload);
+		readData(1,nowhere,example_length,camposAscDesc,firstload);
 
     $("#addRowButton").click(function() {
       // $("#add-row")
@@ -781,7 +785,8 @@ $(".grid-filter").on("change",function(){
         $('#createApForm')[0].reset();
         $('#approveForm')[0].reset();
         $("#approval-error").html('');
-		  hideAllAndShow("")
+        $("#Action").val('');
+		    hideAllAndShow("")
       }
 
     });
@@ -817,6 +822,7 @@ $(".tipoSus").on('change',function(){
 
   function getData() {
     var badge = $("#addbadge").val();
+    
     //console.log(badge)
 	  
     $.ajax({
@@ -859,6 +865,58 @@ $(".tipoSus").on('change',function(){
     } else {
         console.info('Element with ID "' + elementId + '" not found.');
        //elementToShow.style.display="none";
+    }
+}
+
+function showSetLeaveAreas(idLeaveType){
+  switch(idLeaveType){
+      case '1':
+          hideAllAndShow("permisoConSinGoce") 
+          setReasons('motivo_permiso',1);
+        break;
+      case '2':
+        hideAllAndShow("permisoConSinGoce")
+        setReasons('motivo_permiso',1);
+        break;
+      case '3':
+        hideAllAndShow("vacaciones") 
+        break;
+      case '4':
+        hideAllAndShow("traslados")
+        setDespartment();
+        setPosition('newPosition');
+        break;
+      case '5':
+        hideAllAndShow("incapacidad")
+        break;
+      case '6':
+        hideAllAndShow("sanciones")
+        break;
+      case '7':
+        hideAllAndShow("cambiohorario")
+        setReasons('motivo_horario',3);
+        break;
+      case '8':
+        hideAllAndShow("cambiodialibre");
+        setReasons('motivo_cambio',2);
+        break;
+      case '9':
+        hideAllAndShow("ausencia");
+        break;
+      case '10':
+       hideAllAndShow("horasExtra");
+        break;
+      case '11':
+        hideAllAndShow("retiros");
+        break;
+      case '12':
+        hideAllAndShow("ajusteSalarial");
+        setPosition('newPosition2');
+        break;
+      default:
+        hideAllAndShow("")
+        break; 
+
     }
 }
 
@@ -922,15 +980,18 @@ $(".tipoSus").on('change',function(){
     var leaveTime = $("#tiempopermiso").val()
     //console.log(leaveTime)
     if(leaveTime=="Horas"){
+      $("#dia2").val('')
       $("#horas").show();
       $("#dias").hide()
     }else{
+      $("#hora_inicio").val('');
+      $("#hora_final").val('');
       $("#horas").hide();
       $("#dias").show()
     }
   }
 
-  function setReasons(element,type){
+  function setReasons(element,type,option=null){
     $.ajax({
       url:'<?php echo URLROOT; ?>/aps/getreasons/'+type,
       type:'GET',
@@ -949,11 +1010,14 @@ $(".tipoSus").on('change',function(){
 							$dropdown.append($("<option />").val(val.description).text(val.description));
 						//}
 					});
+          if (option){
+            $("#"+element).val(option)
+          }
       }
     })
   }
 	
-  function setDespartment(){
+  function setDespartment(option=null){
     $.ajax({
       url:'<?php echo URLROOT; ?>/aps/getdepartments',
       type:'GET',
@@ -972,11 +1036,14 @@ $(".tipoSus").on('change',function(){
 							$dropdown.append($("<option />").val(val.departmentId).text(val.name));
 						//}
 					});
+          if(option){
+            $("#newDepartment").val(option);
+          }
       }
     })
   }
 
-  function setPosition(id){
+  function setPosition(id,option=null){
     $.ajax({
       url:'<?php echo URLROOT; ?>/aps/getpositions',
       type:'GET',
@@ -995,6 +1062,9 @@ $(".tipoSus").on('change',function(){
 							$dropdown.append($("<option />").val(val.positionId).text(val.positionName));
 						//}
 					});
+          if(option){
+            $("#"+id).val(option)
+          }
       }
     })
   }
@@ -1026,12 +1096,7 @@ function attitionReasons(myvar){
 						console.log('creando select');
 						$dropdown.append($("<option />").val('').text('--Seleccione--'));
 					$.each(reasonObj, function(key,val) {
-						
-						//if(val.id_reason_attrition==attrition_reason){
-//							$dropdown.append($("<option value='"+val.id_reason_attrition+"' selected>"+val.name+"</option>"));
-//						}else{
 							$dropdown.append($("<option />").val(val.id_reason_attrition).text(val.name));
-						//}
 					});
 						
 						$dropdown.val(attrition_reason);
@@ -1056,25 +1121,20 @@ function attitionReasons(myvar){
 						$dropdown.empty();
 						$dropdown.append($("<option />").val('').text('--Seleccione--'));
 					$.each(detailsObj, function(key,val) {
-						//$dropdown.append($("<option />").val(val.idattrition_reasons_detail).text(val.name));
-						//if(val.idattrition_reasons_detail==reasonDetail){
-//							$dropdown.append($("<option value='"+val.idattrition_reasons_detail+"' selected>"+val.name+"</option>"));
-//						}else{
 							$dropdown.append($("<option />").val(val.idattrition_reasons_detail).text(val.name));
-						//}
+			
 					});
 						$dropdown.val(reasonDetail);
 					}else{
 						$("#reasonDetail_div").hide();
 					}
-					//$("#attritionReasons").show();
 					
 				}
 		})
 	}
 }
 	
-function showAttritionReasons(step){
+function showAttritionReasons(step,option=null,option2=null){
 	if(step=="reasonType"){
 		var reasonType = document.getElementById("tipoRetiro").value;
 	//var step = "reasonType";
@@ -1098,6 +1158,9 @@ function showAttritionReasons(step){
 					$.each(reasonObj, function(key,val) {
 							$dropdown.append($("<option />").val(val.attritionReasonId).text(val.name));
 					});
+          if(option){
+            $("#attritions").val(option);
+          }
 					}else{
 						$("#attritionReasons").hide();
 					  $("#reasonDetail_div").hide();
@@ -1110,7 +1173,12 @@ function showAttritionReasons(step){
 	}
 	
 	if(step=="reasonsDetail"){
-		var reasonDetail = document.getElementById("attritions").value;
+    if(option){
+      var reasonDetail = option;
+    }else{
+      var reasonDetail = document.getElementById("attritions").value;
+    }
+		
 		console.log(reasonDetail);
 		$.ajax({
 			url: '<?php echo URLROOT; ?>/aps/getAttritionReasons',
@@ -1127,6 +1195,9 @@ function showAttritionReasons(step){
 						//$dropdown.append($("<option />").val(val.idattrition_reasons_detail).text(val.name));
 						$dropdown.append($("<option />").val(val.attritionReasonDetailId).text(val.name));
 					});
+          if(option2){
+            $("#reasonsDetails").val(option2);
+          }
 					}else{
 						$("#reasonDetail_div").hide();
 						$dropdown.empty();
@@ -1297,7 +1368,11 @@ function showAttritionReasons(step){
                                   $(".modal").modal("hide");
                                   $('#createApForm')[0].reset();
 		                              hideAllAndShow("")
-                                    location.reload();
+                                  var myArray = camposValue();
+                                  //console.log(myArray);
+                                  var camposAscDesc = '';
+                                  var example_length = 10;
+                                  readData(1,myArray,example_length,camposAscDesc,'');
                                 }
                             });
           }else{
@@ -1383,7 +1458,7 @@ function showAttritionReasons(step){
     $("#totalOt").val(totalHours)
 }
 
-function load(page,where='',example_length,camposAscDesc,firstload=''){
+function readData(page,where='',example_length,camposAscDesc,firstload=''){
 	
 	var search="";
 
@@ -1536,7 +1611,7 @@ function load(page,where='',example_length,camposAscDesc,firstload=''){
 				
 				cell10.innerHTML = `<div class="form-button-action">
                         <button type="button" title="" class="btn btn-link btn-lg aproveModal" data-leaveId="${v.apDetailsId}" data-bs-toggle="modal" data-bs-target="#approveModal" ${enable}><i class="fas fa-check-double"></i></button>
-                        <button type="button" class="btn btn-link btn-warning btn-lg">
+                        <button type="button" class="btn btn-link btn-warning btn-lg updateModal" data-bs-toggle="modal" data-bs-target="#addRowModal" data-leaveId="${v.apDetailsId}">
                           <i class="fa fa-edit"></i>
                         </button>
                         ${printButton}
@@ -1609,7 +1684,7 @@ function camposValue(){
 	console.log(myArray);
 	var camposAscDesc = '';
     var example_length = 10;
-    load(1,myArray,example_length,camposAscDesc,'');
+    readData(1,myArray,example_length,camposAscDesc,'');
 	
 });
 
@@ -1665,7 +1740,7 @@ $("#saveApApproval").on("click",function(e){
                                     console.log(myArray);
                                     var camposAscDesc = '';
                                       var example_length = 10;
-                                      load(1,myArray,example_length,camposAscDesc,'');
+                                      readData(1,myArray,example_length,camposAscDesc,'');
                                }
                            });
           }else{
@@ -1682,4 +1757,156 @@ $("#saveApApproval").on("click",function(e){
       })
 		}
 })
+
+$(document).on('click', '.updateModal', function(){
+  var leaveId = $(this).data("leaveid");
+  $("#actionspan").text("Update");
+  $("#addAPButton").text("Edit")
+  $("#Action").val("Update");
+  $("#apId").val(leaveId);
+  //console.log(leaveId)
+  $.ajax({
+    url:"<?Php echo URLROOT; ?>/aps/getleave/"+leaveId,
+    type:"GET",
+    success:function(data){
+      console.log(data)
+      var myObj = JSON.parse(data)
+      $("#addbadge").val(myObj.badge);
+      $('#addbadge').trigger('keyup');
+      $("#addLeaveType").val(myObj.apTypeId);
+      var apType = myObj.apTypeId;
+      $("#addComments").val(myObj.comment)
+      //showSetLeaveAreas(apType)
+      //console.log(myObj.reason1)
+      switch(apType){
+        case 1:
+          hideAllAndShow("permisoConSinGoce") 
+          setReasons('motivo_permiso',1,myObj.reason1);
+          //console.log(myObj.reason1);
+          $("#dia1").val(myObj.apDate1);
+          var reason2 = myObj.reason2;
+          if(reason2=="Horas"){
+            $("#tiempopermiso").val("Horas");
+            $('#tiempopermiso').trigger('change');
+            $("#hora_inicio").val(myObj.startTime);
+            $("#hora_final").val(myObj.endTime)
+          }else{
+            $("#tiempopermiso").val("Dias");
+            $('#tiempopermiso').trigger('change');
+            $("#dia2").val(myObj.apDate2);
+          }
+          
+          //document.getElementById("motivo_permiso").value = myObj.reason1;
+          break;
+        case 2: 
+          hideAllAndShow("permisoConSinGoce") 
+          setReasons('motivo_permiso',1,myObj.reason1);
+          //console.log(myObj.reason1);
+          $("#dia1").val(myObj.apDate1);
+          var reason2 = myObj.reason2;
+          if(reason2=="Horas"){
+            $("#tiempopermiso").val("Horas");
+            $('#tiempopermiso').trigger('change');
+            $("#hora_inicio").val(myObj.startTime);
+            $("#hora_final").val(myObj.endTime)
+          }else{
+            $("#tiempopermiso").val("Dias");
+            $('#tiempopermiso').trigger('change');
+            $("#dia2").val(myObj.apDate2);
+          }
+          break;
+        case 3:
+          hideAllAndShow("vacaciones");
+          $("#inicioVacaciones").val(myObj.apDate1);
+          $("#finVacaciones").val(myObj.apDate2);
+          calculateDays();
+          break;
+        case 4:
+          hideAllAndShow("traslados")
+          setDespartment(myObj.newAccount);
+          setPosition('newPosition',myObj.newPosition);
+          $("#inicioPrueba").val(myObj.apDate1);
+          $("#finPrueba").val(myObj.apDate2);
+          break;
+        case 5:
+          hideAllAndShow("incapacidad");
+          $("#inicioIncapacidad").val(myObj.apDate1);
+          $("#finIncapacidad").val(myObj.apDate2);
+          if(myObj.reason1=="ISSS"){
+            $("#isss").prop('checked', true);
+          }else{
+            $("#particular").prop('checked', true);
+          }
+
+          if(myObj.reason2=="Prorroga"){
+            $("#prorroga").prop('checked', true);
+            $("#prorroga").val("Yes")
+          }
+          break;
+        case 6:
+          hideAllAndShow("sanciones");
+          switch(myObj.reason1){
+            case "Verbal":
+              $("#sancionVerbal").prop('checked', true);
+              break;
+            case "Escrita":
+              $("#sancionEscrita").prop('checked', true);
+              break;
+            case "Suspension":
+              $("#suspension").prop('checked', true);
+              $('#tiempopermiso').trigger('change');
+              $("#inicioSuspension").val(myObj.apDate1);
+              $("#finSuspension").val(myObj.apDate2);
+              break;
+          }
+          break;
+        case 7:
+          hideAllAndShow("cambiohorario")
+          setReasons('motivo_horario',3,myObj.reason1);
+          $("#inicioHorario").val(myObj.apDate1);
+          $("#finHorario").val(myObj.apDate2);
+          break;
+        case 8:
+          hideAllAndShow("cambiodialibre");
+          setReasons('motivo_cambio',2,myObj.reason1);
+          $("#fechaSolicitud").val(myObj.apDate1);
+          $("#diaAsignado").val(myObj.apDate2);
+          $("#diaSolicitado").val(myObj.apDate3);
+          break;
+        case 9:
+          hideAllAndShow("ausencia");
+          $("#inicioAusencia").val(myObj.apDate1);
+          $("#finAusencia").val(myObj.apDate2);
+          break;
+        case 10:
+        hideAllAndShow("horasExtra");
+          $("#fechaOt").val(myObj.apDate1);
+          $("#inicioOt").val(myObj.startTime);
+          $("#finOt").val(myObj.endTime);
+          getTotalOT();
+          break;
+        case 11:
+          hideAllAndShow("retiros");
+          $("#tipoRetiro").val(myObj.withdrawalType);
+          $("#fechaRetiro").val(myObj.apDate1);
+          showAttritionReasons('reasonType',myObj.attritionsId1);
+          console.log(myObj.attritionsId2)
+          if(myObj.attritionsId2){
+            showAttritionReasons('reasonsDetail',myObj.attritionsId1,myObj.attritionsId2);
+          }
+          break;
+        case 12:
+          hideAllAndShow("ajusteSalarial");
+          $("#monto").val(myObj.newSalary);
+          $("#diaEfectivo").val(myObj.apDate1);
+          setPosition('newPosition2',myObj.newPosition);
+          break;
+
+      }
+
+    }
+  })
+  
+})
+
 </script>

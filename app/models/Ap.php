@@ -13,6 +13,13 @@ class Ap {
         return $row;
     }
 
+    public function getSingleLeave($leaveId){
+        $this->db->query("SELECT * FROM hr_surgepays.ap_details WHERE apDetailsId=:leaveId;");
+        $this->db->bind(":leaveId",$leaveId);
+		$row = $this->db->single();
+		return $row;
+    }
+
     public function insertLeave($data){
         $response = $this->db->insertQuery("hr_surgepays.ap_details",$data);
         return $response;
