@@ -118,7 +118,7 @@
                       </div>
                     </div>
 
-                    <div class="col-6">
+                    <div class="col-6" id="permissionLevel">
                       <div class="form-group form-group-default">
                         <label>Permission Level <span class="text-danger">*</span></label>
                         <select id="permissionLevelId" name="permissionLevelId" class="form-select">
@@ -237,6 +237,7 @@
     <?php require APPROOT . '/views/inc/footer.php'; ?>
 
     <script>
+
       $('#firstName, #firstLastName').prop('readonly', true);
       $('#badge_edit').prop('readonly', true);
       $('#externalPersonal_edit').prop('disabled', true);
@@ -248,11 +249,14 @@
           $('#badge').prop('readonly', true);
           $('#badge').val('');
           $('#firstName, #firstLastName').prop('readonly', false);
+          $("#permissionLevel").hide(); 
 
         } else {
           $('#badge').prop('readonly', false);
           $('#firstName, #firstLastName').prop('readonly', true);
           $('#firstName, #firstLastName').val('');
+          $("#permissionLevel").show(); 
+
           // console.log('Checkbox is unchecked');P
         }
       });
@@ -332,10 +336,13 @@
               // Person Externa
               $('#externalPersonal_edit').prop('checked', true);
               $('#firstLastName_edit, #firstName_edit').prop('readonly', false);
+              $('#permissionLevelId_edit').prop('disabled', true);
 
             } else {
               $('#externalPersonal_edit').prop('checked', false);
               $('#firstLastName_edit, #firstName_edit').prop('readonly', true);
+              $('#permissionLevelId_edit').prop('disabled', false);
+
 
             }
 
@@ -528,16 +535,14 @@
 
                 } else {
 
-                  $.notify(content, {
-                    type: 'danger',
-                    placement: {
-                      from: 'top',
-                      align: 'right',
+                  swal(obj.message, {
+                    icon: "error",
+                    buttons: {
+                      confirm: {
+                        className: "btn btn-danger",
+                      },
                     },
-                    time: 1000,
-                    delay: 0,
                   });
-
 
                 }
 

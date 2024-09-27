@@ -43,37 +43,45 @@ class Users extends Controller
                     'externalPersonal' => @$_POST['externalPersonal'],
                 ];
 
-                if ($data['externalPersonal'] == "Yes") {
-                    // Persona Externa
-                    $employeeId = 0;
-                    $firstName = $data['firstName'];
-                    $firstLastName = $data['firstLastName'];
+                if (!$this->userModel->userExists($data['username'])) {
+
+                    if ($data['externalPersonal'] == "Yes") {
+                        // Persona Externa
+                        $employeeId = 0;
+                        $firstName = $data['firstName'];
+                        $firstLastName = $data['firstLastName'];
+                        $permissionLevel = 256;
+                    } else {
+                        $employeeInfo = $this->employeeModel->getEmployeeByBadge($data['badge']);
+                        $employeeId = $employeeInfo['employeeId'];
+                        $firstName = null;
+                        $firstLastName = null;
+                        $permissionLevel = $data['permissionLevelId'];
+                    }
+                    // Insert
+                    $dataUser = [
+                        'username' => $data['username'],
+                        'password' => password_hash('pass123', PASSWORD_DEFAULT),
+                        'employeeId' => $employeeId,
+                        'firstName' => $firstName,
+                        'firstLastName' => $firstLastName,
+                        'permissionLevelId' => $permissionLevel,
+                        'token' => md5(uniqid(rand(), true))
+                    ];
+                    $lastUserId = $this->userModel->createUser($dataUser);
+                    //echo "lastUserId " . $lastUserId;
+
+                    // Save log 
+                    $dataLog = ['userId' => $_SESSION['userId'], 'registerId' => $lastUserId, 'action' => 'Create', 'page' => 'User', 'fields' => json_encode($dataUser)];
+                    $this->activityLogModel->saveActivityLog($dataLog);
+
+                    // echo 'done';
+                    $re['status'] = true;
+                    $re['message'] = 'The User has been create successfully added.';
                 } else {
-                    $employeeInfo = $this->employeeModel->getEmployeeByBadge($data['badge']);
-                    $employeeId = $employeeInfo['employeeId'];
-                    $firstName = null;
-                    $firstLastName = null;
+                    $re['status'] = false;
+                    $re['message'] = "Email Address Already Exists";
                 }
-                // Insert
-                $dataUser = [
-                    'username' => $data['username'],
-                    'password' => password_hash('pass123', PASSWORD_DEFAULT),
-                    'employeeId' => $employeeId,
-                    'firstName' => $firstName,
-                    'firstLastName' => $firstLastName,
-                    'permissionLevelId' => $data['permissionLevelId'],
-                    'token' => md5(uniqid(rand(), true))
-                ];
-                $lastUserId = $this->userModel->createUser($dataUser);
-                //echo "lastUserId " . $lastUserId;
-
-                // Save log 
-                $dataLog = ['userId' => $_SESSION['userId'], 'registerId' => $lastUserId, 'action' => 'Create', 'page' => 'User', 'fields' => json_encode($dataUser)];
-                $this->activityLogModel->saveActivityLog($dataLog);
-
-                // echo 'done';
-                $re['status'] = true;
-                $re['message'] = 'The User has been create successfully added.';
             } catch (Exception $e) {
                 $re['status'] = false;
                 $re['message'] = "Error: " . $e;
@@ -114,7 +122,7 @@ class Users extends Controller
             try {
 
                 $re = ['status' => false, 'message' => ''];
-                $permissions=0;
+                $permissions = 0;
                 $data = [
                     'userIdEdit' => $_POST['userIdEdit'],
                     'externalPersonal' => @$_POST['externalPersonal_edit'],
@@ -127,8 +135,15 @@ class Users extends Controller
                     'changedFields' => $_POST['changedFields'],
                 ];
 
-                foreach ($data['permissionLevelId'] as $key => $up) {
-                    $permissions += $up;
+
+                // get External Personal
+
+                if ($this->userModel->checkExternalPerson($data['userIdEdit'])) {
+                    $permissions = 256;
+                } else {
+                    foreach ($data['permissionLevelId'] as $key => $up) {
+                        $permissions += $up;
+                    }
                 }
 
                 $dataUpdate = [
