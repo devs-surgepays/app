@@ -19,7 +19,7 @@
           <div class="card-body">
             <div class="row">
               <div class="d-flex justify-content-between">
-                <button id="btn-add-user" type="button" class="btn btn-primary ms-auto" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                <button id="btn-add-user" type="button" class="btn btn-primary ms-auto" data-bs-toggle="modal" data-bs-target="#addUser">
                   <i class="fa fa-plus"></i> Add User</button>
               </div>
             </div>
@@ -68,7 +68,7 @@
         <!-- Button trigger modal -->
 
         <!-- Create User -->
-        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal fade" id="addUser" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="addUserLabel" aria-hidden="true">
           <div class="modal-dialog modal-lg">
             <div class="modal-content">
               <div class="modal-header">
@@ -280,6 +280,9 @@
         $("#badge").val('');
         $("#username").val('');
         $('#externalPersonal').prop('checked', false);
+        $("#permissionLevel").show(); 
+
+
       });
 
       function getInfoEmployee() {
@@ -451,13 +454,13 @@
 
           initialState = captureInitialState();
           console.log('Initial State:', initialState);
-        });
 
-        $('#edit-user').on('shown.bs.modal', function() {
           $('.js-select-multiple').select2({
             dropdownParent: $('#edit-user')
           })
+
         });
+        
 
 
         // Function to get changed fields
