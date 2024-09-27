@@ -33,6 +33,8 @@
   <link rel="stylesheet" href="<?php echo URLROOT ?>/assets/css/plugins.min.css?<?php echo rand(1, 9999) ?>" />
   <link rel="stylesheet" href="<?php echo URLROOT ?>/assets/css/kaiadmin.min.css?<?php echo rand(1, 9999) ?>" />
 <link rel="stylesheet" href="<?php echo URLROOT ?>/assets/css/custom.css?<?php echo rand(1, 9999) ?>" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.2/min/dropzone.min.css" rel="stylesheet">
+
   <!-- CSS Just for demo purpose, don't include it in your project -->
   <!-- <link rel="stylesheet" href="<?php //echo URLROOT ?>/assets/css/demo.css" /> -->
 </head>

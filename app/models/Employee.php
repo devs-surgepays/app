@@ -215,4 +215,11 @@ class Employee
         $result = $this->db->resultSetAssoc();
         return $result;
     }
+
+    public function getNameAndBadgeByIdEmp($employeeId){
+        $this->db->query('SELECT badge,firstName,firstLastName FROM hr_surgepays.employees where employeeId=:employeeId;');
+        $this->db->bind('employeeId', $employeeId);
+        $re = $this->db->resultSetFetch();
+        return $re;
+    }
 }

@@ -135,4 +135,22 @@ class User
         $result = $this->db->resultSetFetch();
         return $result['userCount'];
     }
+
+    public function checkExternalPerson($userId){
+        $this->db->query("SELECT employeeId FROM hr_surgepays.users where userId = :userId;");
+        $this->db->bind(':userId', $userId);
+        $result = $this->db->resultSetFetch();
+
+        if ($result['employeeId']>0) return false;
+        else return true;
+    }
+
+    public function userExists($email){
+        $this->db->query("SELECT count(*) as 'count' FROM hr_surgepays.users where username = :username;");
+        $this->db->bind(':username', $email);
+        $result = $this->db->resultSetFetch();
+
+        if ($result['count']>0) return true;
+        else return false;
+    }
 }
