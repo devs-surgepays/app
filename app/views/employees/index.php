@@ -119,16 +119,17 @@
                         </div>
                         <div class="row pt-5 ">
                             <div class="table-responsive">
-                                <table id="tableOrders" class="GrenTable table table-bordered tableOrders">
+                                <table id="tbEmployees" class="GrenTable table table-bordered tbEmployees">
                                     <thead>
                                         <tr class="dataexp">
                                             <td>No.</td>
                                             <td>Badge</td>
                                             <td>Name</td>
                                             <td>Email</td>
-                                            <td style="width: 135px;">
+                                            <td>Hired Date</td>
+                                            <!-- <td style="width: 135px;">
                                                 <div class="searchDataClick" id="date_created" onclick="orderBy(this)">Hired Date<i data-order="orderAscDesc" id="orderby_date_created" class="fa fa-sort"></i></div>
-                                            </td>
+                                            </td> -->
                                             <td>Department</td>
                                             <td>Position</td>
                                             <td>Status</td>
@@ -167,6 +168,8 @@
                                     <tbody class="dataBody">
                                     </tbody>
                                 </table>
+                                <p id="showingRows"></p>
+                                <nav id="paginationRows" style="float:right;"></nav>
 
                                 <div class="d-flex justify-content-between">
                                     <div class="showing"></div>
@@ -182,7 +185,7 @@
                 </div>
             </div>
         </div>
-        
+
         <?php require APPROOT . '/views/inc/footer.php'; ?>
     </div> <!-- end/page-inner -->
 </div> <!-- end/container2 -->
@@ -218,11 +221,49 @@
                 //GIF WAITING
             },
             success: function(data) {
-                //console.log(data)
+                // console.log(data)
                 var obj = JSON.parse(data)
-                $(".dataBody").html(obj.rows).fadeIn('slow');
-                $(".showing").html(obj.showing).fadeIn('slow');
-                $(".pagination").html(obj.pagination).fadeIn('slow');
+                var rows = obj.data;
+                // console.log(rows)
+
+                var tbody = $('#tbEmployees tbody');
+                tbody.empty(); // Limpiar tabla antes de llenar
+
+ 
+                let rowNumber = 1;
+                let totalRowShow = 0;
+
+                if (rows.length > 0) {
+
+                    rows.forEach(function(item) {
+
+                        const status = (item.statusEmployee == 1) ? '<span class="badge badge-success">Active</span>' : '<span class="badge badge-danger">Inactive</span>';
+                        totalRowShow = obj.offset + rowNumber;
+                        const emailCorp = (item.corporateEmail === null) ? '' : item.corporateEmail;
+
+
+                        var row = `<tr>
+                    <td>${rowNumber}</td>
+                    <td><a href="<?php echo URLROOT; ?>/employees/edit/${item.badge}" class="btn btn-primary btn-border">#${item.badge}</a> </td></td>
+                    <td>${ item.fullName }</td>
+                    <td>${ emailCorp}</td>
+                    <td>${ item.formattedHiredDate }</td>
+                    <td>${ item.name }</td>
+                    <td>${ item.positionName }</td>
+                    <td>${ status }</td>
+                    <td> <a href="<?php echo URLROOT; ?>/employees/edit/${item.badge}" class="btn btn-sm btn-info"><i class="fa fa-edit"></i></a></td>
+                    </tr>`;
+                        tbody.append(row);
+                        rowNumber++;
+                    });
+
+                } else {
+                    var row = `<tr class="text-center"><td colspan="9">No records found</td></tr>`;
+                    tbody.append(row);
+                }
+                // showing
+                $("#showingRows").html(`Showing ${obj.offsetnumShow} to ${totalRowShow} of ${obj.numrows}`);
+                $("#paginationRows").html(obj.pagination);
             }
         })
     }
@@ -282,6 +323,7 @@
     // --------------------------------------------------------------------
 
     $(".searchDataChange").change(function() {
+        console.log("AEARCHHH")
         getdataBody();
     });
     $(".searchDataClick").click(function() {
