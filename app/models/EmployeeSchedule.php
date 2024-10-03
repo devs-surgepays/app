@@ -15,12 +15,49 @@ class EmployeeSchedule
         return $result;
     }
 
+    public function getLastEmployeeSchedule($employeeId)
+    {
+        $this->db->query('SELECT * FROM hr_surgepays.employee_schedules where employeeId=:employeeId and status=1 order by createdAt desc LIMIT 1;');
+        $this->db->bind(':employeeId', $employeeId);
+        $result = $this->db->single();
+
+        return $result;
+    }
+
+    public function getEmployeeSchedulebyId($scheduleId)
+    {
+        $this->db->query('SELECT * FROM hr_surgepays.employee_schedules where scheduleId=:scheduleId;');
+        $this->db->bind(':scheduleId', $scheduleId);
+        $result = $this->db->single();
+
+        return $result;
+    }
+
+    public function updateOldSchedules($currentScheduleId,$employeId)
+    {
+        $this->db->query('UPDATE hr_surgepays.employee_schedules SET status=0 where scheduleId !=:scheduleId and employeeId=:employeId;');
+        $this->db->bind(':scheduleId',$currentScheduleId);
+        $this->db->bind(':employeId', $employeId);
+        $this->db->execute();
+        //$result = $this->db->single();
+
+        //return $result;
+    }
+
     public function saveEmployeeSchedule($data)
     {
         $this->db->insertQuery('hr_surgepays.employee_schedules', $data);
         $lastInsertId = $this->db->lastinsertedId();
         return $lastInsertId;
     }
+
+    public function editEmployeeSchedule($data)
+    {
+        $this->db->updateQuery('hr_surgepays.employee_schedules', $data,"scheduleId=:scheduleId");
+        //$lastInsertId = $this->db->lastinsertedId();
+        //return $lastInsertId;
+    }
+
     public function getEmployeeWorkingToday($dayToday)
     {
         $this->db->query("SELECT 

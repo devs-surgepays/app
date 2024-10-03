@@ -9,6 +9,8 @@ class Aps extends Controller
             redirect('auth/login');
         }
         $this->apModel = $this->model('Ap');
+        $this->employeeScheduleModel = $this->model('EmployeeSchedule');
+        $this->employeeModel = $this->model('Employee');
     }
 
     public function index(){
@@ -22,12 +24,18 @@ class Aps extends Controller
 
         echo json_encode($data);
     }
+
+    public function getSingleLeave($leaveId){
+        $data=$this->apModel->getSingleLeave($leaveId);
+
+        return $data;
+    }
 	
 	public function saveAP(){
 		if($_SERVER['REQUEST_METHOD']=='POST'){
             $_POST= filter_input_array(INPUT_POST,FILTER_SANITIZE_STRING);
-            // print_r($_POST);
-            // exit();
+             //print_r($_POST);
+             //exit();
             $action=$_POST['Action'];
             $comments = (isset($_POST['addComments']))?trim($_POST['addComments']):"";
             $data=[
@@ -98,9 +106,117 @@ class Aps extends Controller
                     }
                     break;
                 case 7:
+                    $daysOff="";
+
                     $data['apDate1']=$_POST['inicioHorario'];
                     $data['apDate2']=$_POST['finHorario'];
                     $data['reason1']=$_POST['motivo_horario'];
+                    if(isset($_POST['mondayOff'])){
+                        $schedule['monday']="-OFF-";
+                        $schedule['mondayLunch']="-OFF-";
+                        $days="-";
+                        $daysOff="MON & ";
+                    }else{
+                        $schedule['monday']=$_POST['mondayIn']." - ".$_POST['mondayOut'];
+                        $schedule['mondayLunch']=$_POST['mondayLunch'];
+                        $days="M";
+                    }
+                    if(isset($_POST['tuesdayOff'])){
+                        $schedule['tuesday']="-OFF-";
+                        $schedule['tuesdayLunch']="-OFF-";
+                        $days.="-";
+                        if(strlen($daysOff)>0){
+                            $daysOff.="TUE";
+                        }else{
+                            $daysOff="TUE & ";
+                        }
+                    }else{
+                        $schedule['tuesday']=$_POST['tuesdayIn']." - ".$_POST['tuesdayOut'];
+                        $schedule['tuesdayLunch']=$_POST['tuesdayLunch'];
+                        $days.="T";
+                    }
+                    if(isset($_POST['wednesdayOff'])){
+                        $schedule['wednesday']="-OFF-";
+                        $schedule['wednesdayLunch']="-OFF-";
+                        $days.="-";
+                        if(strlen($daysOff)>0){
+                            $daysOff.="WED";
+                        }else{
+                            $daysOff="WED & ";
+                        }
+                    }else{
+                        $schedule['wednesday']=$_POST['wednesdayIn']." - ".$_POST['wednesdayOut'];
+                        $schedule['wednesdayLunch']=$_POST['wednesdayLunch'];
+                        $days.="W";
+                    }
+                    if(isset($_POST['thursdayOff'])){
+                        $schedule['thursday']="-OFF-";
+                        $schedule['thursdayLunch']="-OFF-";
+                        $days.="-";
+                        if(strlen($daysOff)>0){
+                            $daysOff.="THU";
+                        }else{
+                            $daysOff="THU & ";
+                        }
+                    }else{
+                        $schedule['thursday']=$_POST['thursdayIn']." - ".$_POST['thursdayOut'];
+                        $schedule['thursdayLunch']=$_POST['thursdayLunch'];
+                        $days.="R";
+                    }
+                    if(isset($_POST['fridayOff'])){
+                        $schedule['friday']="-OFF-";
+                        $schedule['fridayLunch']="-OFF-";
+                        $days.="-";
+                        if(strlen($daysOff)>0){
+                            $daysOff.="FRI";
+                        }else{
+                            $daysOff="FRI & ";
+                        }
+                    }else{
+                        $schedule['friday']=$_POST['fridayIn']." - ".$_POST['fridayOut'];
+                        $schedule['fridayLunch']=$_POST['fridayLunch'];
+                        $days.="F";
+                    }
+                    if(isset($_POST['saturdayOff'])){
+                        $schedule['saturday']="-OFF-";
+                        $schedule['saturdayLunch']="-OFF-";
+                        $days.="-";
+                        if(strlen($daysOff)>0){
+                            $daysOff.="SAT";
+                        }else{
+                            $daysOff="SAT & ";
+                        }
+                    }else{
+                        $schedule['saturday']=$_POST['saturdayIn']." - ".$_POST['saturdayOut'];
+                        $schedule['saturdayLunch']=$_POST['saturdayLunch'];
+                        $days.="Y";
+                    }
+                    if(isset($_POST['sundayOff'])){
+                        $schedule['sunday']="-OFF-";
+                        $schedule['sundayLunch']="-OFF-";
+                        $days.="-";
+                        if(strlen($daysOff)>0){
+                            $daysOff.="SUN";
+                        }else{
+                            $daysOff="SUN & ";
+                        }
+                    }else{
+                        $schedule['sunday']=$_POST['sundayIn']." - ".$_POST['sundayOut'];
+                        $schedule['sundayLunch']=$_POST['sundayLunch'];
+                        $days.="S";
+                    }
+                    //$data['reasonId']=$_POST['scheduleId']
+                    $schedule['days']=$days;
+                    $schedule['daysOff']=$daysOff;
+                    $schedule['status']=0;
+                    $schedule['employeeId']=$_POST['addEmployeeId'];
+                    if($action=="Insert"){
+                        $data['scheduleId']=$this->employeeScheduleModel->saveEmployeeSchedule($schedule);
+                    }else if($action=="Update"){
+                        $schedule['scheduleId']=$_POST['scheduleId'];
+                        $this->employeeScheduleModel->editEmployeeSchedule($schedule);
+                    }
+                    
                     break;
                 case 8:
                     $data['apDate1']=$_POST['fechaSolicitud'];
@@ -151,6 +267,8 @@ class Aps extends Controller
             
             $data['status']="success";
             $data['message']="your leave has been saved succesfully";
+            //print_r($data);
+            //print_r($schedule);
             echo json_encode($data);
         }else{
             // Forbidden Access
@@ -185,22 +303,41 @@ class Aps extends Controller
                 "apDetailsId"=>$_POST['id'],
                 "status"=>$_POST['status']
             ];
+            //Getting permission level
             $permissionLevel = $_SESSION['permissionLevelId'];
             if($permissionLevel&8){
-                $data['aprovedByM']=$_POST['status'];
+                $data['aprovedByM']=$data['status'];
                 $data['byMUser']=$_SESSION['userId'];
             }else if($permissionLevel&16){
-                $data['aprovedByHR']=$_POST['status'];
+                $data['aprovedByHR']=$data['status'];
                 $data['byHRUser']=$_SESSION['userId'];
             }else if($permissionLevel&32){
-                $data['aprovedByWf']=$_POST['status'];
+                $data['aprovedByWf']=$data['status'];
                 $data['byWfUSer']=$_SESSION['userId'];
             }else if($permissionLevel&4){
-                $data['aprovedBySup']=$_POST['status'];
+                $data['aprovedBySup']=$data['status'];
                 $data['bySupUser']=$_SESSION['userId'];
             } 
+            //Updating Aproves into apDetails Table
             $this->apModel->updateLeave($data);
-            $data['status']="success";
+            //Getting apDetails
+            $apInfo= $this->getSingleLeave($data['apDetailsId']);
+            //Getting Employee Info by badge
+            $employeeInfo = $this->employeeModel->getEmployeeByBadge($apInfo['badge']);
+            //Updating employee Schedule for Schedule Change aprove
+            //Verifing if ap Id equal schedule change
+            if($apInfo['apTypeId']==7){
+                //Verifying if status is approve
+                if($data['status']==1){
+                    $schedule['scheduleId']=$apInfo['scheduleId'];
+                    $schedule['status']=1;
+                    //Turn On last schedule
+                    $this->employeeScheduleModel->editEmployeeSchedule($schedule);
+                    //Turn Off old schedules
+                    $this->employeeScheduleModel->updateOldSchedules($apInfo['scheduleId'],$employeeInfo['employeeId']);
+                }
+            }
+            $data['response']="success";
             $data['message']="you gave approval to this leave";
             echo json_encode($data);
         }else{
@@ -435,8 +572,13 @@ class Aps extends Controller
            print_r($row);
         }
 
-        public function getEmployeeInfo($badge){
-            $row = $this->apModel->searchEmployeeByBadge($badge);
+        public function getEmployeeInfo($badge=null){
+            if($badge){
+                $row = $this->apModel->searchEmployeeByBadge($badge);
+            }else{
+                $row = ["msg"=>"error"];
+            }
+            
             //print_r($row);
             echo json_encode($row);
         }
@@ -461,4 +603,18 @@ class Aps extends Controller
 				echo json_encode($row);
 			}
 		}
+
+    public function getLastSchedule($employeeId){
+        $row = $this->employeeScheduleModel->getLastEmployeeSchedule($employeeId);
+        echo json_encode($row);
+    }
+
+    public function getEmployeeSchedule($id,$type){
+        if($type=="Last"){
+            $row = $this->employeeScheduleModel->getLastEmployeeSchedule($id);
+        }else if($type=="Edit"){
+            $row = $this->employeeScheduleModel->getEmployeeSchedulebyId($id);
+        }
+        echo json_encode($row);
+    }
 }

@@ -342,7 +342,7 @@
 									</div>								
 								</div>
 
-                                <div class="col-sm-12">
+                                <!-- <div class="col-sm-12">
                                     <div class="form-floating form-floating-custom mb-3">
                                       <select class="form-select" name="tipohorario" id="tipohorario">
                                         <option value="Normal">Normal</option>
@@ -350,7 +350,7 @@
                                       </select>
                                       <label for="tipohorario"> Tipo de Horario: </label>
                                     </div>
-                                </div>
+                                </div> -->
                                 <div class="col-sm-12">
                                   <div class="table-responsive">
                                     <table class="table table-hover">
@@ -369,12 +369,13 @@
                                             <td><input type="time" class="form-control" id="mondayOut" name="mondayOut"></td>
                                             <td>
                                               <select class="form-select" name="mondayLunch" id="mondayLunch">
-                                                <option value="1">1:00</option>
-                                                <option value="30">0:30</option>
+                                              <option value="" selected>--:--</option>
+                                                <option value="1H">1:00</option>
+                                                <option value="30M">0:30</option>
                                                 <option value="0">0:00</option>
                                               </select>
                                             </td>
-                                            <td><input class="form-check" type="checkbox" id="mondayOff" name="mondayOff"></td>
+                                            <td><input class="form-check dayOff" value="ON" onChange="isOffchecked('mondayOff')" data-day="monday" type="checkbox" id="mondayOff" name="mondayOff"></td>
                                           </tr>
                                           <tr>
                                             <td>Martes</td>
@@ -382,12 +383,13 @@
                                             <td><input type="time" class="form-control" id="tuesdayOut" name="tuesdayOut"></td>
                                             <td>
                                               <select class="form-select" name="tuesdayLunch" id="tuesdayLunch">
-                                                <option value="1">1:00</option>
-                                                <option value="30">0:30</option>
+                                              <option value="" selected>--:--</option>
+                                                <option value="1H">1:00</option>
+                                                <option value="30M">0:30</option>
                                                 <option value="0">0:00</option>
                                               </select>
                                             </td>
-                                            <td><input class="form-check" type="checkbox" id="tuesdayOff" name="tuesdayOff"></td>
+                                            <td><input class="form-check dayOff" value="ON" onChange="isOffchecked('tuesdayOff')" data-day="tuesday" type="checkbox" id="tuesdayOff" name="tuesdayOff"></td>
                                           </tr>
                                           <tr>
                                             <td>Miercoles</td>
@@ -395,12 +397,13 @@
                                             <td><input type="time" class="form-control" id="wednesdayOut" name="wednesdayOut"></td>
                                             <td>
                                               <select class="form-select" name="wednesdayLunch" id="wednesdayLunch">
-                                                <option value="1">1:00</option>
-                                                <option value="30">0:30</option>
+                                              <option value="" selected>--:--</option>
+                                                <option value="1H">1:00</option>
+                                                <option value="30M">0:30</option>
                                                 <option value="0">0:00</option>
                                               </select>
                                             </td>
-                                            <td><input class="form-check" type="checkbox" id="wednesdayOff" name="wednesdayOff"></td>
+                                            <td><input class="form-check dayOff" value="ON" onChange="isOffchecked('wednesdayOff')" data-day="wednesday" type="checkbox" id="wednesdayOff" name="wednesdayOff"></td>
                                           </tr>
                                           <tr>
                                             <td>Jueves</td>
@@ -408,12 +411,13 @@
                                             <td><input type="time" class="form-control" id="thursdayOut" name="thursdayOut"></td>
                                             <td>
                                               <select class="form-select" name="thursdayLunch" id="thursdayLunch">
-                                                <option value="1">1:00</option>
-                                                <option value="30">0:30</option>
+                                              <option value="" selected>--:--</option>
+                                                <option value="1H">1:00</option>
+                                                <option value="30M">0:30</option>
                                                 <option value="0">0:00</option>
                                               </select>
                                             </td>
-                                            <td><input class="form-check" type="checkbox" id="thursdayOff" name="thursdayOff"></td>
+                                            <td><input class="form-check dayOff" value="ON" onChange="isOffchecked('thursdayOff')" data-day="thursday"  type="checkbox" id="thursdayOff" name="thursdayOff"></td>
                                           </tr>
                                           <tr>
                                             <td>Viernes</td>
@@ -421,12 +425,13 @@
                                             <td><input type="time" class="form-control" id="fridayOut" name="fridayOut"></td>
                                             <td>
                                               <select class="form-select" name="fridayLunch" id="fridayLunch">
-                                                <option value="1">1:00</option>
-                                                <option value="30">0:30</option>
+                                              <option value="" selected>--:--</option>
+                                                <option value="1H">1:00</option>
+                                                <option value="30M">0:30</option>
                                                 <option value="0">0:00</option>
                                               </select>
                                             </td>
-                                            <td><input class="form-check" type="checkbox" id="fridayOff" name="fridayOff"></td>
+                                            <td><input class="form-check dayOff" value="ON" onChange="isOffchecked('fridayOff')" data-day="friday"  type="checkbox" id="fridayOff" name="fridayOff"></td>
                                           </tr>
                                           <tr>
                                             <td>Saturday</td>
@@ -434,12 +439,13 @@
                                             <td><input type="time" class="form-control" id="saturdayOut" name="saturdayOut"></td>
                                             <td>
                                               <select class="form-select" name="saturdayLunch" id="saturdayLunch">
-                                                <option value="1">1:00</option>
-                                                <option value="30">0:30</option>
+                                              <option value="" selected>--:--</option>
+                                                <option value="1H">1:00</option>
+                                                <option value="30M">0:30</option>
                                                 <option value="0">0:00</option>
                                               </select>
                                             </td>
-                                            <td><input class="form-check" type="checkbox" id="saturdayOff" name="saturdayOff"></td>
+                                            <td><input class="form-check dayOff" value="ON" onChange="isOffchecked('saturdayOff')" data-day="saturday"  type="checkbox" id="saturdayOff" name="saturdayOff"></td>
                                           </tr>
                                           <tr>
                                             <td>Domingo</td>
@@ -447,12 +453,13 @@
                                             <td><input type="time" class="form-control" id="sundayOut" name="sundayOut"></td>
                                             <td>
                                               <select class="form-select" name="sundayLunch" id="sundayLunch">
-                                                <option value="1">1:00</option>
-                                                <option value="30">0:30</option>
+                                              <option value="" selected>--:--</option>
+                                                <option value="1H">1:00</option>
+                                                <option value="30M">0:30</option>
                                                 <option value="0">0:00</option>
                                               </select>
                                             </td>
-                                            <td><input class="form-check" type="checkbox" id="sundayOff" name="sundayOff"></td>
+                                            <td><input class="form-check dayOff" value="ON" onChange="isOffchecked('sundayOff')" data-day="sunday"  type="checkbox" id="sundayOff" name="sundayOff"></td>
                                           </tr>
                                         <tbody>
 
@@ -618,6 +625,7 @@
                   </div>
                   <input type="hidden" id="Action" name="Action">
                   <input type="hidden" id="apId" name="apId">
+                  <input type="hidden" id="scheduleId" name="scheduleId">
 					  </form>
                 </div>
               </div>
@@ -725,7 +733,8 @@
 $("#createModal").click(function(){
   $("#Action").val("Insert");
   $("#actionspan").text("Create");
-  $("#addAPButton").text("Create")
+  $("#addAPButton").text("Create");
+  $('#addLeaveType').prop('disabled', true);
 })
 function resetform(){
   $(".grid-filter").val("");
@@ -833,7 +842,9 @@ $(".tipoSus").on('change',function(){
         myObj = JSON.parse(data)
         if (myObj.msg == "error") {
           $("#badgeDiv").addClass("has-error");
-          $("#msgArea").html("<label><small>Record Not Found!</small></label>")
+          $("#msgArea").html("<label><small>Record Not Found!</small></label>");
+          $('#addLeaveType').prop('disabled', true);
+          hideAllAndShow("");
         } else {
           $("#badgeDiv").removeClass("has-error");
           $("#msgArea").html("")
@@ -842,7 +853,8 @@ $(".tipoSus").on('change',function(){
           $("#addDepartment").val(myObj.departmentName)
           $("#addEmployeeId").val(myObj.employeeId)
           $("#currentPosition").val(myObj.positionId)
-          $("#currentDepartment").val(myObj.departmentId)
+          $("#currentDepartment").val(myObj.departmentId);
+          $('#addLeaveType').prop('disabled', false);
         }
       }
     })
@@ -866,6 +878,177 @@ $(".tipoSus").on('change',function(){
         console.info('Element with ID "' + elementId + '" not found.');
        //elementToShow.style.display="none";
     }
+}
+
+function getLastSchedule(id,type){
+  //console.log(employeeId)
+  $.ajax({
+      url: "<?php echo URLROOT; ?>/aps/getEmployeeSchedule/" + id+"/"+type,
+      method: "GET",
+      success: function(data) {
+        //console.log(data)
+        myObj = JSON.parse(data)
+        console.table(myObj)
+        const daysObj = myObj.days.split('');
+        let start,end;
+        //console.log(daysObj)
+        $("#scheduleId").val("")
+        $("#scheduleId").val(myObj.scheduleId)
+        daysObj.forEach(function(day,index){
+          //console.log(day)
+          switch(index){
+            case 0:
+              if(myObj.monday=="-OFF-"){
+                $("#mondayOff").prop("checked",true).trigger("change");
+                //$("#mondayIn").val("").prop("disabled",true);
+                //$("#mondayOut").val("").prop("disabled",true);
+                //$("#mondayLunch").val("").prop("disabled",true);
+                setScheduleInputs("monday","","","",true)
+              }else{
+                [start, end] = myObj.monday.split(' - ');
+                $("#mondayOff").prop("checked",false)
+                // $("#mondayIn").val(start).prop("disabled",false);
+                // $("#mondayOut").val(end).prop("disabled",false);
+                // $("#mondayLunch").val(myObj.mondayLunch).prop("disabled",false);
+                setScheduleInputs("monday",start,end,myObj.mondayLunch,false)
+              }
+              start="";
+              end="";
+              break;
+            case 1:
+              if(myObj.tuesday=="-OFF-"){
+                $("#tuesdayOff").prop("checked",true).trigger("change");
+                // $("#tuesdayIn").val("").prop("disabled",true);
+                // $("#tuesdayOut").val("").prop("disabled",true);
+                // $("#tuesdayLunch").val("").prop("disabled",true);
+                setScheduleInputs("tuesday","","","",true)
+              }else{
+                [start, end] = myObj.tuesday.split(' - ');
+                //.log("tuesday:"+start+"-"+end)
+                $("#tuesdayOff").prop("checked",false)
+                // $("#tuesdayIn").val(start).prop("disabled",false);
+                // $("#tuesdayOut").val(end).prop("disabled",false);
+                // $("#tuesdayLunch").val(myObj.tuesdayLunch).prop("disabled",false);
+                setScheduleInputs("tuesday",start,end,myObj.tuesdayLunch,false)
+              }
+              start="";
+              end=""
+              break;
+            case 2:
+              if(myObj.wednesday=="-OFF-"){
+                $("#wednesdayOff").prop("checked",true).trigger("change");
+                // $("#wednesdayIn").val("").prop("disabled",true);
+                // $("#wednesdayOut").val("").prop("disabled",true);
+                // $("#wednesdayLunch").val("").prop("disabled",true);
+                setScheduleInputs("wednesday","","","",true)
+
+              }else{
+                [start, end] = myObj.wednesday.split(' - ');
+                $("#wednesdayOff").prop("checked",false)
+                // $("#wednesdayIn").val(start).prop("disabled",false);
+                // $("#wednesdayOut").val(end).prop("disabled",false);
+                // $("#wednesdayLunch").val(myObj.wednesdayLunch).prop("disabled",false);
+                setScheduleInputs("wednesday",start,end,myObj.wednesdayLunch,false)
+              }
+              start="";
+              end=""
+              break;
+            case 3:
+              if(myObj.thursday=="-OFF-"){
+                $("#thursdayOff").prop("checked",true).trigger("change");
+                // $("#thursdayIn").val("").prop("disabled",true);
+                // $("#thursdayOut").val("").prop("disabled",true);
+                // $("#thursdayLunch").val("").prop("disabled",true);
+                setScheduleInputs("thursday","","","",true)
+
+              }else{
+                [start, end] = myObj.thursday.split(' - ');
+                $("#thursdayOff").prop("checked",false)
+                // $("#thursdayIn").val(start).prop("disabled",false);
+                // $("#thursdayOut").val(end).prop("disabled",false);
+                // $("#thursdayLunch").val(myObj.thursdayLunch).prop("disabled",false);
+                setScheduleInputs("thursday",start,end,myObj.thursdayLunch,false)
+              }
+              start="";
+              end=""
+              break;
+            case 4:
+              if(myObj.friday=="-OFF-"){
+                $("#fridayOff").prop("checked",true).trigger("change");
+                // $("#fridayIn").val("").prop("disabled",true);
+                // $("#fridayOut").val("").prop("disabled",true);
+                // $("#fridayLunch").val("").prop("disabled",true);
+                setScheduleInputs("friday","","","",true)
+
+              }else{
+                [start, end] = myObj.friday.split(' - ');
+                $("#fridayOff").prop("checked",false)
+                // $("#fridayIn").val(start).prop("disabled",false);
+                // $("#fridayOut").val(end).prop("disabled",false);
+                // $("#fridayLunch").val(myObj.fridayLunch).prop("disabled",false);
+                setScheduleInputs("friday",start,end,myObj.fridayLunch,false)
+              }
+              start="";
+              end=""
+              break;
+            case 5:
+              if(myObj.saturday=="-OFF-"){
+                $("#saturdayOff").prop("checked",true).trigger("change");
+                // $("#saturdayIn").val("").prop("disabled",true);
+                // $("#saturdayOut").val("").prop("disabled",true);
+                // $("#saturdayLunch").val("").prop("disabled",true);
+                setScheduleInputs("saturday","","","",true)
+
+              }else{
+                [start, end] = myObj.saturday.split(' - ');
+                $("#saturdayOff").prop("checked",false)
+                // $("#saturdayIn").val(start).prop("disabled",false);
+                // $("#saturdayOut").val(end).prop("disabled",false);
+                // $("#saturdayLunch").val(myObj.saturdayLunch).prop("disabled",false);
+                setScheduleInputs("saturday",start,end,myObj.saturdayLunch,false)
+              }
+              start="";
+              end=""
+              break;
+            case 6:
+              if(myObj.sunday=="-OFF-"){
+                $("#sundayOff").prop("checked",true).trigger("change");
+                // $("#sundayIn").val("").prop("disabled",true);
+                // $("#sundayOut").val("").prop("disabled",true);
+                // $("#sundayLunch").val("").prop("disabled",true);
+                setScheduleInputs("sunday","","","",true)
+
+              }else{
+                [start, end] = myObj.sunday.split(' - ');
+                $("#sundayOff").prop("checked",false)
+                // $("#sundayIn").val(start).prop("disabled",false);
+                // $("#sundayOut").val(end).prop("disabled",false);
+                // $("#sundayLunch").val(myObj.sundayLunch).prop("disabled",false);
+                setScheduleInputs("sunday",start,end,myObj.sundayLunch,false)
+              }
+              start="";
+              end=""
+              break;
+          }
+          
+        })
+        // if (myObj.msg == "error") {
+        //   $("#badgeDiv").addClass("has-error");
+        //   $("#msgArea").html("<label><small>Record Not Found!</small></label>");
+        //   $('#addLeaveType').prop('disabled', true);
+        // } else {
+        //   $("#badgeDiv").removeClass("has-error");
+        //   $("#msgArea").html("")
+        //   $("#addName").val(myObj.fullname);
+        //   $("#addPosition").val(myObj.positionName);
+        //   $("#addDepartment").val(myObj.departmentName)
+        //   $("#addEmployeeId").val(myObj.employeeId)
+        //   $("#currentPosition").val(myObj.positionId)
+        //   $("#currentDepartment").val(myObj.departmentId);
+        //   $('#addLeaveType').prop('disabled', false);
+        // }
+      }
+    })
 }
 
 function showSetLeaveAreas(idLeaveType){
@@ -895,6 +1078,7 @@ function showSetLeaveAreas(idLeaveType){
       case '7':
         hideAllAndShow("cambiohorario")
         setReasons('motivo_horario',3);
+        console.log("Cambio de Horario")
         break;
       case '8':
         hideAllAndShow("cambiodialibre");
@@ -923,6 +1107,7 @@ function showSetLeaveAreas(idLeaveType){
   $("#addLeaveType").on("change",function(){
     //$('#createApForm')[0].reset();
     var idLeaveType = $(this).val();
+    var employeeId = $("#addEmployeeId").val();
     console.log(idLeaveType)
     switch(idLeaveType){
       case '1':
@@ -948,8 +1133,9 @@ function showSetLeaveAreas(idLeaveType){
         hideAllAndShow("sanciones")
         break;
       case '7':
-        hideAllAndShow("cambiohorario")
-        setReasons('motivo_horario',3);
+          hideAllAndShow("cambiohorario")
+          setReasons('motivo_horario',3);
+          getLastSchedule(employeeId,"Last");    
         break;
       case '8':
         hideAllAndShow("cambiodialibre");
@@ -996,7 +1182,7 @@ function showSetLeaveAreas(idLeaveType){
       url:'<?php echo URLROOT; ?>/aps/getreasons/'+type,
       type:'GET',
       success:function(data){
-        console.table(data)
+        //console.table(data)
         var reasonObj = JSON.parse(data)
         var $dropdown = $("#"+element);
 						$dropdown.empty();
@@ -1411,11 +1597,21 @@ function showAttritionReasons(step,option=null,option2=null){
     }
     return check;
   }
+
+  function isOffchecked(idelement) {
+    var check;
+    if ($('#' + idelement).is(':checked')) {
+      $('#' + idelement).val('OFF');
+    } else {
+      $('#' + idelement).val('ON');
+    }
+    return check;
+  }
   
 	
 	function getChangedFields() {
             var changedFields = {};
-            $('#createApForm').find('input, select,textarea').each(function() {
+            $('#createApForm').find('input,select,textarea').each(function() {
                 var name = $(this).attr('name');
                 var currentValue = $(this).val();
                 if (currentValue !== initialState[name]) {
@@ -1537,12 +1733,11 @@ function readData(page,where='',example_length,camposAscDesc,firstload=''){
 				cell3.innerHTML = v.createdAt;
 				cell4.innerHTML = v.username;
 				cell5.innerHTML = v.name;
+        printButton="disabled";
         switch(v.aprovedByM){
           case 1:
             cell6.innerHTML = '<span class="badge badge-success">Approved</span>';
-            printButton = `<button type="button" class="btn btn-link btn-info">
-                          <i class="fa fa-print"></i>
-                        </button>`;
+            printButton = "";
             break;
           case 2:
             cell6.innerHTML = '<span class="badge badge-danger">Rejected</span>';
@@ -1558,9 +1753,7 @@ function readData(page,where='',example_length,camposAscDesc,firstload=''){
         switch(v.aprovedByHR){
           case 1:
             cell7.innerHTML = '<span class="badge badge-success">Approved</span>';
-            printButton = `<button type="button" class="btn btn-link btn-info">
-                         <i class="fa fa-print"></i>
-                        </button>`;
+            printButton = "";
             
             break;
           case 2:
@@ -1604,17 +1797,24 @@ function readData(page,where='',example_length,camposAscDesc,firstload=''){
             
             break;
         }
-
+        btnsuccess="btn-success";
+        btnwarning="btn-warning";
         if(v.aprovedByM>=1 || v.aprovedByHR>=1){
           enable="disabled";
+          btnsuccess="";
+          btnwarning="";
         }
 				
 				cell10.innerHTML = `<div class="form-button-action">
-                        <button type="button" title="" class="btn btn-link btn-lg aproveModal" data-leaveId="${v.apDetailsId}" data-bs-toggle="modal" data-bs-target="#approveModal" ${enable}><i class="fas fa-check-double"></i></button>
-                        <button type="button" class="btn btn-link btn-warning btn-lg updateModal" data-bs-toggle="modal" data-bs-target="#addRowModal" data-leaveId="${v.apDetailsId}">
+                        <button type="button" title="" class="btn btn-link btn-lg ${btnsuccess} aproveModal" data-leaveId="${v.apDetailsId}" data-bs-toggle="modal" data-bs-target="#approveModal" ${enable}>
+                        <i class="fas fa-check-double"></i>
+                        </button>
+                        <button type="button" class="btn btn-link btn-lg ${btnwarning} updateModal" data-bs-toggle="modal" data-bs-target="#addRowModal" data-leaveId="${v.apDetailsId}" ${enable}>
                           <i class="fa fa-edit"></i>
                         </button>
-                        ${printButton}
+                        <button type="button" class="btn btn-link" ${printButton}>
+                         <i class="fa fa-print"></i>
+                        </button>
                       </div>`;
 				/*cell8.innerHTML = v.address2;
 				cell7.innerHTML = v.city;
@@ -1722,7 +1922,7 @@ $("#saveApApproval").on("click",function(e){
         success:function(data){
           console.log(data)
           var myObj = JSON.parse(data)
-          if(myObj.status=="success"){
+          if(myObj.response=="success"){
             swal(myObj.message, {
                                 icon: "success",
                                buttons: {
@@ -1744,7 +1944,7 @@ $("#saveApApproval").on("click",function(e){
                                }
                            });
           }else{
-           swal('Error', obj.message, {
+           swal('Error', myObj.message, {
                                 icon: "error",
                                 buttons: {
                                     confirm: {
@@ -1865,6 +2065,7 @@ $(document).on('click', '.updateModal', function(){
           setReasons('motivo_horario',3,myObj.reason1);
           $("#inicioHorario").val(myObj.apDate1);
           $("#finHorario").val(myObj.apDate2);
+          getLastSchedule(myObj.scheduleId,"Edit");
           break;
         case 8:
           hideAllAndShow("cambiodialibre");
@@ -1909,4 +2110,33 @@ $(document).on('click', '.updateModal', function(){
   
 })
 
+$(".dayOff").on("change",function(){
+  var day = $(this).data("day")
+  if($(this).is(":checked")){
+    console.log(day)
+    //$("#"+day+"In").val("").prop("disabled",true).rules('remove','required');
+    //$("#"+day+"Out").val("").prop("disabled",true).rules('remove','required');
+    //$("#"+day+"Lunch").val("").prop("disabled",true).rules('remove','required');
+    setScheduleInputs(day,"","","",true)
+  }else{
+    console.log("is not checked")
+    setScheduleInputs(day,"","","",false)
+    //$("#"+day+"In").prop("disabled",false).rules('add', {required: true});
+    //$("#"+day+"Out").prop("disabled",false).rules('add', {required: true});
+    //$("#"+day+"Lunch").prop("disabled",false).rules('add', {required: true});
+ 
+  }
+})
+
+function setScheduleInputs(day,inVal,outVal,lunchVal,checked){
+  if(checked==true){
+    $("#"+day+"In").val("").prop("disabled",true).rules('remove','required');
+    $("#"+day+"Out").val("").prop("disabled",true).rules('remove','required');
+    $("#"+day+"Lunch").val("").prop("disabled",true).rules('remove','required');
+  }else{
+    $("#"+day+"In").val(inVal).prop("disabled",false).rules('add', {required: true});
+    $("#"+day+"Out").val(outVal).prop("disabled",false).rules('add', {required: true});
+    $("#"+day+"Lunch").val(lunchVal).prop("disabled",false).rules('add', {required: true});
+  }
+}
 </script>
