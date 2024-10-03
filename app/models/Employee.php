@@ -217,6 +217,7 @@ class Employee
             em.employeeId as employeeId,
             em.badge as badge,
             em.photo,
+            em.personalEmail,
             concat_ws(" ",em.firstName,em.secondName,em.thirdName,em.firstLastName,em.secondLastName,em.thirdLastName) as fullname,
             em.contactPhone AS contactPhone,
             em.homePhone AS homePhone,
