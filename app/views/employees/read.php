@@ -95,6 +95,14 @@ $emergencyContacts = (isset($data['emergencyContacts']) && $data['emergencyConta
                             </div>
                         </div>
                         <div class="row pt-3">
+                            <div class="col-md-12">
+                                <div class="info text-sm font-style">
+                                    <strong class="font-bold">Personal Email :</strong>
+                                    <span><?php echo $data['employeeInfo']['personalEmail']; ?></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row pt-3">
                             <div class="col-md-6">
                                 <div class="info text-sm font-style">
                                     <strong class="font-bold">Contact Phone :</strong>
