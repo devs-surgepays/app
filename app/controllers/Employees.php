@@ -268,7 +268,6 @@ class Employees extends Controller
             $offset = ($page - 1) * $per_page;
             $offsetnumShow = ($page - 1) * $per_page + 1;
 
-
             if (!empty($ascDesc)) {
                 if ($ascDesc[0] == "fa fa-sort-up") $orderby = "e.createdAt asc";
                 else if ($ascDesc[0] == "fa fa-sort-down") $orderby = "e.createdAt desc";
@@ -296,8 +295,6 @@ class Employees extends Controller
                 $op = false;
 
                 for ($i = 0; $i < count($fielDB); $i++) {
-
-
 
                     $fielname = $fielDB[$i][0];
                     $type = $fielDB[$i][1];
@@ -334,51 +331,16 @@ class Employees extends Controller
             $countTotal = $this->employeeModel->countRegisterEmployee($searchQuery);
             $numrows = $countTotal['numrows'];
             $total_pages = ceil($numrows / $per_page);
-            $reload = 'index.php';
-            $number = 1;
-            $c = 0;
-            $htmlRows = '';
-            $htmlPagination = '';
             $registers = $this->employeeModel->readRegisters($offset, $per_page, $searchQuery, $orderby);
 
-            if (!empty($registers)) {
+            $return['data'] = $registers;
+            $return['offsetnumShow'] = $offsetnumShow;
+            $return['offset'] = $offset;
+            $return['numrows'] = $numrows;
+            $return['pagination'] = paginateRead('index.php', $page, $total_pages, 2, $searchFields, $length, $ascDesc);
 
-                for ($i = 0; $i < count($registers); $i++) {
-                    $c = $offset + $number;
-                    $status = ($registers[$i]['statusEmployee'] == 1) ? '<span class="badge badge-success">Active</span>' : '<span class="badge badge-danger">Inactive</span>';
-
-                    $htmlRows .= '<tr class="dataexp">';
-                    $htmlRows .= '<td><i class="fa fa-point"></i>' . $c . '</td>';
-                    $htmlRows .= '<td><a href="' . URLROOT . '/employees/edit/' . $registers[$i]['badge'] . '" class="btn btn-primary btn-border">#' . $registers[$i]['badge'] . '</a> </td>';
-                    $htmlRows .= '<td>' . $registers[$i]['firstName'] . ' ' .
-                        $registers[$i]['secondName'] . ' ' .
-                        $registers[$i]['thirdName'] . ' ' .
-                        $registers[$i]['firstLastName'] . ' ' .
-                        $registers[$i]['secondLastName'] . ' ' .
-                        $registers[$i]['thirdLastName'] . '</td>';
-
-                    $htmlRows .= '<td>' . $registers[$i]['corporateEmail'] . '</td>';
-                    $htmlRows .= '<td>' . date('F d, Y', strtotime($registers[$i]['hiredDate'])) . '</td>';
-                    $htmlRows .= '<td>' . $registers[$i]['name'] . '</td>';
-                    $htmlRows .= '<td>' . $registers[$i]['positionName'] . '</td>';
-                    $htmlRows .= '<td>' . $status . '</td>';
-                    $htmlRows .= '<td><a href="' . URLROOT . '/employees/edit/' . $registers[$i]['badge'] . '" class="btn btn-sm btn-info"><i class="fa fa-edit"></i></a></td>';
-                    $htmlRows .= '</tr>';
-                    $number++;
-                }
-                $return['rows'] = $htmlRows;
-            }
-
-            $htmlShowing = "<p>Showing " . $offsetnumShow .   " to " . $c . " of " . $numrows . "</p>";
-            $htmlPagination .= '<nav style="float:right;">';
-            $htmlPagination .=  paginateRead($reload, $page, $total_pages, 2, $searchFields, $length, $ascDesc);
-            $htmlPagination .= '</nav>';
-
-            $return['showing'] = $htmlShowing;
-            $return['pagination'] = $htmlPagination;
         }
 
-        if (empty($return['rows'])) $return['rows'] = '<tr class="text-center"><td colspan="9">No records found</td></tr>';
 
         echo json_encode($return);
     }
