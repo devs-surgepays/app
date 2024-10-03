@@ -18,25 +18,46 @@ class Employee
     public function countRegisterEmployee($searchQuery)
     {
         $query = '';
+        $withWhere = true;
+        if (!empty($searchQuery)) {
+            $query = "where " . $searchQuery;
+            $withWhere = false;
+        }
 
-        if (!empty($searchQuery)) $query = "where " . $searchQuery;
+        $showEmWhere = getPLEmployeeTable($withWhere);
 
-        $this->db->query('SELECT COUNT(*) AS numrows  FROM hr_surgepays.employees e INNER JOIN positions p ON p.positionId = e.positionId ' . $query);
+        if (!getPLShowInactiveEmployee()) {
+            $statusEmployee = (!empty($showEmWhere)) ? ' and em.status=1 ' : '';
+        }
+
+        $this->db->query('SELECT COUNT(*) AS numrows  FROM hr_surgepays.employees em INNER JOIN positions p ON p.positionId = em.positionId ' . $query . $showEmWhere . $statusEmployee);
         $result = $this->db->resultSetFetch();
         return $result;
     }
     public function readRegisters($offset, $per_page, $searchQuery, $orderby)
     {
         $query = '';
-        if (!empty($searchQuery)) $query = "where " . $searchQuery . ' ';
+        $statusEmployee = '';
+        $withWhere = true;
+        if (!empty($searchQuery)) {
+            $query = "where " . $searchQuery . ' ';
+            $withWhere = false;
+        }
 
-        $this->db->query("SELECT *, e.status as statusEmployee,
-        concat_ws(' ', e.firstName, e.secondName,e.thirdName,e.firstLastName,e.secondLastName ) as 'fullName',
+        $showEmWhere = getPLEmployeeTable($withWhere);
+
+        if (!getPLShowInactiveEmployee()) {
+            $statusEmployee = (!empty($showEmWhere)) ? ' and em.status=1 ' : '';
+        }
+
+
+        $this->db->query("SELECT *, em.status as statusEmployee,
+        concat_ws(' ', em.firstName, em.secondName,em.thirdName,em.firstLastName,em.secondLastName ) as 'fullName',
         DATE_FORMAT(hiredDate, '%M %e, %Y') AS formattedHiredDate
-        FROM hr_surgepays.employees e 
-        INNER JOIN departments d ON d.departmentId = e.departmentId
-        INNER JOIN positions p ON p.positionId = e.positionId 
-        " . $query . " ORDER BY $orderby limit $offset,$per_page;");
+        FROM hr_surgepays.employees em 
+        INNER JOIN departments d ON d.departmentId = em.departmentId
+        INNER JOIN positions p ON p.positionId = em.positionId 
+        " . $query . " $showEmWhere $statusEmployee ORDER BY $orderby limit $offset,$per_page;");
         $result = $this->db->resultSetAssoc();
         return $result;
     }
@@ -181,7 +202,43 @@ class Employee
     }
     public function getEmployeeDetailsByBadge($badge)
     {
-        $this->db->query('SELECT * FROM hr_surgepays.employees AS em  WHERE em.badge = :badge;');
+        $showEmWhere = getPLEmployeeTable(false);
+
+        $this->db->query('SELECT *  FROM hr_surgepays.employees AS em  WHERE em.badge = :badge ' . $showEmWhere . '');
+        $this->db->bind(':badge', $badge);
+        $result = $this->db->resultSetFetch();
+        return $result;
+    }
+    public function getEmployeeReadByBadge($badge)
+    {
+        $showEmWhere = getPLEmployeeTable(false);
+
+        $this->db->query('SELECT
+            em.employeeId as employeeId,
+            em.badge as badge,
+            em.photo,
+            concat_ws(" ",em.firstName,em.secondName,em.thirdName,em.firstLastName,em.secondLastName,em.thirdLastName) as fullname,
+            em.contactPhone AS contactPhone,
+            em.homePhone AS homePhone,
+            IF (em.status=1, "Activo","Inactivo") as status,
+            de.name AS departamentName,
+            ar.areaName as areaName,
+            p.positionName as positionName,
+            em.corporateEmail,
+            em.hiredDate as hiredDate,
+            em.hiredDateOld as hiredDateOld,
+            em.contractType as contractType,
+            em.workHours as workHours,
+            IF (em.bonus=1, "Yes","No") as bonus
+            FROM
+            employees em
+                LEFT JOIN
+            departments de ON de.departmentId = em.departmentId
+                LEFT JOIN
+            positions p ON p.positionId = em.positionId 
+                LEFT JOIN
+            areas ar ON ar.areaId = em.areaId 
+            where  em.badge = :badge and em.status=1 ' . $showEmWhere . '');
         $this->db->bind(':badge', $badge);
         $result = $this->db->resultSetFetch();
         return $result;
@@ -213,16 +270,163 @@ class Employee
 
     public function getEmployeesByStatus($status)
     {
-        $this->db->query("CALL getAllEmployeesByStatus(:status)");
-        $this->db->bind('status', $status);
+        $where = '';
+        $statusWhere = '';
+        $showEmWhere = getPLEmployeeTable(true);
+
+        if (getPLShowInactiveEmployee()) { // Puede ver inactivo?
+            if ($status == 0) {
+                $statusWhere = " em.status = 0 ";
+            } else if ($status >= 2) {
+                $statusWhere = '';
+            } else {
+                $statusWhere = " em.status = 1 ";
+            }
+        } else {
+            $statusWhere = " em.status = 1 ";
+        }
+
+        // union
+        if (!empty($showEmWhere)) {
+            if (!empty($statusWhere))  $where = $showEmWhere . " and " . $statusWhere;
+            else $where = $showEmWhere;
+        } else {
+            if (!empty($statusWhere)) $where = " where " . $statusWhere;
+        }
+        $fields = '';
+
+        if (getPLEditEmployee()) {
+            // All fields bd
+            $fields = "SELECT 
+                    em.badge as BADGE,
+                    concat_ws(' ',em.firstName,em.secondName,em.thirdName,em.firstLastName,em.secondLastName,em.thirdLastName) as NOMBRE,
+                    em.firstName as 'PRIMER NOMBRE',
+                    em.secondName as 'SEGUNDO NOMBRE',
+                    em.thirdName as 'TERCER NOMBRE',
+                    em.firstLastName as 'PRIMER APELLIDO',
+                    em.secondLastName as 'SEGUNDO APELLIDO',
+                    em.thirdLastName as 'APELLIDO DE CASADA',
+                    CASE
+                        WHEN em.genderId = 0 THEN 'M'
+                        WHEN em.genderId = 1 THEN 'F'
+                        WHEN em.genderId = 2 THEN 'Other'
+                        ELSE 'Unknown'
+                    END AS 'SEXO',
+                    IF (em.status=1, 'Activo','Inactivo') as 'STATUS',
+                    em.hiredDate as 'FECHA DE INGRESO SURGEPAYS',
+                    em.hiredDateOld as 'FECHA DE CONTRATACION',
+                    p.positionName as 'CARGO',
+                    de.name AS 'DEPARTAMENTO',
+                    ar.areaName as 'AREA',
+                    bi.billName as 'BILL TO',
+                    em.dob as 'FECHA DE NACIMIENTO',
+                    em.contractType as 'TIPO DE CONTRATO',
+                    IF (em.bonus=1, 'Yes','No') as 'BONO',
+                    em.workHours as 'HORAS CONTRATADAS',
+                    em.shift as 'TURNO',
+                    em.endDate as 'FECHA DE BAJA',
+                    em.reasonTermination as 'RAZON DE BAJA',
+                    TIMESTAMPDIFF(YEAR, em.dob, CURDATE()) AS EDAD,
+                    dt.name AS 'TIPO DE DOCUMENTO',
+                    em.documentNumber as 'NUMERO DE DOCUMENTO',
+                    em.nationality as 'NACIONALIDAD',
+                    em.documentExpedPlace AS 'LUGAR DE EXPEDICION DUI',
+                    em.documentExpedDate AS 'FECHA DE EXPEDICION DUI',
+                    em.documentExpDate AS 'FECHA DE EXPIRACION DUI',
+                    em.birthDeparment AS 'DEPARTAMENTO DE NACIMIENTO',
+                    em.address AS 'DOMICILIO DUI',
+                    concat_ws(', ', s.stateName, c.cityName, d.districtName) AS 'RESIDENCIA DUI',
+                    em.career AS 'PROFESION',
+                    em.maritalStatus AS 'ESTADO CIVIL',
+                    IF(em.documentTypeId = 1, em.documentNumber, '') AS 'NIT',
+                    af.name AS 'AFP',
+                    em.afpNumber AS 'NUP',
+                    em.ssn AS 'ISSS',
+                    em.spouseName AS 'NOMBRE CONYUGUE',
+                    em.homePhone AS 'TELEFONO DE CASA',
+                    em.contactPhone AS 'TELEFONO CELULAR',
+                    em.personalEmail as 'EMAIL',";
+            if (getPLSalary())  $fields .= "em.salary AS 'SALARIO',";
+            $fields .= "em.bankAccount  AS 'CUENTA DEL BANCO'
+                    FROM
+                    employees em
+                        LEFT JOIN
+                    states s ON s.stateId = em.stateId
+                        LEFT JOIN
+                    cities c ON c.cityId = em.cityId
+                        LEFT JOIN
+                    departments de ON de.departmentId = em.departmentId
+                        LEFT JOIN
+                    districts d ON d.districtId = em.districtId
+                        LEFT JOIN
+                    users u ON u.userId = em.superiorId
+                        LEFT JOIN
+                    positions p ON p.positionId = em.positionId 
+                        LEFT JOIN
+                    areas ar ON ar.areaId = em.areaId 
+                        LEFT JOIN
+                    bills bi ON bi.billToId = em.billTo 
+                        LEFT JOIN
+                    documents_type dt ON dt.documentTypeId = em.documentTypeId 
+                        LEFT JOIN
+                    afp af ON af.afpId = em.afpTypeId ";
+        } else {
+            $fields = "SELECT
+            em.employeeId as employeeId,
+            em.badge as badge,
+            concat_ws(' ',em.firstName,em.secondName,em.thirdName,em.firstLastName,em.secondLastName,em.thirdLastName) as fullname,
+            em.contactPhone AS contactPhone,
+            em.homePhone AS homePhone,
+            IF (em.status=1, 'Activo','Inactivo') as status,
+            de.name AS departamentName,
+            ar.areaName as areaName,
+            p.positionName as positionName,
+            em.corporateEmail,
+            em.hiredDate as hiredDate,
+            em.hiredDateOld as hiredDateOld,
+            em.contractType as contractType,
+            em.workHours as workHours,
+            IF (em.bonus=1, 'Yes','No') as bonus
+            FROM
+            employees em
+                LEFT JOIN
+            departments de ON de.departmentId = em.departmentId
+                LEFT JOIN
+            positions p ON p.positionId = em.positionId 
+                LEFT JOIN
+            areas ar ON ar.areaId = em.areaId ";
+        }
+
+        $query = $fields . $where;
+
+        $this->db->query($query);
         $result = $this->db->resultSetAssoc();
         return $result;
     }
 
-    public function getNameAndBadgeByIdEmp($employeeId){
+    public function getNameAndBadgeByIdEmp($employeeId)
+    {
         $this->db->query('SELECT badge,firstName,firstLastName FROM hr_surgepays.employees where employeeId=:employeeId;');
         $this->db->bind('employeeId', $employeeId);
         $re = $this->db->resultSetFetch();
+        return $re;
+    }
+
+    public function BirthdaysOfTheMonth()
+    {
+        $this->db->query("SELECT 
+            employeeId,
+            DATE_FORMAT(dob, '%M %e') AS formDOB ,
+            dob,
+            badge,
+            photo,
+            firstName,
+            firstLastName
+        FROM
+            hr_surgepays.employees
+        WHERE
+            status=1 and MONTH(dob) = MONTH(CURDATE()) order by DAY(dob) asc;");
+        $re = $this->db->resultSetAssoc();
         return $re;
     }
 }

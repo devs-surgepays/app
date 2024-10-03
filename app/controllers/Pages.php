@@ -44,13 +44,15 @@ class Pages extends Controller
     usort($schedules, function ($a, $b) {
       return strcmp($a['clockIn'], $b['clockIn']);
     });
-    $groupedByDepartment = [];
-    $groupedByDepartmentCount = [];
-    $employeeByDeparment = $this->employeeModel->getEmployeeByDeparment();
-    foreach ($employeeByDeparment as $department) {
-      array_push($groupedByDepartment,$department['departmentName']);
-      array_push($groupedByDepartmentCount,$department['totalEmployees']);
-    }
+
+    
+    // $groupedByDepartment = [];
+    // $groupedByDepartmentCount = [];
+    // $employeeByDeparment = $this->employeeModel->getEmployeeByDeparment();
+    // foreach ($employeeByDeparment as $department) {
+    //   array_push($groupedByDepartment,$department['departmentName']);
+    //   array_push($groupedByDepartmentCount,$department['totalEmployees']);
+    // }
 
     // count users
     $countUser = $this->usersModel->getUsersActives();
@@ -60,8 +62,9 @@ class Pages extends Controller
       'employeeWorkingToday' => $schedules,
       'leavesCreatedToday' => 0,
       'tickets' => 0,
-      'departmentName' => $groupedByDepartment,
-      'totalEmployeesDepartment' => $groupedByDepartmentCount,
+      'BirthdaysOfTheMonth' => $this->employeeModel->BirthdaysOfTheMonth(),
+      // 'departmentName' => $groupedByDepartment,
+      // 'totalEmployeesDepartment' => $groupedByDepartmentCount,
       'totalUsers' => $countUser
     ];
 

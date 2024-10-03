@@ -22,16 +22,21 @@ class Reports extends Controller
 
     public function index()
     {
-        $data = [];
-        $data['apTypes'] = $this->apModel->getAllApTypes();
-        $this->view('reports/index', $data);
+
+        if (getPLReports()) {
+            $data = [];
+            $data['apTypes'] = $this->apModel->getAllApTypes();
+            $this->view('reports/index', $data);
+        } else {
+            redirect(''); // Dashboard
+        }
     }
 
     public function exportEmployeesByStatus()
     {
         $status = $_POST["employee_status"];
-        $s = ($status==2) ? null : $status;
-        $employees = $this->employeeModel->getEmployeesByStatus($s);
+        // $s = ($status == 2) ? null : $status;
+        $employees = $this->employeeModel->getEmployeesByStatus($status);
         echo json_encode($employees);
     }
 }

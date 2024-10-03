@@ -115,7 +115,6 @@ function getPLReports()
 
     return $permission;
 }
-
 function getPLUsers()
 {
     $permissionLevelId = $_SESSION['permissionLevelId'];

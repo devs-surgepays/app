@@ -154,12 +154,15 @@
                                                 </select>
                                             </th>
                                             <th>
-                                                <select class="form-control form-control-sm searchDataChange camposserch" id="serch_status">
-                                                    <option value="">Select</option>
-                                                    <?php for ($i = 0; $i < count($data['status']); $i++)  echo '<option value="' . $data['status'][$i]['statusId'] . '">' . $data['status'][$i]['statusName'] . '</option>'; ?>
-                                                </select>
-                                            </th>
+                                                <?php if (getPLShowInactiveEmployee()) { ?>
 
+                                                    <select class="form-control form-control-sm searchDataChange camposserch" id="serch_status">
+                                                        <option value="">Select</option>
+                                                        <?php for ($i = 0; $i < count($data['status']); $i++)  echo '<option value="' . $data['status'][$i]['statusId'] . '">' . $data['status'][$i]['statusName'] . '</option>'; ?>
+                                                    </select>
+
+                                                <?php } ?>
+                                            </th>
                                             <th>
                                                 <img style="cursor: pointer;" onclick="resetform()" src="<?php echo URLROOT; ?>/assets/img/clear-filter.png" width="25" height="25">
                                             </th>
@@ -229,7 +232,7 @@
                 var tbody = $('#tbEmployees tbody');
                 tbody.empty(); // Limpiar tabla antes de llenar
 
- 
+
                 let rowNumber = 1;
                 let totalRowShow = 0;
 
@@ -240,19 +243,19 @@
                         const status = (item.statusEmployee == 1) ? '<span class="badge badge-success">Active</span>' : '<span class="badge badge-danger">Inactive</span>';
                         totalRowShow = obj.offset + rowNumber;
                         const emailCorp = (item.corporateEmail === null) ? '' : item.corporateEmail;
-
+                        const urlEmployee = (obj.getPLEditEmployee) ? 'edit' : 'showEmployee';
 
                         var row = `<tr>
-                    <td>${rowNumber}</td>
-                    <td><a href="<?php echo URLROOT; ?>/employees/edit/${item.badge}" class="btn btn-primary btn-border">#${item.badge}</a> </td></td>
-                    <td>${ item.fullName }</td>
-                    <td>${ emailCorp}</td>
-                    <td>${ item.formattedHiredDate }</td>
-                    <td>${ item.name }</td>
-                    <td>${ item.positionName }</td>
-                    <td>${ status }</td>
-                    <td> <a href="<?php echo URLROOT; ?>/employees/edit/${item.badge}" class="btn btn-sm btn-info"><i class="fa fa-edit"></i></a></td>
-                    </tr>`;
+                        <td>${rowNumber}</td>
+                        <td><a href="<?php echo URLROOT; ?>/employees/${urlEmployee}/${item.badge}" class="btn btn-primary btn-border">#${item.badge}</a> </td></td>
+                        <td>${ item.fullName }</td>
+                        <td>${ emailCorp}</td>
+                        <td>${ item.formattedHiredDate }</td>
+                        <td>${ item.name }</td>
+                        <td>${ item.positionName }</td>
+                        <td>${ status }</td>
+                        <td> <a href="<?php echo URLROOT; ?>/employees/${urlEmployee}/${item.badge}" class="btn btn-sm btn-info"><i class="fa fa-edit"></i></a></td>
+                        </tr>`;
                         tbody.append(row);
                         rowNumber++;
                     });

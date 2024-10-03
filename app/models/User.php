@@ -81,7 +81,7 @@ class User
 
     public function login($email, $password)
     {
-        $this->db->query('SELECT * FROM users where username = :username ');
+        $this->db->query('SELECT *,if (employeeId>0, (SELECT areaId FROM hr_surgepays.employees where employeeId=users.employeeId),0) as areaId FROM users where username = :username ');
         $this->db->bind(':username', $email);
 
         $row = $this->db->singleObj();
@@ -97,7 +97,7 @@ class User
 
     public function getUserById($userId)
     {
-        $this->db->query('SELECT * FROM users WHERE userId = :userId');
+        $this->db->query('SELECT *,if (employeeId>0, (SELECT areaId FROM hr_surgepays.employees where employeeId=users.employeeId),0) as areaId FROM users WHERE userId = :userId');
         $this->db->bind(':userId', $userId);
         $row = $this->db->singleObj();
         return $row;

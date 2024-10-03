@@ -13,8 +13,9 @@
                                 <select class="form-select" aria-label="Default select example" required id="employee_status">
                                     <option selected disabled>Select Status</option>
                                     <option value="2">All</option>
-                                    <option value="1">Active</option>
-                                    <option value="0">Inactive</option>
+                                    
+                                    <?php echo getPLShowInactiveEmployee() ? '<option value="1">Active</option> <option value="0">Inactive</option>' : ''; ?>
+                                    
                                 </select>
                                 <small class="required_field" id="status_error" hidden>*status is required</small>
                             </div>
@@ -27,7 +28,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-12">
+            <!-- <div class="col-12">
                 <div class="card card-stats card-round">
                     <div class="card-body">
                         <div class="row">
@@ -65,7 +66,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
         </div>
         
         <?php require APPROOT . '/views/inc/footer.php'; ?>

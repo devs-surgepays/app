@@ -161,35 +161,60 @@ class Employees extends Controller
     {
 
         if (!empty($badgeEmployee)) {
+
             $data = [];
             $data['employeeInfo'] = $this->employeeModel->getEmployeeDetailsByBadge($badgeEmployee);
             $idEmployee = $data['employeeInfo']['employeeId'];
 
             if (!empty($idEmployee)) {
 
-                $data['states'] = $this->employeeModel->getStates();
-                $data['departments'] = $this->departmentModel->getDeparments();
-                $data['positions'] = $this->positionModel->getPositions();
-                $data['banks'] = $this->bankModel->getBanks();
-                $data['afps'] = $this->afpModel->getAFPs();
-                $data['areas'] = $this->areaModel->getAreas();
-                $data['bills'] = $this->billModel->getBillsTo();
-                $data['typesDocuments'] = $this->employeeDocumentModel->getTypesDocuments();
+                if (getPLEditEmployee()) {
 
-                $data['employeeDocumentsInfo'] = $this->employeeDocumentModel->getEmployeDocument($idEmployee);
-                $data['employeeSchedule'] = $this->employeeScheduleModel->getSchedulesEmployee($idEmployee);
-                $data['employeeEmergencyContacts'] = $this->emergencyContactsModel->getEmergencyContacts($idEmployee);
-                $data['relationship'] = $this->relationshipModel->getRelationshipsEnglish();
-                $data['superiors'] = $this->usersModel->getSuperiors();
-                $data['financialDependents'] = $this->financialDependentModel->getFinancialDependents($idEmployee);
+                    $data['states'] = $this->employeeModel->getStates();
+                    $data['departments'] = $this->departmentModel->getDeparments();
+                    $data['positions'] = $this->positionModel->getPositions();
+                    $data['banks'] = $this->bankModel->getBanks();
+                    $data['afps'] = $this->afpModel->getAFPs();
+                    $data['areas'] = $this->areaModel->getAreas();
+                    $data['bills'] = $this->billModel->getBillsTo();
+                    $data['typesDocuments'] = $this->employeeDocumentModel->getTypesDocuments();
 
+                    $data['employeeDocumentsInfo'] = $this->employeeDocumentModel->getEmployeDocument($idEmployee);
+                    $data['employeeSchedule'] = $this->employeeScheduleModel->getSchedulesEmployee($idEmployee);
+                    $data['employeeEmergencyContacts'] = $this->emergencyContactsModel->getEmergencyContacts($idEmployee);
+                    $data['relationship'] = $this->relationshipModel->getRelationshipsEnglish();
+                    $data['superiors'] = $this->usersModel->getSuperiors();
+                    $data['financialDependents'] = $this->financialDependentModel->getFinancialDependents($idEmployee);
 
+                    $this->view('employees/edit', $data);
+                } else {
+                    redirect('employees/index');
+                }
             } else {
                 redirect('employees/index');
             }
+        } else {
+            redirect('employees/index');
+        }
+    }
 
+    public function showEmployee($badgeEmployee='')
+    {
 
-            $this->view('employees/edit', $data);
+        if (!empty($badgeEmployee)) {
+
+            $data = [];
+            $data['employeeInfo'] = $this->employeeModel->getEmployeeReadByBadge($badgeEmployee);
+ 
+            $idEmployee = $data['employeeInfo']['employeeId'];
+
+            if (!empty($idEmployee)) {
+
+                $data['emergencyContacts'] = $this->emergencyContactsModel->getEmergencyContacts($idEmployee);
+                $this->view('employees/read', $data);
+            } else {
+                redirect('employees/index');
+            }
         } else {
             redirect('employees/index');
         }
@@ -260,7 +285,7 @@ class Employees extends Controller
 
         if ($action == 'ajaxDataRows') {
 
-            $orderby = " e.badge desc";
+            $orderby = " em.badge desc";
             $countField = 0;
             $searchQuery = '';
 
@@ -269,8 +294,8 @@ class Employees extends Controller
             $offsetnumShow = ($page - 1) * $per_page + 1;
 
             if (!empty($ascDesc)) {
-                if ($ascDesc[0] == "fa fa-sort-up") $orderby = "e.createdAt asc";
-                else if ($ascDesc[0] == "fa fa-sort-down") $orderby = "e.createdAt desc";
+                if ($ascDesc[0] == "fa fa-sort-up") $orderby = "em.createdAt asc";
+                else if ($ascDesc[0] == "fa fa-sort-down") $orderby = "em.createdAt desc";
                 // if ($ascDesc[1] == "fas fa-sort-up") $orderby = "date_retained asc";
                 // else if ($ascDesc[1] == "fas fa-sort-down") $orderby = "date_retained desc";
             }
@@ -285,9 +310,9 @@ class Employees extends Controller
                     1 =>  array('-', 'multiField', array("firstName", "secondName", "thirdName", "firstLastName", "secondLastName", "thirdLastName")),
                     2 =>  array("corporateEmail", 'like'),
                     3 => array("hiredDate", 'date'),
-                    4 =>  array("e.departmentId", 'equal'),
+                    4 =>  array("em.departmentId", 'equal'),
                     5 =>  array("p.positionName", 'like'),
-                    6 =>  array("e.status", 'equal'),
+                    6 =>  array("em.status", 'equal'),
                     // 2 =>  array("customer_id", 'equalString'),
                     // 5 =>  array("phone_number", 'phone'),
                 );
@@ -333,12 +358,12 @@ class Employees extends Controller
             $total_pages = ceil($numrows / $per_page);
             $registers = $this->employeeModel->readRegisters($offset, $per_page, $searchQuery, $orderby);
 
+            $return['getPLEditEmployee'] =  getPLEditEmployee();
             $return['data'] = $registers;
             $return['offsetnumShow'] = $offsetnumShow;
             $return['offset'] = $offset;
             $return['numrows'] = $numrows;
             $return['pagination'] = paginateRead('index.php', $page, $total_pages, 2, $searchFields, $length, $ascDesc);
-
         }
 
 
