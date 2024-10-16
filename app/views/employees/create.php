@@ -440,6 +440,7 @@ $bills = (isset($data['bills']) && $data['bills'] != NULL) ? $data['bills'] : []
                                                 <option value="">Select</option>
                                                 <option value="F">Full Time</option>
                                                 <option value="PT">Part Time</option>
+                                                <option value="GS">Graveyard Shift</option>
                                             </select>
                                             <label for="dob">Contract Type</label>
                                         </div>

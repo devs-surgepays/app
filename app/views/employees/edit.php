@@ -686,6 +686,7 @@ $employeeDocumentsInfo = (isset($data['employeeDocumentsInfo']) && $data['employ
                                                             <option value="">Select</option>
                                                             <option <?php echo ("F" == $data['employeeInfo']['contractType']) ? 'selected' : '' ?> value="F">Full Time</option>
                                                             <option <?php echo ("PT" == $data['employeeInfo']['contractType']) ? 'selected' : '' ?> value="PT">Part Time</option>
+                                                            <option <?php echo ("GS" == $data['employeeInfo']['contractType']) ? 'selected' : '' ?> value="GS">Graveyard Shift</option>
                                                         </select>
                                                         <label for="dob">contract Type</label>
                                                     </div>
