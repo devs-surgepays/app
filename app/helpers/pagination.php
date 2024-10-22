@@ -1,6 +1,6 @@
 <?php
 
-function paginateRead($reload, $page, $tpages, $adjacents, $ArrayCampos, $example_length, $camposAscDesc)
+function paginateRead($reload, $page, $tpages, $adjacents, $ArrayCampos, $example_length, $camposAscDesc,$billTo=1)
 {
     $ArrayCampos = json_encode($ArrayCampos);
     $camposAscDesc = json_encode($camposAscDesc);
@@ -13,14 +13,14 @@ function paginateRead($reload, $page, $tpages, $adjacents, $ArrayCampos, $exampl
     if ($page == 1) {
         $out .= "<li class='page-item disabled'><a class='page-link'>$prevlabel</a></li>";
     } else if ($page == 2) {
-        $out .= "<li class='page-item'><a class='page-link' href='javascript:void(0);' onclick='readData(1," . $ArrayCampos . "," . $example_length . "," . $camposAscDesc . ")'>$prevlabel</a></li>";
+        $out .= "<li class='page-item'><a class='page-link' href='javascript:void(0);' onclick='readData(1," . $ArrayCampos . "," . $example_length . "," . $camposAscDesc . ",".$billTo.")'>$prevlabel</a></li>";
     } else {
-        $out .= "<li class='page-item'><a class='page-link' href='javascript:void(0);' onclick='readData(" . ($page - 1) . ",$ArrayCampos,$example_length,$camposAscDesc)'>$prevlabel</a></li>";
+        $out .= "<li class='page-item'><a class='page-link' href='javascript:void(0);' onclick='readData(" . ($page - 1) . ",$ArrayCampos,$example_length,$camposAscDesc,$billTo)'>$prevlabel</a></li>";
     }
 
     // first label
     if ($page > ($adjacents + 1)) {
-        $out .= "<li class='page-item'><a class='page-link' href='javascript:void(0);' onclick='readData(1," . $ArrayCampos . "," . $example_length . "," . $camposAscDesc . ")'>1</a></li>";
+        $out .= "<li class='page-item'><a class='page-link' href='javascript:void(0);' onclick='readData(1," . $ArrayCampos . "," . $example_length . "," . $camposAscDesc . ",".$billTo.")'>1</a></li>";
     }
     // interval
     if ($page > ($adjacents + 2)) {
@@ -34,9 +34,9 @@ function paginateRead($reload, $page, $tpages, $adjacents, $ArrayCampos, $exampl
         if ($i == $page) {
             $out .= "<li class='page-item active'><a class='page-link'>$i</a></li>";
         } else if ($i == 1) {
-            $out .= "<li class='page-item'><a class='page-link' href='javascript:void(0);' onclick='readData(1," . $ArrayCampos . "," . $example_length . "," . $camposAscDesc . ")'>$i</a></li>";
+            $out .= "<li class='page-item'><a class='page-link' href='javascript:void(0);' onclick='readData(1," . $ArrayCampos . "," . $example_length . "," . $camposAscDesc . ",".$billTo.")'>$i</a></li>";
         } else {
-            $out .= "<li class='page-item'><a class='page-link' href='javascript:void(0);' onclick='readData(" . $i . ",$ArrayCampos,$example_length,$camposAscDesc)'>$i</a></li>";
+            $out .= "<li class='page-item'><a class='page-link' href='javascript:void(0);' onclick='readData(" . $i . ",$ArrayCampos,$example_length,$camposAscDesc,$billTo)'>$i</a></li>";
         }
     }
     // interval
@@ -46,11 +46,11 @@ function paginateRead($reload, $page, $tpages, $adjacents, $ArrayCampos, $exampl
 
     // last
     if ($page < ($tpages - $adjacents)) {
-        $out .= "<li class='page-item'><a class='page-link' href='javascript:void(0);' onclick='readData($tpages," . $ArrayCampos . "," . $example_length . "," . $camposAscDesc . ")'>$tpages</a></li>";
+        $out .= "<li class='page-item'><a class='page-link' href='javascript:void(0);' onclick='readData($tpages," . $ArrayCampos . "," . $example_length . "," . $camposAscDesc . ",".$billTo.")'>$tpages</a></li>";
     }
     // next
     if ($page < $tpages) {
-        $out .= "<li class='page-item'><a class='page-link' href='javascript:void(0);' onclick='readData(" . ($page + 1) . ",$ArrayCampos,$example_length,$camposAscDesc)'>$nextlabel</a></li>";
+        $out .= "<li class='page-item'><a class='page-link' href='javascript:void(0);' onclick='readData(" . ($page + 1) . ",$ArrayCampos,$example_length,$camposAscDesc,$billTo)'>$nextlabel</a></li>";
     } else {
         $out .= "<li class='page-item disabled'><a class='page-link'>$nextlabel</a></li>";
     }

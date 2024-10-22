@@ -377,7 +377,7 @@ class Employees extends Controller
             $return['offsetnumShow'] = $offsetnumShow;
             $return['offset'] = $offset;
             $return['numrows'] = $numrows;
-            $return['pagination'] = paginateRead('index.php', $page, $total_pages, 2, $searchFields, $length, $ascDesc);
+            $return['pagination'] = paginateRead('index.php', $page, $total_pages, 2, $searchFields, $length, $ascDesc,$billTo);
         }
 
 
