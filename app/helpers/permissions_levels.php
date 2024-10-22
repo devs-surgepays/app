@@ -41,7 +41,7 @@ function getPLEmployeeTable($withWhere)
 
     return $where;
 }
-// Puede Editar la informacion del Empleado
+// edit Employee?
 function getPLEditEmployee()
 {
     $permissionLevelId = $_SESSION['permissionLevelId'];
@@ -61,7 +61,7 @@ function getPLEditEmployee()
     return $permission;
 }
 
-// can see inactivo?
+// see inactivo?
 function getPLShowInactiveEmployee()
 {
     $permissionLevelId = $_SESSION['permissionLevelId'];
@@ -79,7 +79,7 @@ function getPLShowInactiveEmployee()
 
     return $permission;
 }
-// Can see salary?
+// see salary?
 function getPLSalary()
 {
     $permissionLevelId = $_SESSION['permissionLevelId'];
@@ -90,14 +90,14 @@ function getPLSalary()
     if (($permissionLevelId & 8))  $permission = false; // Manager Account
     if (($permissionLevelId & 16))  $permission = true; // HR
     if (($permissionLevelId & 32))  $permission = false; // Operation Manager
-    if (($permissionLevelId & 64))  $permission = false; // Super Admin
-    if (($permissionLevelId & 128))  $permission = false; // Development
+    if (($permissionLevelId & 64))  $permission = true; // Super Admin
+    if (($permissionLevelId & 128))  $permission = true; // Development
     if (($permissionLevelId & 256))  $permission = false; // External person
     if (($permissionLevelId & 512))  $permission = false; // WF
 
     return $permission;
 }
-// Can see Reports?
+// see Reports?
 function getPLReports()
 {
     $permissionLevelId = $_SESSION['permissionLevelId'];
@@ -115,11 +115,43 @@ function getPLReports()
 
     return $permission;
 }
+
+/**
+ * Method getPLUsers
+ * CRUD user module.
+ * 
+ * Super Admin - 64
+ * Development - 128
+ * WF - 512
+ * TOTAL 704
+ *
+ * @return bool
+ */
 function getPLUsers()
 {
     $permissionLevelId = $_SESSION['permissionLevelId'];
     $permission = false;
-    if (($permissionLevelId & 640))  $permission = true; // 512	WF + 128 Development
+    if (($permissionLevelId & 704))  $permission = true;
 
+    return $permission;
+}
+
+
+/**
+ * Method getPLAnotherBillTo
+ * 
+ * HR - 16
+ * Super Admin - 64
+ * Development - 128
+ * WF - 512
+ * TOTAL 720
+ *
+ * @return bool
+ */
+function getPLAnotherBillTo()
+{
+    $permissionLevelId = $_SESSION['permissionLevelId'];
+    $permission = false;
+    if (($permissionLevelId & 720))  $permission = true;
     return $permission;
 }

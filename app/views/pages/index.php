@@ -74,7 +74,7 @@ $num = 1;
                             </div>
                             <div class="col col-stats ms-3 ms-sm-0">
                                 <div class="numbers">
-                                    <p class="card-category">Employees</p>
+                                    <p class="card-category">Active Employee</p>
                                     <h4 class="card-title"><?php echo $data['employeeTotal']; ?></h4>
                                 </div>
                             </div>

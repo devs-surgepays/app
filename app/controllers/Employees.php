@@ -53,15 +53,19 @@ class Employees extends Controller
     {
         $data = [];
 
-        $data['states'] = $this->employeeModel->getStates();
-        $data['departments'] = $this->departmentModel->getDeparments();
-        $data['positions'] = $this->positionModel->getPositions();
-        $data['banks'] = $this->bankModel->getBanks();
-        $data['afps'] = $this->afpModel->getAFPs();
-        $data['superiors'] = $this->usersModel->getSuperiors();
-        $data['areas'] = $this->areaModel->getAreas();
-        $data['bills'] = $this->billModel->getBillsTo();
-        $this->view('employees/create', $data);
+        if (getPLEditEmployee()) {
+            $data['states'] = $this->employeeModel->getStates();
+            $data['departments'] = $this->departmentModel->getDeparments();
+            $data['positions'] = $this->positionModel->getPositions();
+            $data['banks'] = $this->bankModel->getBanks();
+            $data['afps'] = $this->afpModel->getAFPs();
+            $data['superiors'] = $this->usersModel->getSuperiors();
+            $data['areas'] = $this->areaModel->getAreas();
+            $data['bills'] = $this->billModel->getBillsTo();
+            $this->view('employees/create', $data);
+        } else {
+            redirect('employees/index');
+        }
     }
 
     public function createEmpProcess()
@@ -198,14 +202,14 @@ class Employees extends Controller
         }
     }
 
-    public function showEmployee($badgeEmployee='')
+    public function showEmployee($badgeEmployee = '')
     {
 
         if (!empty($badgeEmployee)) {
 
             $data = [];
             $data['employeeInfo'] = $this->employeeModel->getEmployeeReadByBadge($badgeEmployee);
- 
+
             $idEmployee = $data['employeeInfo']['employeeId'];
 
             if (!empty($idEmployee)) {
@@ -281,6 +285,7 @@ class Employees extends Controller
         $searchFields = (isset($_REQUEST['search']) && $_REQUEST['search'] != NULL) ? $_REQUEST['search'] : '';
         $length = (isset($_REQUEST['length']) && $_REQUEST['length'] != NULL) ? $_REQUEST['length'] : '';
         $ascDesc = (isset($_REQUEST['ascDesc']) && $_REQUEST['ascDesc'] != NULL) ? $_REQUEST['ascDesc'] : '';
+        $billTo = (isset($_REQUEST['billTo']) && $_REQUEST['billTo'] != NULL) ? $_REQUEST['billTo'] : '';
         $return = array();
 
         if ($action == 'ajaxDataRows') {
@@ -352,6 +357,15 @@ class Employees extends Controller
                 }
             }
 
+            // BILL TO
+            if (getPLAnotherBillTo()) {
+                $return['loandingCard'] = 1;
+                $searchQuery .=  (!empty($searchQuery)) ? ' and em.billTo=' . $billTo : ' em.billTo=' . $billTo;
+            } else {
+                $return['loandingCard'] = 0;
+                $searchQuery .=  (!empty($searchQuery)) ? ' and em.billTo=1' : ' em.billTo=1';
+            }
+
             $return['searchQuery'] = $searchQuery;
             $countTotal = $this->employeeModel->countRegisterEmployee($searchQuery);
             $numrows = $countTotal['numrows'];
@@ -372,11 +386,15 @@ class Employees extends Controller
 
     public function getInfoCard()
     {
+        // BILL TO
+        if (getPLAnotherBillTo()) $idBillTo = $_POST['status'];
+        else $idBillTo =  1;
+
         $data = [];
-        $data['TotalEmployeeActive'] = $this->employeeModel->getTotalEmployeeActive();
-        $data['TotalEmployee'] = $this->employeeModel->getTotalEmployee();
-        $data['CustomerServicesActive'] = $this->employeeModel->getTotalEmployeeCustomerServices();
-        $data['HiredToday'] = $this->employeeModel->getTotalEmployeeHiredToday();
+        $data['TotalEmployeeActive'] = $this->employeeModel->getTotalEmployeeActive($idBillTo);
+        $data['CustomerServicesActive'] = $this->employeeModel->getTotalEmployeeCustomerServices($idBillTo);
+        $data['HiredToday'] = $this->employeeModel->getTotalEmployeeHiredToday($idBillTo);
+        $data['status'] = $_POST['status'];
         echo json_encode($data);
     }
 

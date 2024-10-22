@@ -12,26 +12,8 @@
               </div> -->
         </div>
         <div class="row">
-            <div class="col-sm-6 col-md-3">
-                <div class="card card-stats card-round">
-                    <div class="card-body">
-                        <div class="row align-items-center">
-                            <div class="col-icon">
-                                <div class="icon-big text-center icon-primary bubble-shadow-small">
-                                    <i class="fas fa-users"></i>
-                                </div>
-                            </div>
-                            <div class="col col-stats ms-3 ms-sm-0">
-                                <div class="numbers">
-                                    <p class="card-category">Employees</p>
-                                    <h4 class="card-title totalEmployee"></h4>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-6 col-md-3">
+
+            <div class="col-sm-6 col-md-4">
                 <div class="card card-stats card-round">
                     <div class="card-body">
                         <div class="row align-items-center">
@@ -50,7 +32,28 @@
                     </div>
                 </div>
             </div>
-            <div class="col-sm-6 col-md-3">
+
+            <!-- <div class="col-sm-6 col-md-4">
+                <div class="card card-stats card-round">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-icon">
+                                <div class="icon-big text-center icon-primary bubble-shadow-small">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                            </div>
+                            <div class="col col-stats ms-3 ms-sm-0">
+                                <div class="numbers">
+                                    <p class="card-category">Employees</p>
+                                    <h4 class="card-title totalEmployee"></h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+
+            <div class="col-sm-6 col-md-4">
                 <div class="card card-stats card-round">
                     <div class="card-body">
                         <div class="row align-items-center">
@@ -70,7 +73,7 @@
                 </div>
             </div>
 
-            <div class="col-sm-6 col-md-3">
+            <div class="col-sm-6 col-md-4">
                 <div class="card card-stats card-round">
                     <div class="card-body">
                         <div class="row align-items-center">
@@ -96,6 +99,16 @@
             <div class="col-12">
                 <div class="card card-stats card-round">
                     <div class="card-body">
+                        <?php if (getPLAnotherBillTo()) { ?>
+                            <div class="row mb-3">
+                                <div class="col-md-3">
+                                    <select class="form-select form-select-sm searchDataChange" id="billToBtn" name="billToBtn">
+                                        <option selected value="1">SURGEPAYS</option>
+                                        <option value="2">ELITE</option>
+                                    </select>
+                                </div>
+                            </div>
+                        <?php } ?>
                         <!-- Table Employees -->
                         <div class="row">
 
@@ -114,7 +127,9 @@
                                         </select> entries
                                     </label>
                                 </div>
-                                <div><a href="<?php echo URLROOT ?>/employees/create" class="btn btn-primary btn-round"><i class="fa fa-plus"></i> Add Employee</a></div>
+                                <?php if (getPLEditEmployee()) { ?>
+                                    <div><a href="<?php echo URLROOT ?>/employees/create" class="btn btn-primary btn-round"><i class="fa fa-plus"></i> Add Employee</a></div>
+                                <?php } ?>
                             </div>
                         </div>
                         <div class="row pt-5 ">
@@ -201,17 +216,18 @@
 <script>
     $(document).ready(function() {
         $('.js-select-basic').select2();
-        readData(1, '', 10, '');
+        readData(1, '', 10, '', 1);
         getInfoCard();
     });
 
-    function readData(page, search, length, ascDesc) {
+    function readData(page, search, length, ascDesc, billTo) {
         var param = {
             'action': 'ajaxDataRows',
             'page': page,
             'search': search,
             'length': length,
             'ascDesc': ascDesc,
+            'billTo': billTo,
         };
 
         console.log(param)
@@ -267,6 +283,10 @@
                 // showing
                 $("#showingRows").html(`Showing ${obj.offsetnumShow} to ${totalRowShow} of ${obj.numrows}`);
                 $("#paginationRows").html(obj.pagination);
+
+                if (obj.loandingCard) getInfoCard();
+
+
             }
         })
     }
@@ -276,7 +296,8 @@
         var search = fieldsValue()
         var ascDesc = getAscDesc();
         var length = $('select[id=length]').val();
-        readData(1, search, length, ascDesc);
+        var billTo = $('select[id=billToBtn]').val();
+        readData(1, search, length, ascDesc, billTo);
     }
 
 
@@ -312,7 +333,16 @@
     }
 
     function getInfoCard() {
-        fetch('<?php echo URLROOT; ?>/employees/getInfoCard') // api for the get request
+        const data = new URLSearchParams();
+        data.append('status', $('select[id=billToBtn]').val());
+
+        fetch('<?php echo URLROOT; ?>/employees/getInfoCard', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: data
+            }) // api for the get request
             .then(response => response.json())
             .then(data => {
                 console.log(data)
@@ -326,7 +356,6 @@
     // --------------------------------------------------------------------
 
     $(".searchDataChange").change(function() {
-        console.log("AEARCHHH")
         getdataBody();
     });
     $(".searchDataClick").click(function() {

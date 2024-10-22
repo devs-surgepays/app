@@ -18,26 +18,25 @@ class Employee
     public function countRegisterEmployee($searchQuery)
     {
         $query = '';
+        $showEmWhere = '';
         $withWhere = true;
         if (!empty($searchQuery)) {
             $query = "where " . $searchQuery;
             $withWhere = false;
         }
-
         $showEmWhere = getPLEmployeeTable($withWhere);
 
         if (!getPLShowInactiveEmployee()) {
-            $statusEmployee = (!empty($showEmWhere)) ? ' and em.status=1 ' : '';
+            $showEmWhere .= (!empty($query) or !empty($showEmWhere)) ? ' and em.status=1 ' : ' where em.status=1 ';
         }
-
-        $this->db->query('SELECT COUNT(*) AS numrows  FROM hr_surgepays.employees em INNER JOIN positions p ON p.positionId = em.positionId ' . $query . $showEmWhere . $statusEmployee);
+        $this->db->query('SELECT COUNT(*) AS numrows  FROM hr_surgepays.employees em INNER JOIN positions p ON p.positionId = em.positionId ' . $query . $showEmWhere );
         $result = $this->db->resultSetFetch();
         return $result;
     }
     public function readRegisters($offset, $per_page, $searchQuery, $orderby)
     {
         $query = '';
-        $statusEmployee = '';
+        $showEmWhere = '';
         $withWhere = true;
         if (!empty($searchQuery)) {
             $query = "where " . $searchQuery . ' ';
@@ -47,9 +46,8 @@ class Employee
         $showEmWhere = getPLEmployeeTable($withWhere);
 
         if (!getPLShowInactiveEmployee()) {
-            $statusEmployee = (!empty($showEmWhere)) ? ' and em.status=1 ' : '';
+            $showEmWhere .= (!empty($query) or !empty($showEmWhere)) ? ' and em.status=1 ' : ' where em.status=1 ';
         }
-
 
         $this->db->query("SELECT *, em.status as statusEmployee,
         concat_ws(' ', em.firstName, em.secondName,em.thirdName,em.firstLastName,em.secondLastName ) as 'fullName',
@@ -57,36 +55,33 @@ class Employee
         FROM hr_surgepays.employees em 
         INNER JOIN departments d ON d.departmentId = em.departmentId
         INNER JOIN positions p ON p.positionId = em.positionId 
-        " . $query . " $showEmWhere $statusEmployee ORDER BY $orderby limit $offset,$per_page;");
+        " . $query . " $showEmWhere ORDER BY $orderby limit $offset,$per_page;");
         $result = $this->db->resultSetAssoc();
         return $result;
     }
 
-    public function getTotalEmployeeActive()
+    public function getTotalEmployeeActive($idBillTo = 1)
     {
-        $this->db->query("SELECT count(*) as 'TotalEmployeeActive' FROM hr_surgepays.employees where status=1;");
+        $showEmWhere = getPLEmployeeTable(false);
+        $this->db->query("SELECT count(*) as 'TotalEmployeeActive' FROM hr_surgepays.employees em where em.status=1 and em.billTo = $idBillTo $showEmWhere;");
         $result = $this->db->resultSetFetch();
         return $result['TotalEmployeeActive'];
     }
-    public function getTotalEmployee()
-    {
-        $this->db->query("SELECT count(*) as 'TotalEmployee' FROM hr_surgepays.employees");
-        $result = $this->db->resultSetFetch();
-        return $result['TotalEmployee'];
-    }
 
-    public function getTotalEmployeeCustomerServices()
+    public function getTotalEmployeeCustomerServices($idBillTo = 1)
     {
-        $this->db->query("SELECT count(*) as 'totalCustomer' FROM hr_surgepays.employees 
-        inner join positions p on employees.positionId = p.positionId
-        where employees.status=1 and positionName like '%AGENTE DE SERVICIO AL CLIENTE%';");
+        $showEmWhere = getPLEmployeeTable(false);
+
+        $this->db->query("SELECT count(*) as 'totalCustomer' FROM hr_surgepays.employees em
+        inner join positions p on em.positionId = p.positionId
+        where em.status=1 and positionName like '%AGENTE DE SERVICIO AL CLIENTE%' and em.billTo = $idBillTo $showEmWhere");
         $result = $this->db->resultSetFetch();
         return $result['totalCustomer'];
     }
 
-    public function getTotalEmployeeHiredToday()
+    public function getTotalEmployeeHiredToday($idBillTo = 1)
     {
-        $this->db->query("SELECT count(*) as 'hiredToday' FROM hr_surgepays.employees where DATE(createdAt) = CURDATE();");
+        $this->db->query("SELECT count(*) as 'hiredToday' FROM hr_surgepays.employees where DATE(createdAt) = CURDATE() and employees.billTo = $idBillTo;");
         $result = $this->db->resultSetFetch();
         return $result['hiredToday'];
     }
@@ -204,6 +199,9 @@ class Employee
     {
         $showEmWhere = getPLEmployeeTable(false);
 
+        // If the user has no permissions to view another billTo, add the standar (billTo=1)
+        if (!getPLAnotherBillTo()) $showEmWhere .= ' and em.billTo=1 '; // surgepays
+        
         $this->db->query('SELECT *  FROM hr_surgepays.employees AS em  WHERE em.badge = :badge ' . $showEmWhere . '');
         $this->db->bind(':badge', $badge);
         $result = $this->db->resultSetFetch();
@@ -212,6 +210,9 @@ class Employee
     public function getEmployeeReadByBadge($badge)
     {
         $showEmWhere = getPLEmployeeTable(false);
+
+        if (!getPLShowInactiveEmployee()) $showEmWhere .= ' and em.status = 1 '; 
+        if (!getPLAnotherBillTo()) $showEmWhere .= ' and em.billTo=1 '; // surgepays
 
         $this->db->query('SELECT
             em.employeeId as employeeId,
@@ -239,7 +240,7 @@ class Employee
             positions p ON p.positionId = em.positionId 
                 LEFT JOIN
             areas ar ON ar.areaId = em.areaId 
-            where  em.badge = :badge and em.status=1 ' . $showEmWhere . '');
+            where  em.badge = :badge '. $showEmWhere . '');
         $this->db->bind(':badge', $badge);
         $result = $this->db->resultSetFetch();
         return $result;
@@ -269,7 +270,7 @@ class Employee
         return $re['photo'];
     }
 
-    public function getEmployeesByStatus($status)
+    public function getEmployeesByStatus($status,$idBillTo)
     {
         $where = '';
         $statusWhere = '';
@@ -397,6 +398,9 @@ class Employee
                 LEFT JOIN
             areas ar ON ar.areaId = em.areaId ";
         }
+
+        $where .= (!empty($where)) ? ' and em.billTo= '.$idBillTo : ' where em.billTo='.$idBillTo; 
+        
 
         $query = $fields . $where;
 
