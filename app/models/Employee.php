@@ -86,9 +86,10 @@ class Employee
         return $result['hiredToday'];
     }
 
-    public function createBadgeEmployee()
+    public function createBadgeEmployee($billTo)
     {
-        $this->db->query('SELECT badge FROM hr_surgepays.employees order by badge desc limit 1;');
+        $this->db->query('SELECT badge FROM hr_surgepays.employees where billTo=:billTo order by badge desc limit 1;');
+        $this->db->bind(':billTo', $billTo);
         $result = $this->db->resultSetFetch();
         $newBadge = $result['badge'] + 1;
         return $newBadge;

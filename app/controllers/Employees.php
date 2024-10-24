@@ -112,7 +112,7 @@ class Employees extends Controller
                     'afpTypeId' => (isset($_POST['afpTypeId']) && $_POST['afpTypeId'] != NULL) ? trim($_POST['afpTypeId']) : Null,
                     'afpNumber' => (isset($_POST['afpNumber']) && $_POST['afpNumber'] != NULL) ? trim($_POST['afpNumber']) : Null,
                     'salary' => trim($_POST['salary']),
-                    'billTo' => (isset($_POST['billTo']) && $_POST['billTo'] != NULL) ? trim($_POST['billTo']) : Null,
+                    'billTo' => (isset($_POST['billTo']) && $_POST['billTo'] != NULL) ? trim($_POST['billTo']) : 1,
                     'thirdName' => trim($_POST['thirdName']),
                     'thirdLastName' => trim($_POST['thirdLastName']),
                     'birthMunicipality' => trim($_POST['birthMunicipality']),
@@ -127,7 +127,7 @@ class Employees extends Controller
                 ];
 
                 // CrateBadge...
-                $newBadge = $this->employeeModel->createBadgeEmployee();
+                $newBadge = $this->employeeModel->createBadgeEmployee($data['billTo']);
                 $data['badge'] = $newBadge;
 
                 // save in employee table and add lastIdEmployee in data
