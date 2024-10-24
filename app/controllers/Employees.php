@@ -215,6 +215,8 @@ class Employees extends Controller
             if (!empty($idEmployee)) {
 
                 $data['emergencyContacts'] = $this->emergencyContactsModel->getEmergencyContacts($idEmployee);
+                $data['employeeSchedule'] = $this->employeeScheduleModel->getSchedulesEmployee($idEmployee);
+
                 $this->view('employees/read', $data);
             } else {
                 redirect('employees/index');

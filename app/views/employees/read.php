@@ -1,6 +1,7 @@
 <?php require APPROOT . '/views/inc/header.php';
 $employeeInfo = (isset($data['employeeInfo']) && $data['employeeInfo'] != NULL) ? $data['employeeInfo'] : [];
 $emergencyContacts = (isset($data['emergencyContacts']) && $data['emergencyContacts'] != NULL) ? $data['emergencyContacts'] : [];
+$employeeSchedule = (isset($data['employeeSchedule']) && $data['employeeSchedule'] != NULL) ? $data['employeeSchedule'] : [];
 
 ?>
 <style>
@@ -50,6 +51,9 @@ $emergencyContacts = (isset($data['emergencyContacts']) && $data['emergencyConta
     .cursor-unset {
         cursor: unset;
     }
+    .off-color {
+        background: #0674b94f !important;
+    }
 </style>
 <div class="container">
     <div class="page-inner">
@@ -58,7 +62,7 @@ $emergencyContacts = (isset($data['emergencyContacts']) && $data['emergencyConta
         <div class="row">
             <div class="col-md-6 col-xl-6 col-sm-12">
                 <!-- Personal Detail -->
-                <div class="card">
+                <div style="min-height: 430px;" class="card">
                     <div class="card-header">
                         <h5>Personal Detail</h5>
                     </div>
@@ -121,7 +125,7 @@ $emergencyContacts = (isset($data['emergencyContacts']) && $data['emergencyConta
             </div>
             <div class="col-md-6 col-xl-6 col-sm-12">
                 <!-- Company Detail -->
-                <div class="card">
+                <div style="min-height: 430px;"  class="card">
                     <div class="card-header">
                         <h5>Company Detail</h5>
                     </div>
@@ -208,6 +212,74 @@ $emergencyContacts = (isset($data['emergencyContacts']) && $data['emergencyConta
             </div>
 
             <div class="col-md-6 col-lx-6 col-sm-12">
+                <!-- Employee Schedules -->
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Employee Schedules</h5>
+                    </div>
+                    <div class="card-body" style="min-height: 175px;">
+                        <div class="row">
+                            <div class="col-md-12 col-12">
+                                <p class="fw-medium">Days: <span class="fw-light"><?php echo $employeeSchedule['days'] ?></span></p>
+                                <p class="fw-medium mb-3">Days OFF: <span class="fw-light"><?php echo $employeeSchedule['daysOff'] ?></span></p>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Day</th>
+                                                <th scope="col">Time</th>
+                                                <th scope="col">Lunch</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>Monday</td>
+                                                <td class="<?php echo ($employeeSchedule['monday'] == '-OFF-') ? 'off-color' : '' ?>"><?php echo $employeeSchedule['monday'] ?></td>
+                                                <td class="<?php echo ($employeeSchedule['mondayLunch'] == '-OFF-') ? 'off-color' : '' ?>"><?php echo $employeeSchedule['mondayLunch'] ?></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Tuesday</td>
+                                                <td class="<?php echo ($employeeSchedule['tuesday'] == '-OFF-') ? 'off-color' : '' ?>"><?php echo $employeeSchedule['tuesday'] ?></td>
+                                                <td class="<?php echo ($employeeSchedule['tuesdayLunch'] == '-OFF-') ? 'off-color' : '' ?>"><?php echo $employeeSchedule['tuesdayLunch'] ?></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Wednesday</td>
+                                                <td class="<?php echo ($employeeSchedule['wednesday'] == '-OFF-') ? 'off-color' : '' ?>"><?php echo $employeeSchedule['wednesday'] ?></td>
+                                                <td class="<?php echo ($employeeSchedule['wednesdayLunch'] == '-OFF-') ? 'off-color' : '' ?>"><?php echo $employeeSchedule['wednesdayLunch'] ?></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Thursday</td>
+                                                <td class="<?php echo ($employeeSchedule['thursday'] == '-OFF-') ? 'off-color' : '' ?>"><?php echo $employeeSchedule['thursday'] ?></td>
+                                                <td class="<?php echo ($employeeSchedule['thursdayLunch'] == '-OFF-') ? 'off-color' : '' ?>"><?php echo $employeeSchedule['thursdayLunch'] ?></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Friday</td>
+                                                <td class="<?php echo ($employeeSchedule['friday'] == '-OFF-') ? 'off-color' : '' ?>"><?php echo $employeeSchedule['friday'] ?></td>
+                                                <td class="<?php echo ($employeeSchedule['fridayLunch'] == '-OFF-') ? 'off-color' : '' ?>"><?php echo $employeeSchedule['fridayLunch'] ?></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Saturday</td>
+                                                <td class="<?php echo ($employeeSchedule['saturday'] == '-OFF-') ? 'off-color' : '' ?>"><?php echo $employeeSchedule['saturday'] ?></td>
+                                                <td class="<?php echo ($employeeSchedule['saturdayLunch'] == '-OFF-') ? 'off-color' : '' ?>"><?php echo $employeeSchedule['saturdayLunch'] ?></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Sunday</td>
+                                                <td class="<?php echo ($employeeSchedule['sunday'] == '-OFF-') ? 'off-color' : '' ?>"><?php echo $employeeSchedule['sunday'] ?></td>
+                                                <td class="<?php echo ($employeeSchedule['sundayLunch'] == '-OFF-') ? 'off-color' : '' ?>"><?php echo $employeeSchedule['sundayLunch'] ?></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <!-- <small class="pt-5"> *PAra editar el horario crear una accion de Personal (AP).</small> -->
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lx-6 col-sm-12">
                 <!-- Emergency Contacts -->
                 <div class="card">
                     <div class="card-header">
@@ -233,6 +305,7 @@ $emergencyContacts = (isset($data['emergencyContacts']) && $data['emergencyConta
                     </div>
                 </div>
             </div>
+                        
         </div>
         <?php require APPROOT . '/views/inc/footer.php'; ?>
     </div>
