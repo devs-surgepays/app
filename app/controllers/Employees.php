@@ -174,6 +174,15 @@ class Employees extends Controller
 
                 if (getPLEditEmployee()) {
 
+                    $documentType = $this->employeeDocumentModel->getTypesDocuments();
+
+                    // Poner al final Other Document.
+                    usort($documentType, function($a, $b) {
+                        if ($a['name'] == 'Other Document') return 1;
+                        if ($b['name'] == 'Other Document') return -1;
+                        return $a['documentTypeId'] <=> $b['documentTypeId'];
+                    });
+
                     $data['states'] = $this->employeeModel->getStates();
                     $data['departments'] = $this->departmentModel->getDeparments();
                     $data['positions'] = $this->positionModel->getPositions();
@@ -181,7 +190,7 @@ class Employees extends Controller
                     $data['afps'] = $this->afpModel->getAFPs();
                     $data['areas'] = $this->areaModel->getAreas();
                     $data['bills'] = $this->billModel->getBillsTo();
-                    $data['typesDocuments'] = $this->employeeDocumentModel->getTypesDocuments();
+                    $data['typesDocuments'] = $documentType;
 
                     $data['employeeDocumentsInfo'] = $this->employeeDocumentModel->getEmployeDocument($idEmployee);
                     $data['employeeSchedule'] = $this->employeeScheduleModel->getSchedulesEmployee($idEmployee);
