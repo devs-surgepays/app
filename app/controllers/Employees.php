@@ -258,6 +258,7 @@ class Employees extends Controller
                     if (isset($changedFields['thirdLastName']) && $changedFields['thirdLastName'] != NULL) $changedFields['thirdLastName'] = strtoupper($changedFields['thirdLastName']);
                     if (isset($changedFields['contactPhone']) && $changedFields['contactPhone'] != NULL) $changedFields['contactPhone'] =  preg_replace('/[^0-9]/', '', $_POST['contactPhone']);
                     if (isset($changedFields['personalEmail']) && $changedFields['personalEmail'] != NULL) $changedFields['personalEmail'] = trim(strtolower($_POST['personalEmail']));
+                    if (isset($changedFields['corporateEmail']) && $changedFields['corporateEmail'] != NULL) $changedFields['corporateEmail'] = trim(strtolower($_POST['corporateEmail']));
 
                     $this->employeeModel->updatedEmployee($changedFields);
                 }
