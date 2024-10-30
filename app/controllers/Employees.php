@@ -75,14 +75,14 @@ class Employees extends Controller
             try {
                 $returnMessage = ['status' => false, 'message' => '', 'fieldError' => array()];
                 $data = [
-                    'firstName' => ucfirst(strtolower($_POST['firstName'])),
-                    'secondName' => ucfirst(strtolower($_POST['secondName'])),
-                    'thirdName' => (isset($_POST['thirdName']) && $_POST['thirdName'] != NULL) ? ucfirst(strtolower($_POST['thirdName'])) : null,
-                    'firstLastName' => ucfirst(strtolower($_POST['firstLastName'])),
-                    'secondLastName' => ucfirst(strtolower($_POST['secondLastName'])),
-                    'thirdLastName' => (isset($_POST['thirdLastName']) && $_POST['thirdLastName'] != NULL) ? ucfirst(strtolower($_POST['thirdLastName'])) : null,
+                    'firstName' => (isset($_POST['firstName']) && $_POST['firstName'] != NULL) ? strtoupper($_POST['firstName']) : null,
+                    'secondName' => (isset($_POST['secondName']) && $_POST['secondName'] != NULL) ? strtoupper($_POST['secondName']) : null,
+                    'thirdName' => (isset($_POST['thirdName']) && $_POST['thirdName'] != NULL) ? strtoupper($_POST['thirdName']) : null,
+                    'firstLastName' => (isset($_POST['firstLastName']) && $_POST['firstLastName'] != NULL) ? strtoupper($_POST['firstLastName']) : null,
+                    'secondLastName' => (isset($_POST['secondLastName']) && $_POST['secondLastName'] != NULL) ? strtoupper($_POST['secondLastName']) : null,
+                    'thirdLastName' => (isset($_POST['thirdLastName']) && $_POST['thirdLastName'] != NULL) ? strtoupper($_POST['thirdLastName']) : null,
                     'contactPhone' => preg_replace('/[^0-9]/', '', $_POST['contactPhone']),
-                    'personalEmail' => trim($_POST['personalEmail']),
+                    'personalEmail' => trim(strtolower($_POST['personalEmail'])),
                     'dob' => $_POST['dob'],
                     'genderId' => (isset($_POST['genderId']) && $_POST['genderId'] != NULL) ? trim($_POST['genderId']) : Null,
                     'documentTypeId' => intval($_POST['documentTypeId']),
@@ -103,7 +103,7 @@ class Employees extends Controller
                     'areaId' => (isset($_POST['areaId']) && $_POST['areaId'] != NULL) ? trim($_POST['areaId']) : Null,
                     'superiorId' => (isset($_POST['superiorId']) && $_POST['superiorId'] != NULL) ? trim($_POST['superiorId']) : Null,
                     'positionId' => (isset($_POST['positionId']) && $_POST['positionId'] != NULL) ? trim($_POST['positionId']) : Null,
-                    'corporateEmail' => trim($_POST['corporateEmail']),
+                    'corporateEmail' => trim(strtolower($_POST['corporateEmail'])),
                     'hiredDate' => trim($_POST['hiredDate']),
                     'contractType' => (isset($_POST['contractType']) && $_POST['contractType'] != NULL) ? trim($_POST['contractType']) : Null,
                     'workHours' => (isset($_POST['workHours']) && $_POST['workHours'] != NULL) ? trim($_POST['workHours']) : Null,
@@ -113,7 +113,6 @@ class Employees extends Controller
                     'afpNumber' => (isset($_POST['afpNumber']) && $_POST['afpNumber'] != NULL) ? trim($_POST['afpNumber']) : Null,
                     'salary' => trim($_POST['salary']),
                     'billTo' => (isset($_POST['billTo']) && $_POST['billTo'] != NULL) ? trim($_POST['billTo']) : 1,
-                    'thirdName' => trim($_POST['thirdName']),
                     'thirdLastName' => trim($_POST['thirdLastName']),
                     'birthMunicipality' => trim($_POST['birthMunicipality']),
                     'birthDeparment' => trim($_POST['birthDeparment']),
@@ -251,13 +250,14 @@ class Employees extends Controller
                     $changedFields['employeeId'] = $employeeId;
 
                     // Clean fields if there are in array changeField
-                    if (isset($changedFields['firstName']) && $changedFields['firstName'] != NULL) $changedFields['firstName'] = ucfirst(strtolower($changedFields['firstName']));
-                    if (isset($changedFields['secondName']) && $changedFields['secondName'] != NULL) $changedFields['secondName'] = ucfirst(strtolower($changedFields['secondName']));
-                    if (isset($changedFields['thirdName']) && $changedFields['thirdName'] != NULL) $changedFields['thirdName'] = ucfirst(strtolower($changedFields['thirdName']));
-                    if (isset($changedFields['firstLastName']) && $changedFields['firstLastName'] != NULL) $changedFields['firstLastName'] = ucfirst(strtolower($changedFields['firstLastName']));
-                    if (isset($changedFields['secondLastName']) && $changedFields['secondLastName'] != NULL) $changedFields['secondLastName'] = ucfirst(strtolower($changedFields['secondLastName']));
-                    if (isset($changedFields['thirdLastName']) && $changedFields['thirdLastName'] != NULL) $changedFields['thirdLastName'] = ucfirst(strtolower($changedFields['thirdLastName']));
+                    if (isset($changedFields['firstName']) && $changedFields['firstName'] != NULL) $changedFields['firstName'] = strtoupper($changedFields['firstName']);
+                    if (isset($changedFields['secondName']) && $changedFields['secondName'] != NULL) $changedFields['secondName'] = strtoupper($changedFields['secondName']);
+                    if (isset($changedFields['thirdName']) && $changedFields['thirdName'] != NULL) $changedFields['thirdName'] = strtoupper($changedFields['thirdName']);
+                    if (isset($changedFields['firstLastName']) && $changedFields['firstLastName'] != NULL) $changedFields['firstLastName'] = strtoupper($changedFields['firstLastName']);
+                    if (isset($changedFields['secondLastName']) && $changedFields['secondLastName'] != NULL) $changedFields['secondLastName'] = strtoupper($changedFields['secondLastName']);
+                    if (isset($changedFields['thirdLastName']) && $changedFields['thirdLastName'] != NULL) $changedFields['thirdLastName'] = strtoupper($changedFields['thirdLastName']);
                     if (isset($changedFields['contactPhone']) && $changedFields['contactPhone'] != NULL) $changedFields['contactPhone'] =  preg_replace('/[^0-9]/', '', $_POST['contactPhone']);
+                    if (isset($changedFields['personalEmail']) && $changedFields['personalEmail'] != NULL) $changedFields['personalEmail'] = trim(strtolower($_POST['personalEmail']));
 
                     $this->employeeModel->updatedEmployee($changedFields);
                 }
