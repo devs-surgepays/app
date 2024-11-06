@@ -58,26 +58,32 @@
                         <p>Employees</p>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a href="<?php echo URLROOT; ?>/users">
-                        <i class="fa fa-solid fa-users"></i>
-                        <p>Users</p>
-                    </a>
-                </li>
-                <?php if ($_SESSION['permissionLevelId']&128) { ?>
-                <li class="nav-item">
-                    <a href="<?php echo URLROOT; ?>/aps">
-                        <i class="fa fa-solid fa-list-alt"></i>
-                        <p>Leaves</p>
-                    </a>
-                </li>
+                <?php if (getPLUsers()) { ?>
+                    <li class="nav-item">
+                        <a href="<?php echo URLROOT; ?>/users">
+                            <i class="fa fa-solid fa-users"></i>
+                            <p>Users</p>
+                        </a>
+                    </li>
                 <?php } ?>
-                <li class="nav-item">
-                    <a href="<?php echo URLROOT; ?>/reports">
-                        <i class="fa fa-file" aria-hidden="true"></i>
-                        <p>Reports</p>
-                    </a>
-                </li>
+                <?php if ($_SESSION['permissionLevelId'] & 128) { ?>
+                    <li class="nav-item">
+                        <a href="<?php echo URLROOT; ?>/aps">
+                            <i class="fa fa-solid fa-list-alt"></i>
+                            <p>Leaves</p>
+                        </a>
+                    </li>
+                <?php } ?>
+
+                <?php if (getPLReports()) { ?>
+                    <li class="nav-item">
+                        <a href="<?php echo URLROOT; ?>/reports">
+                            <i class="fa fa-file" aria-hidden="true"></i>
+                            <p>Reports</p>
+                        </a>
+                    </li>
+                <?php } ?>
+
                 <!-- <li class="nav-item">
                     <a data-bs-toggle="collapse" href="#sidebarLayouts">
                         <i class="fas fa-th-list"></i>

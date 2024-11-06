@@ -9,7 +9,10 @@ class Bill
     }
 
     public function getBillsTo() {
-        $this->db->query('SELECT * FROM hr_surgepays.bills where status=1;');
+
+        $bill = (!getPLAnotherBillTo()) ? ' and billToId = 1':'';
+
+        $this->db->query("SELECT * FROM hr_surgepays.bills where status=1 $bill ");
         $result = $this->db->resultSetAssoc();
         return $result;
     }

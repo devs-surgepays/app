@@ -18,12 +18,13 @@ class Users extends Controller
 
     public function index()
     {
-
-        $data['users'] = $this->userModel->getUsers();
-        $data['permissions_levels'] = $this->userModel->getpermissions_levels();
-
-
-        $this->view('users/index', $data);
+        if (getPLUsers()) {
+            $data['users'] = $this->userModel->getUsers();
+            $data['permissions_levels'] = $this->userModel->getpermissions_levels();
+            $this->view('users/index', $data);
+        } else {
+            redirect(''); // Dashboard
+        }
     }
 
     public function createUserProcess()

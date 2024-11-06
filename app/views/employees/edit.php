@@ -487,7 +487,7 @@ $employeeDocumentsInfo = (isset($data['employeeDocumentsInfo']) && $data['employ
                                                 <div class="col-6">
                                                     <div class="form-floating form-floating-custom mb-3">
                                                         <input type="number" value="<?php echo $data['employeeInfo']['afpNumber']; ?>" name="afpNumber" id="afpNumber" placeholder="afpNumber" class="form-control">
-                                                        <label for="afpNumber">AFP Number <label id="afpNumber-error" class="error" for="corporateEmail"></label> </label><small class="form-text text-muted">No Hyphens.</small>
+                                                        <label for="afpNumber">AFP Number <label id="afpNumber-error" class="error" for="corporateEmail"></label> </label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -686,6 +686,7 @@ $employeeDocumentsInfo = (isset($data['employeeDocumentsInfo']) && $data['employ
                                                             <option value="">Select</option>
                                                             <option <?php echo ("F" == $data['employeeInfo']['contractType']) ? 'selected' : '' ?> value="F">Full Time</option>
                                                             <option <?php echo ("PT" == $data['employeeInfo']['contractType']) ? 'selected' : '' ?> value="PT">Part Time</option>
+                                                            <option <?php echo ("GS" == $data['employeeInfo']['contractType']) ? 'selected' : '' ?> value="GS">Graveyard Shift</option>
                                                         </select>
                                                         <label for="dob">contract Type</label>
                                                     </div>
@@ -698,34 +699,35 @@ $employeeDocumentsInfo = (isset($data['employeeDocumentsInfo']) && $data['employ
                                                 </div>
                                             </div>
                                             <!-- salary -->
-                                            <div class="row pt-3">
-                                                <div class="col-6">
+                                            <?php if (getPLSalary()) { ?>
+                                                <div class="row pt-3">
+                                                    <div class="col-6">
+                                                        <div class="form-group form-group-default">
+                                                            <label for="Name">Salary</label>
+                                                            <div class="input-group">
+                                                                <input disabled id="Name" type="password" value="<?php echo $data['employeeInfo']['salary']; ?>" class="form-control" placeholder="Fill Name">
+                                                                <span class="input-group-text">
+                                                                    <i class="fas fa-eye" id="togglePassword"></i>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
 
-                                                    <div class="form-group form-group-default">
-                                                        <label for="Name">Salary</label>
-                                                        <div class="input-group">
-                                                            <input disabled id="Name" type="password" value="<?php echo $data['employeeInfo']['salary']; ?>" class="form-control" placeholder="Fill Name">
-                                                            <span class="input-group-text">
-                                                                <i class="fas fa-eye" id="togglePassword"></i>
-                                                            </span>
+                                                    <div class="col-6">
+                                                        <label class="positionSelect" for="billTo">Bill To <span class="text-danger">*</span>
+                                                            <label id="billTo-error" class="error" for="billTo"></label></label>
+                                                        <div class="form-floating form-floating-custom mb-3">
+                                                            <select name="billTo" id="billTo" class="form-select form-control js-select-basic">
+                                                                <option value="">Select</option>
+                                                                <?php for ($i = 0; $i < count($bills); $i++) {
+                                                                    $select = ($bills[$i]['billToId'] == $data['employeeInfo']['billTo']) ? 'selected' : '';
+                                                                    echo '<option ' . $select . '  value="' . $bills[$i]['billToId'] . '">' . $bills[$i]['billName'] . '</option>';
+                                                                } ?>
+                                                            </select>
                                                         </div>
                                                     </div>
                                                 </div>
-
-                                                <div class="col-6">
-                                                    <label class="positionSelect" for="billTo">Bill To <span class="text-danger">*</span>
-                                                        <label id="billTo-error" class="error" for="billTo"></label></label>
-                                                    <div class="form-floating form-floating-custom mb-3">
-                                                        <select name="billTo" id="billTo" class="form-select form-control js-select-basic">
-                                                            <option value="">Select</option>
-                                                            <?php for ($i = 0; $i < count($bills); $i++) {
-                                                                $select = ($bills[$i]['billToId'] == $data['employeeInfo']['billTo']) ? 'selected' : '';
-                                                                echo '<option ' . $select . '  value="' . $bills[$i]['billToId'] . '">' . $bills[$i]['billName'] . '</option>';
-                                                            } ?>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                            <?php } ?>
                                             <hr class="hr-color">
 
                                             <div class="row pt-3">
@@ -1730,12 +1732,12 @@ $employeeDocumentsInfo = (isset($data['employeeDocumentsInfo']) && $data['employ
             previewFile(this, '#photo-preview');
         });
 
-        $('#docType').on('change', function(){
-            if(this.value == 9){
+        $('#docType').on('change', function() {
+            if (this.value == 9) {
                 $(".docNameOther").show(1000)
-            }else{
+            } else {
                 $(".docNameOther").hide(1000)
-                
+
             }
         })
 

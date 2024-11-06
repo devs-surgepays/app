@@ -161,6 +161,7 @@ class Auths extends Controller
     public function createUserSession($user, $redirect = true)
     {
         $_SESSION['userId'] = $user->userId;
+        $_SESSION['areaId'] = $user->areaId;
         $_SESSION['username'] = $user->username;
         $_SESSION['employeeId'] = $user->employeeId;
         $names = explode('@', $user->username);

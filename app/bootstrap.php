@@ -5,6 +5,7 @@
   require_once 'helpers/session_helper.php';
   require_once 'helpers/pagination.php';
   require_once 'helpers/breadcrumbs.php';
+  require_once 'helpers/permissions_levels.php';
 
   // Autoload Core Libraries
   spl_autoload_register(function($className){

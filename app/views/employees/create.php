@@ -440,6 +440,7 @@ $bills = (isset($data['bills']) && $data['bills'] != NULL) ? $data['bills'] : []
                                                 <option value="">Select</option>
                                                 <option value="F">Full Time</option>
                                                 <option value="PT">Part Time</option>
+                                                <option value="GS">Graveyard Shift</option>
                                             </select>
                                             <label for="dob">Contract Type</label>
                                         </div>
@@ -559,7 +560,7 @@ $bills = (isset($data['bills']) && $data['bills'] != NULL) ? $data['bills'] : []
                                     <div class="col-6">
                                         <div class="form-floating form-floating-custom mb-3">
                                             <input type="number" name="afpNumber" id="afpNumber" placeholder="afpNumber" class="form-control">
-                                            <label for="afpNumber">AFP Number <label id="afpNumber-error" class="error" for="corporateEmail"></label> </label><small class="form-text text-muted">No Hyphens.</small>
+                                            <label for="afpNumber">AFP Number <label id="afpNumber-error" class="error" for="corporateEmail"></label> </label>
                                         </div>
                                     </div>
                                 </div>

@@ -9,12 +9,19 @@
                     <div class="card-body">
                         <div class="row">
                             <h3 class="mb-3">Employees</h3>
+                            <?php if (getPLAnotherBillTo()) { ?>
+                                <div class="col-4">
+                                    <select class="form-select form-select-sm searchDataChange" id="employee_billTo" name="employee_billTo">
+                                        <option selected value="1">SURGEPAYS</option>
+                                        <option value="2">ELITE</option>
+                                    </select>
+                                </div>
+                            <?php } ?>
                             <div class="col-4">
                                 <select class="form-select" aria-label="Default select example" required id="employee_status">
                                     <option selected disabled>Select Status</option>
                                     <option value="2">All</option>
-                                    <option value="1">Active</option>
-                                    <option value="0">Inactive</option>
+                                    <?php echo getPLShowInactiveEmployee() ? '<option value="1">Active</option> <option value="0">Inactive</option>' : ''; ?>
                                 </select>
                                 <small class="required_field" id="status_error" hidden>*status is required</small>
                             </div>
@@ -27,7 +34,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-12">
+            <!-- <div class="col-12">
                 <div class="card card-stats card-round">
                     <div class="card-body">
                         <div class="row">
@@ -36,7 +43,7 @@
                                 <select class="form-select" aria-label="Default select example" id="ap_type">
                                     <option disabled selected>Select type</option>
                                     <option>All</option>
-                                    <?php foreach($data["apTypes"] as $type): ?>
+                                    <?php foreach ($data["apTypes"] as $type): ?>
                                         <option value="<?php echo $type["apTypeId"]; ?>"><?php echo $type["name"]; ?></option>
                                     <?php endforeach; ?>
                                 </select>
@@ -65,9 +72,9 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
         </div>
-        
+
         <?php require APPROOT . '/views/inc/footer.php'; ?>
     </div> <!-- end/page-inner -->
 </div> <!-- end/container2 -->
@@ -80,6 +87,7 @@
         border-radius: 5px;
         border: var(--bs-border-width) solid var(--bs-border-color);
     }
+
     .required_field {
         color: red;
     }
@@ -91,7 +99,7 @@
 
         $("#download_employees").click(() => {
 
-            if($("#employee_status").val() == "" || $("#employee_status").val() == null) {
+            if ($("#employee_status").val() == "" || $("#employee_status").val() == null) {
 
                 $("#status_error").attr("hidden", false);
                 return;
@@ -99,34 +107,35 @@
             } else {
 
                 try {
-                    
+
                     $("#status_error").attr("hidden", true);
                     let frm = new FormData();
                     frm.append("employee_status", $("#employee_status").val());
+                    frm.append("employee_billTo", $("#employee_billTo").val());
                     fetch('<?php echo URLROOT; ?>/reports/exportEmployeesByStatus', {
-                        method: "POST",
-                        body: frm
-                    })
-                    .then((response) => response.json())
-                    .then((data) => {
-                        console.log($("#employee_status").val())
-                        console.log(data);
-                        const now = new Date();
-                        const year = now.getFullYear();
-                        const month = String(now.getMonth() + 1).padStart(2, '0');
-                        const day = String(now.getDate()).padStart(2, '0');
-                        const dateStr = `${year}-${month}-${day}`;
-                        
-                        let processedData = data.map(item => ({
-                            Badge: item.badge,
-                            firstName: item.firstName
-                        }));
+                            method: "POST",
+                            body: frm
+                        })
+                        .then((response) => response.json())
+                        .then((data) => {
+                            console.log($("#employee_status").val())
+                            console.log(data);
+                            const now = new Date();
+                            const year = now.getFullYear();
+                            const month = String(now.getMonth() + 1).padStart(2, '0');
+                            const day = String(now.getDate()).padStart(2, '0');
+                            const dateStr = `${year}-${month}-${day}`;
 
-                        let ws = XLSX.utils.json_to_sheet(data);
-                        let wb = XLSX.utils.book_new();
-                        XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-                        XLSX.writeFile(wb, 'employees_' + dateStr + '.xlsx');
-                    });
+                            let processedData = data.map(item => ({
+                                Badge: item.badge,
+                                firstName: item.firstName
+                            }));
+
+                            let ws = XLSX.utils.json_to_sheet(data);
+                            let wb = XLSX.utils.book_new();
+                            XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+                            XLSX.writeFile(wb, 'employees_' + dateStr + '.xlsx');
+                        });
 
                 } catch (error) {
                     console.error('Error fetching or exporting data:', error);
@@ -135,18 +144,18 @@
             }
         });
 
-      $("#download_aps").click(() => {
-        if($("#ap_type").val() == "" || $("#ap_type").val() == null || $("#ap_approval_option").val() == "" || $("#ap_approval_option").val() == null || $("#date_range").val() == "" || $("#date_range").val() == null) {
-            $("#ap_type").val() == "" || $("#ap_type").val() == null ? $("#type_error").attr("hidden", false) : $("#type_error").attr("hidden", true);
-            $("#ap_approval_option").val() == "" || $("#ap_approval_option").val() == null ? $("#approval_error").attr("hidden", false) : $("#approval_error").attr("hidden", true);
-            $("#date_range").val() == "" || $("#date_range").val() == null ? $("#date_error").attr("hidden", false) : $("#date_error").attr("hidden", true);
-            return;
-        } else {
-            $("#type_error").attr("hidden", true);
-            $("#approval_error").attr("hidden", true);
-            $("#date_error").attr("hidden", true);
-        }
-      });
+        $("#download_aps").click(() => {
+            if ($("#ap_type").val() == "" || $("#ap_type").val() == null || $("#ap_approval_option").val() == "" || $("#ap_approval_option").val() == null || $("#date_range").val() == "" || $("#date_range").val() == null) {
+                $("#ap_type").val() == "" || $("#ap_type").val() == null ? $("#type_error").attr("hidden", false) : $("#type_error").attr("hidden", true);
+                $("#ap_approval_option").val() == "" || $("#ap_approval_option").val() == null ? $("#approval_error").attr("hidden", false) : $("#approval_error").attr("hidden", true);
+                $("#date_range").val() == "" || $("#date_range").val() == null ? $("#date_error").attr("hidden", false) : $("#date_error").attr("hidden", true);
+                return;
+            } else {
+                $("#type_error").attr("hidden", true);
+                $("#approval_error").attr("hidden", true);
+                $("#date_error").attr("hidden", true);
+            }
+        });
 
     });
 

@@ -60,6 +60,8 @@ class EmployeeSchedule
 
     public function getEmployeeWorkingToday($dayToday)
     {
+        $showEmWhere = getPLEmployeeTable(false);
+        
         $this->db->query("SELECT 
                             em.employeeId, 
                             em.badge, 
@@ -69,12 +71,14 @@ class EmployeeSchedule
                             es.$dayToday, 
                             es.createdAt,
                             de.name as 'deparmentName',
+                            ar.areaName as 'areaName',
                             po.positionName
                         FROM 
                             hr_surgepays.employee_schedules es
                         INNER JOIN employees em ON em.employeeId = es.employeeId
                         INNER JOIN departments de ON em.departmentId = de.departmentId
-                         INNER JOIN positions po ON em.positionId = po.positionId
+                        INNER JOIN positions po ON em.positionId = po.positionId
+                        INNER JOIN areas ar ON ar.areaId = em.areaId
                         WHERE 
                             es.status = 1 
                             AND es.$dayToday != '-OFF-' 
@@ -83,9 +87,9 @@ class EmployeeSchedule
                                 FROM hr_surgepays.employee_schedules es2
                                 WHERE es2.employeeId = es.employeeId 
                                 AND es2.status = 1 
-                                AND es2.$dayToday != '-OFF-'
-                            );");
+                                AND es2.$dayToday != '-OFF-') $showEmWhere ;");
         $result = $this->db->resultSetAssoc();
         return $result;
-    }
+   
+   }
 }

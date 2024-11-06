@@ -1,27 +1,37 @@
 <?php require APPROOT . '/views/inc/header.php'; ?>
-
+<style>
+    .card-header h5::after {
+        content: "";
+        height: 30px;
+        width: 3px;
+        background: #51459d;
+        position: absolute;
+        left: 0;
+        border-radius: 0 3px 3px 0;
+        background: #0674b9 !important;
+    }
+</style>
 <div class="container">
-
     <div class="page-inner">
-
-        <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
-            <div>
-                <h3 class="fw-bold mb-3">SurgePays, Inc.</h3>
-                <h6 class="op-7 mb-2">San Salvador, El Salvador</h6>
-            </div>
-            <!-- <div class="ms-md-auto py-2 py-md-0">
-                <a href="#" class="btn btn-label-info btn-round me-2">Manage</a>
-                <a href="#" class="btn btn-primary btn-round"> <i class="fa fa-add"></i> Add Employee</a>
-            </div> -->
-        </div>
+        <?php echo breadcrumbs('Employee') ?>
+    <!-- mAIN -->
         <div class="row">
-            <?php echo breadcrumbs('Employee') ?>
+            <div class="col-md-6 col-xl-6 col-sm-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Personal Detail</h5>
+                    </div>
+                    <div class="card-body">
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="pt-2"></div>
+    <!-- mAIN -->
 
         <?php require APPROOT . '/views/inc/footer.php'; ?>
-    </div> <!-- end/page-inner -->
-</div> <!-- end/container2 -->
+    </div>
+</div>
+
 <script>
     $(document).ready(function() {
 
