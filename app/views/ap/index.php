@@ -730,12 +730,15 @@
 
 
 <script>
+  //This button open createModal in order to create a new Leave
 $("#createModal").click(function(){
   $("#Action").val("Insert");
   $("#actionspan").text("Create");
   $("#addAPButton").text("Create");
   $('#addLeaveType').prop('disabled', true);
 })
+
+//This function help to reset each filter of the grid 
 function resetform(){
   $(".grid-filter").val("");
   $('#searchCreatedAt').daterangepicker({
@@ -746,6 +749,7 @@ function resetform(){
   });
 }
 
+//this action get all changed fields 
 $(".grid-filter").on("change",function(){
   $('#add-row').find('input, select,textarea').each(function() {
             initialState[$(this).attr('name')] = $(this).val();
@@ -1797,16 +1801,16 @@ function readData(page,where='',example_length,camposAscDesc,firstload=''){
             
             break;
         }
-        btnsuccess="btn-success";
+        //btnsuccess="btn-success";
         btnwarning="btn-warning";
         if(v.aprovedByM>=1 || v.aprovedByHR>=1){
           enable="disabled";
-          btnsuccess="";
+          //btnsuccess="";
           btnwarning="";
         }
 				
 				cell10.innerHTML = `<div class="form-button-action">
-                        <button type="button" title="" class="btn btn-link btn-lg ${btnsuccess} aproveModal" data-leaveId="${v.apDetailsId}" data-bs-toggle="modal" data-bs-target="#approveModal" ${enable}>
+                        <button type="button" title="" class="btn btn-link btn-lg btn-success aproveModal" data-leaveId="${v.apDetailsId}" data-bs-toggle="modal" data-bs-target="#approveModal">
                         <i class="fas fa-check-double"></i>
                         </button>
                         <button type="button" class="btn btn-link btn-lg ${btnwarning} updateModal" data-bs-toggle="modal" data-bs-target="#addRowModal" data-leaveId="${v.apDetailsId}" ${enable}>
