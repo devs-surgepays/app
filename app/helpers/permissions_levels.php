@@ -17,18 +17,18 @@
  */
 function getPLEmployeeTable($withWhere)
 {
-    $where = 'or em.superiorId = ' . $_SESSION['userId'] . ' or em.employeeId = ' . $_SESSION['employeeId'];
+    $where = 'or em.superiorId = ' . $_SESSION['userId'] . ' or em.employeeId = ' . $_SESSION['employeeId']; // ALL
 
     $permissionLevelId = $_SESSION['permissionLevelId'];
     // if (($permissionLevelId & 2))  $where .= ' or em.employeeId = ' . $_SESSION['employeeId']; // Regular Agent
     //if (($permissionLevelId & 4))  $where .= ' or em.superiorId = ' . $_SESSION['userId'] . ' or em.employeeId = ' . $_SESSION['employeeId']; // Supervisor
-    if (($permissionLevelId & 8))  $where .= ' or em.areaId = ' . $_SESSION['areaId']; // Manager Account
-    if (($permissionLevelId & 16))  $where = ''; // HR
-    if (($permissionLevelId & 32))  $where = ''; // Operation Manager
-    if (($permissionLevelId & 64))  $where = ''; // Super Admin
-    if (($permissionLevelId & 128))  $where = ''; // Development
-    if (($permissionLevelId & 256))  $where = ''; // External person
-    if (($permissionLevelId & 512))  $where = ''; // WF
+    if (($permissionLevelId & 8))  $where .= ' or em.areaId in (9,10) '; //  '  '; // Account Manager  9-SURGEPAYS /10-SURGEPHONE
+    // if (($permissionLevelId & 16))  $where .= ''; // HR
+    // if (($permissionLevelId & 32))  $where .= ''; // Operation Manager
+    // if (($permissionLevelId & 64))  $where .= ''; // Super Admin
+    // if (($permissionLevelId & 128))  $where .= ''; // Development
+    // if (($permissionLevelId & 256))  $where .= ''; // External person
+    // if (($permissionLevelId & 512))  $where .= ''; // WF
 
     if (!empty($where)) {
         //Delete the first "OR"
