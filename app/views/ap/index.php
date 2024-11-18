@@ -1968,7 +1968,7 @@ $(document).on('click', '.updateModal', function(){
   $("#addAPButton").text("Edit")
   $("#Action").val("Update");
   $("#apId").val(leaveId);
-  //console.log(leaveId)
+  console.log(leaveId)
   $.ajax({
     url:"<?Php echo URLROOT; ?>/aps/getleave/"+leaveId,
     type:"GET",
@@ -1981,12 +1981,12 @@ $(document).on('click', '.updateModal', function(){
       var apType = myObj.apTypeId;
       $("#addComments").val(myObj.comment)
       //showSetLeaveAreas(apType)
-      //console.log(myObj.reason1)
+      console.log(apType)
       switch(apType){
-        case 1:
+        case "1":
           hideAllAndShow("permisoConSinGoce") 
           setReasons('motivo_permiso',1,myObj.reason1);
-          //console.log(myObj.reason1);
+          console.log(myObj.reason1);
           $("#dia1").val(myObj.apDate1);
           var reason2 = myObj.reason2;
           if(reason2=="Horas"){
@@ -2002,7 +2002,7 @@ $(document).on('click', '.updateModal', function(){
           
           //document.getElementById("motivo_permiso").value = myObj.reason1;
           break;
-        case 2: 
+        case "2": 
           hideAllAndShow("permisoConSinGoce") 
           setReasons('motivo_permiso',1,myObj.reason1);
           //console.log(myObj.reason1);
@@ -2019,20 +2019,20 @@ $(document).on('click', '.updateModal', function(){
             $("#dia2").val(myObj.apDate2);
           }
           break;
-        case 3:
+        case "3":
           hideAllAndShow("vacaciones");
           $("#inicioVacaciones").val(myObj.apDate1);
           $("#finVacaciones").val(myObj.apDate2);
           calculateDays();
           break;
-        case 4:
+        case "4":
           hideAllAndShow("traslados")
           setDespartment(myObj.newAccount);
           setPosition('newPosition',myObj.newPosition);
           $("#inicioPrueba").val(myObj.apDate1);
           $("#finPrueba").val(myObj.apDate2);
           break;
-        case 5:
+        case "5":
           hideAllAndShow("incapacidad");
           $("#inicioIncapacidad").val(myObj.apDate1);
           $("#finIncapacidad").val(myObj.apDate2);
@@ -2047,7 +2047,7 @@ $(document).on('click', '.updateModal', function(){
             $("#prorroga").val("Yes")
           }
           break;
-        case 6:
+        case "6":
           hideAllAndShow("sanciones");
           switch(myObj.reason1){
             case "Verbal":
@@ -2064,33 +2064,33 @@ $(document).on('click', '.updateModal', function(){
               break;
           }
           break;
-        case 7:
+        case "7":
           hideAllAndShow("cambiohorario")
           setReasons('motivo_horario',3,myObj.reason1);
           $("#inicioHorario").val(myObj.apDate1);
           $("#finHorario").val(myObj.apDate2);
           getLastSchedule(myObj.scheduleId,"Edit");
           break;
-        case 8:
+        case "8":
           hideAllAndShow("cambiodialibre");
           setReasons('motivo_cambio',2,myObj.reason1);
           $("#fechaSolicitud").val(myObj.apDate1);
           $("#diaAsignado").val(myObj.apDate2);
           $("#diaSolicitado").val(myObj.apDate3);
           break;
-        case 9:
+        case "9":
           hideAllAndShow("ausencia");
           $("#inicioAusencia").val(myObj.apDate1);
           $("#finAusencia").val(myObj.apDate2);
           break;
-        case 10:
+        case "10":
         hideAllAndShow("horasExtra");
           $("#fechaOt").val(myObj.apDate1);
           $("#inicioOt").val(myObj.startTime);
           $("#finOt").val(myObj.endTime);
           getTotalOT();
           break;
-        case 11:
+        case "11":
           hideAllAndShow("retiros");
           $("#tipoRetiro").val(myObj.withdrawalType);
           $("#fechaRetiro").val(myObj.apDate1);
@@ -2100,7 +2100,7 @@ $(document).on('click', '.updateModal', function(){
             showAttritionReasons('reasonsDetail',myObj.attritionsId1,myObj.attritionsId2);
           }
           break;
-        case 12:
+        case "12":
           hideAllAndShow("ajusteSalarial");
           $("#monto").val(myObj.newSalary);
           $("#diaEfectivo").val(myObj.apDate1);
