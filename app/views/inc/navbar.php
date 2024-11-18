@@ -189,7 +189,7 @@
                     <span class="text">Users</span>
                   </div>
                 </a>
-                <?php if ($_SESSION['permissionLevelId']&128) { ?>
+                <?php if ($_SESSION['permissionLevelId']&640) { ?>
                   <a class="col-6 col-md-4 p-0" href="<?php echo URLROOT; ?>/aps">
                     <div class="quick-actions-item">
                       <div class="avatar-item bg-info rounded-circle">

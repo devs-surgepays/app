@@ -66,7 +66,7 @@
                         </a>
                     </li>
                 <?php } ?>
-                <?php if ($_SESSION['permissionLevelId'] & 128) { ?>
+                <?php if ($_SESSION['permissionLevelId'] & 640) { ?>
                     <li class="nav-item">
                         <a href="<?php echo URLROOT; ?>/aps">
                             <i class="fa fa-solid fa-list-alt"></i>
