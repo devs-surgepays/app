@@ -126,7 +126,7 @@ class User
 
     public function getSuperiors(){
         $this->db->query("SELECT u.userId, if (u.employeeId>0, CONCAT(COALESCE(e.firstName, ''), ' ', COALESCE(e.firstLastName, '')), CONCAT(COALESCE(u.firstName, ''), ' ', COALESCE(u.firstLastName, '')) ) as 'fullname' FROM hr_surgepays.users u
-        left JOIN employees e ON u.employeeId = e.employeeId where u.status=1 and permissionLevelId & 268 order by userId desc;");
+        left JOIN employees e ON u.employeeId = e.employeeId where u.status=1 and permissionLevelId & 380 order by userId desc;");
         return $row = $this->db->resultSetAssoc();
     }
 
