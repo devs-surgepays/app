@@ -41,8 +41,29 @@ function getPLEmployeeTable($withWhere)
 
     return $where;
 }
-// edit Employee?
-function getPLEditEmployee()
+
+//Vista que muestra toda la informacion (sin salario - se modifica en la funcion getPLSalary())
+function getPLFullEmployeeInfo()
+{
+    $permissionLevelId = $_SESSION['permissionLevelId'];
+
+    $permission = false;
+
+    if (($permissionLevelId & 2))  $permission = false; // Regular Agent
+    if (($permissionLevelId & 4))  $permission = false; // Supervisor
+    if (($permissionLevelId & 8))  $permission = false; // Manager Account
+    if (($permissionLevelId & 16))  $permission = true; // HR
+    if (($permissionLevelId & 32))  $permission = true; // Operation Manager
+    if (($permissionLevelId & 64))  $permission = true; // Super Admin
+    if (($permissionLevelId & 128))  $permission = true; // Development
+    if (($permissionLevelId & 256))  $permission = false; // External person
+    if (($permissionLevelId & 512))  $permission = false; // WF
+
+    return $permission;
+}
+
+// Si tiene como true la funcion getPLFullEmployeeInfo() Puede deshabilitar que se muestre toda la info sin CREAR, EDITAR ni DELETE.
+function getPLCreateEditDeleteInfoEmployee()
 {
     $permissionLevelId = $_SESSION['permissionLevelId'];
 
@@ -60,6 +81,7 @@ function getPLEditEmployee()
 
     return $permission;
 }
+
 
 // see inactivo?
 function getPLShowInactiveEmployee()
@@ -79,6 +101,8 @@ function getPLShowInactiveEmployee()
 
     return $permission;
 }
+
+
 // see salary?
 function getPLSalary()
 {
@@ -89,7 +113,7 @@ function getPLSalary()
     if (($permissionLevelId & 4))  $permission = false; // Supervisor
     if (($permissionLevelId & 8))  $permission = false; // Manager Account
     if (($permissionLevelId & 16))  $permission = true; // HR
-    if (($permissionLevelId & 32))  $permission = false; // Operation Manager
+    if (($permissionLevelId & 32))  $permission = true; // Operation Manager
     if (($permissionLevelId & 64))  $permission = true; // Super Admin
     if (($permissionLevelId & 128))  $permission = true; // Development
     if (($permissionLevelId & 256))  $permission = false; // External person
@@ -97,6 +121,7 @@ function getPLSalary()
 
     return $permission;
 }
+
 // see Reports?
 function getPLReports()
 {

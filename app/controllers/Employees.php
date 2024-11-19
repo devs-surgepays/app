@@ -53,7 +53,8 @@ class Employees extends Controller
     {
         $data = [];
 
-        if (getPLEditEmployee()) {
+        // Validation - Permission to create (view) Employee Info
+        if (getPLCreateEditDeleteInfoEmployee()) {
             $data['states'] = $this->employeeModel->getStates();
             $data['departments'] = $this->departmentModel->getDeparments();
             $data['positions'] = $this->positionModel->getPositions();
@@ -72,90 +73,95 @@ class Employees extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-            try {
-                $returnMessage = ['status' => false, 'message' => '', 'fieldError' => array()];
-                $data = [
-                    'firstName' => (isset($_POST['firstName']) && $_POST['firstName'] != NULL) ? strtoupper($_POST['firstName']) : null,
-                    'secondName' => (isset($_POST['secondName']) && $_POST['secondName'] != NULL) ? strtoupper($_POST['secondName']) : null,
-                    'thirdName' => (isset($_POST['thirdName']) && $_POST['thirdName'] != NULL) ? strtoupper($_POST['thirdName']) : null,
-                    'firstLastName' => (isset($_POST['firstLastName']) && $_POST['firstLastName'] != NULL) ? strtoupper($_POST['firstLastName']) : null,
-                    'secondLastName' => (isset($_POST['secondLastName']) && $_POST['secondLastName'] != NULL) ? strtoupper($_POST['secondLastName']) : null,
-                    'thirdLastName' => (isset($_POST['thirdLastName']) && $_POST['thirdLastName'] != NULL) ? strtoupper($_POST['thirdLastName']) : null,
-                    'contactPhone' => preg_replace('/[^0-9]/', '', $_POST['contactPhone']),
-                    'personalEmail' => trim(strtolower($_POST['personalEmail'])),
-                    'dob' => $_POST['dob'],
-                    'genderId' => (isset($_POST['genderId']) && $_POST['genderId'] != NULL) ? trim($_POST['genderId']) : Null,
-                    'documentTypeId' => intval($_POST['documentTypeId']),
-                    'documentNumber' => $_POST['documentNumber'],
-                    'documentExpDate' => $_POST['documentExpDate'],
-                    'documentExpedDate' => (isset($_POST['documentExpedDate']) && $_POST['documentExpedDate'] != NULL) ? trim($_POST['documentExpedDate']) : Null,
-                    'documentExpedPlace' => $_POST['documentExpedPlace'],
-                    'ssn' => trim($_POST['ssn']),
-                    'stateId' => (isset($_POST['stateId']) && $_POST['stateId'] != NULL) ? trim($_POST['stateId']) : Null,
-                    'cityId' => (isset($_POST['cityId']) && $_POST['cityId'] != NULL) ? trim($_POST['cityId']) : Null,
-                    'districtId' => (isset($_POST['districtId']) && $_POST['districtId'] != NULL) ? trim($_POST['districtId']) : Null,
-                    'address' => trim($_POST['address']),
-                    'maritalStatus' => trim($_POST['maritalStatus']),
-                    'children' => (isset($_POST['children']) && $_POST['children'] != NULL) ? trim($_POST['children']) : Null,
-                    'educationLevel' => trim($_POST['educationLevel']),
-                    'career' => trim($_POST['career']),
-                    'departmentId' => (isset($_POST['departmentId']) && $_POST['departmentId'] != NULL) ? trim($_POST['departmentId']) : Null,
-                    'areaId' => (isset($_POST['areaId']) && $_POST['areaId'] != NULL) ? trim($_POST['areaId']) : Null,
-                    'superiorId' => (isset($_POST['superiorId']) && $_POST['superiorId'] != NULL) ? trim($_POST['superiorId']) : Null,
-                    'positionId' => (isset($_POST['positionId']) && $_POST['positionId'] != NULL) ? trim($_POST['positionId']) : Null,
-                    'corporateEmail' => trim(strtolower($_POST['corporateEmail'])),
-                    'hiredDate' => trim($_POST['hiredDate']),
-                    'contractType' => (isset($_POST['contractType']) && $_POST['contractType'] != NULL) ? trim($_POST['contractType']) : Null,
-                    'workHours' => (isset($_POST['workHours']) && $_POST['workHours'] != NULL) ? trim($_POST['workHours']) : Null,
-                    'bankId' => (isset($_POST['bankId']) && $_POST['bankId'] != NULL) ? trim($_POST['bankId']) : Null,
-                    'bankAccount' => trim($_POST['bankAccount']),
-                    'afpTypeId' => (isset($_POST['afpTypeId']) && $_POST['afpTypeId'] != NULL) ? trim($_POST['afpTypeId']) : Null,
-                    'afpNumber' => (isset($_POST['afpNumber']) && $_POST['afpNumber'] != NULL) ? trim($_POST['afpNumber']) : Null,
-                    'salary' => trim($_POST['salary']),
-                    'billTo' => (isset($_POST['billTo']) && $_POST['billTo'] != NULL) ? trim($_POST['billTo']) : 1,
-                    'thirdLastName' => trim($_POST['thirdLastName']),
-                    'birthMunicipality' => trim($_POST['birthMunicipality']),
-                    'birthDeparment' => trim($_POST['birthDeparment']),
-                    'homePhone' => trim($_POST['homePhone']),
-                    'nationality' => trim($_POST['nationality']),
-                    'contractsigning' => (isset($_POST['contractsigning']) && $_POST['contractsigning'] != NULL) ?  trim($_POST['contractsigning']) : Null,
-                    'signingContractHeadset' => (isset($_POST['signingContractHeadset']) && $_POST['signingContractHeadset'] != NULL) ?  trim($_POST['signingContractHeadset']) : Null,
-                    'signingConfidentialityAgreement' => (isset($_POST['signingConfidentialityAgreement']) && $_POST['signingConfidentialityAgreement'] != NULL) ? trim($_POST['signingConfidentialityAgreement']) : Null,
-                    'bonus' => (isset($_POST['bonus']) && $_POST['bonus'] != NULL) ? trim($_POST['bonus']) : Null,
-                    'changedFields' => trim($_POST['changedFields']),
-                ];
+            // Validation - Permission to create (Process) Employee Info
+            if (getPLCreateEditDeleteInfoEmployee()) {
+                try {
+                    $returnMessage = ['status' => false, 'message' => '', 'fieldError' => array()];
+                    $data = [
+                        'firstName' => (isset($_POST['firstName']) && $_POST['firstName'] != NULL) ? strtoupper($_POST['firstName']) : null,
+                        'secondName' => (isset($_POST['secondName']) && $_POST['secondName'] != NULL) ? strtoupper($_POST['secondName']) : null,
+                        'thirdName' => (isset($_POST['thirdName']) && $_POST['thirdName'] != NULL) ? strtoupper($_POST['thirdName']) : null,
+                        'firstLastName' => (isset($_POST['firstLastName']) && $_POST['firstLastName'] != NULL) ? strtoupper($_POST['firstLastName']) : null,
+                        'secondLastName' => (isset($_POST['secondLastName']) && $_POST['secondLastName'] != NULL) ? strtoupper($_POST['secondLastName']) : null,
+                        'thirdLastName' => (isset($_POST['thirdLastName']) && $_POST['thirdLastName'] != NULL) ? strtoupper($_POST['thirdLastName']) : null,
+                        'contactPhone' => preg_replace('/[^0-9]/', '', $_POST['contactPhone']),
+                        'personalEmail' => trim(strtolower($_POST['personalEmail'])),
+                        'dob' => $_POST['dob'],
+                        'genderId' => (isset($_POST['genderId']) && $_POST['genderId'] != NULL) ? trim($_POST['genderId']) : Null,
+                        'documentTypeId' => intval($_POST['documentTypeId']),
+                        'documentNumber' => $_POST['documentNumber'],
+                        'documentExpDate' => $_POST['documentExpDate'],
+                        'documentExpedDate' => (isset($_POST['documentExpedDate']) && $_POST['documentExpedDate'] != NULL) ? trim($_POST['documentExpedDate']) : Null,
+                        'documentExpedPlace' => $_POST['documentExpedPlace'],
+                        'ssn' => trim($_POST['ssn']),
+                        'stateId' => (isset($_POST['stateId']) && $_POST['stateId'] != NULL) ? trim($_POST['stateId']) : Null,
+                        'cityId' => (isset($_POST['cityId']) && $_POST['cityId'] != NULL) ? trim($_POST['cityId']) : Null,
+                        'districtId' => (isset($_POST['districtId']) && $_POST['districtId'] != NULL) ? trim($_POST['districtId']) : Null,
+                        'address' => trim($_POST['address']),
+                        'maritalStatus' => trim($_POST['maritalStatus']),
+                        'children' => (isset($_POST['children']) && $_POST['children'] != NULL) ? trim($_POST['children']) : Null,
+                        'educationLevel' => trim($_POST['educationLevel']),
+                        'career' => trim($_POST['career']),
+                        'departmentId' => (isset($_POST['departmentId']) && $_POST['departmentId'] != NULL) ? trim($_POST['departmentId']) : Null,
+                        'areaId' => (isset($_POST['areaId']) && $_POST['areaId'] != NULL) ? trim($_POST['areaId']) : Null,
+                        'superiorId' => (isset($_POST['superiorId']) && $_POST['superiorId'] != NULL) ? trim($_POST['superiorId']) : Null,
+                        'positionId' => (isset($_POST['positionId']) && $_POST['positionId'] != NULL) ? trim($_POST['positionId']) : Null,
+                        'corporateEmail' => trim(strtolower($_POST['corporateEmail'])),
+                        'hiredDate' => trim($_POST['hiredDate']),
+                        'contractType' => (isset($_POST['contractType']) && $_POST['contractType'] != NULL) ? trim($_POST['contractType']) : Null,
+                        'workHours' => (isset($_POST['workHours']) && $_POST['workHours'] != NULL) ? trim($_POST['workHours']) : Null,
+                        'bankId' => (isset($_POST['bankId']) && $_POST['bankId'] != NULL) ? trim($_POST['bankId']) : Null,
+                        'bankAccount' => trim($_POST['bankAccount']),
+                        'afpTypeId' => (isset($_POST['afpTypeId']) && $_POST['afpTypeId'] != NULL) ? trim($_POST['afpTypeId']) : Null,
+                        'afpNumber' => (isset($_POST['afpNumber']) && $_POST['afpNumber'] != NULL) ? trim($_POST['afpNumber']) : Null,
+                        'salary' => trim($_POST['salary']),
+                        'billTo' => (isset($_POST['billTo']) && $_POST['billTo'] != NULL) ? trim($_POST['billTo']) : 1,
+                        'thirdLastName' => trim($_POST['thirdLastName']),
+                        'birthMunicipality' => trim($_POST['birthMunicipality']),
+                        'birthDeparment' => trim($_POST['birthDeparment']),
+                        'homePhone' => trim($_POST['homePhone']),
+                        'nationality' => trim($_POST['nationality']),
+                        'contractsigning' => (isset($_POST['contractsigning']) && $_POST['contractsigning'] != NULL) ?  trim($_POST['contractsigning']) : Null,
+                        'signingContractHeadset' => (isset($_POST['signingContractHeadset']) && $_POST['signingContractHeadset'] != NULL) ?  trim($_POST['signingContractHeadset']) : Null,
+                        'signingConfidentialityAgreement' => (isset($_POST['signingConfidentialityAgreement']) && $_POST['signingConfidentialityAgreement'] != NULL) ? trim($_POST['signingConfidentialityAgreement']) : Null,
+                        'bonus' => (isset($_POST['bonus']) && $_POST['bonus'] != NULL) ? trim($_POST['bonus']) : Null,
+                        'changedFields' => trim($_POST['changedFields']),
+                    ];
 
-                // CrateBadge...
-                $newBadge = $this->employeeModel->createBadgeEmployee($data['billTo']);
-                $data['badge'] = $newBadge;
+                    // CrateBadge...
+                    $newBadge = $this->employeeModel->createBadgeEmployee($data['billTo']);
+                    $data['badge'] = $newBadge;
 
-                // save in employee table and add lastIdEmployee in data
-                $lastIdEmployee = $this->employeeModel->createEmployee($data);
-                $data['lastIdEmployee'] = $lastIdEmployee;
+                    // save in employee table and add lastIdEmployee in data
+                    $lastIdEmployee = $this->employeeModel->createEmployee($data);
+                    $data['lastIdEmployee'] = $lastIdEmployee;
 
-                if (!empty($data['lastIdEmployee'])) {
+                    if (!empty($data['lastIdEmployee'])) {
 
-                    // Save log
-                    $alog = json_decode($data['changedFields'], true);
-                    $alog['employeeId'] = $data['lastIdEmployee'];
-                    $dataLog = ['userId' => $_SESSION['userId'], 'registerId' => $lastIdEmployee, 'action' => 'Create', 'page' => 'Employee', 'fields' => json_encode($alog)];
-                    $this->activityLogModel->saveActivityLog($dataLog);
+                        // Save log
+                        $alog = json_decode($data['changedFields'], true);
+                        $alog['employeeId'] = $data['lastIdEmployee'];
+                        $dataLog = ['userId' => $_SESSION['userId'], 'registerId' => $lastIdEmployee, 'action' => 'Create', 'page' => 'Employee', 'fields' => json_encode($alog)];
+                        $this->activityLogModel->saveActivityLog($dataLog);
 
-                    $returnMessage = ['status' => true, 'message' => '', 'fieldError' => array()];
+                        $returnMessage = ['status' => true, 'message' => '', 'fieldError' => array()];
 
-                    // Documents upload
-                    $nameFile = $newBadge . '_' . substr($data['firstName'], 0, 1) . substr($data['firstLastName'], 0, 1) . '_' . date('mdyhis');
-                    $dataEmployeeDocument['employeeId'] = $data['lastIdEmployee'];
-                    $re = $this->uploadSaveFile($_FILES, $data['lastIdEmployee'], $nameFile);
-                    //--------------------------------------------------------------------------------
-                    $returnMessage = ['status' => true, 'message' => 'The employee has been successfully added. Badge: ' . $newBadge, 'fieldError' => $re['errorFileSave']];
-                } else {
-                    $returnMessage = ['status' => false, 'message' => 'Error Employee Table', 'fieldError' => array()];
+                        // Documents upload
+                        $nameFile = $newBadge . '_' . substr($data['firstName'], 0, 1) . substr($data['firstLastName'], 0, 1) . '_' . date('mdyhis');
+                        $dataEmployeeDocument['employeeId'] = $data['lastIdEmployee'];
+                        $re = $this->uploadSaveFile($_FILES, $data['lastIdEmployee'], $nameFile);
+                        //--------------------------------------------------------------------------------
+                        $returnMessage = ['status' => true, 'message' => 'The employee has been successfully added. Badge: ' . $newBadge, 'fieldError' => $re['errorFileSave']];
+                    } else {
+                        $returnMessage = ['status' => false, 'message' => 'Error Employee Table', 'fieldError' => array()];
+                    }
+
+                    echo json_encode($returnMessage);
+                } catch (Exception $e) {
+                    echo json_encode(['status' => false, 'message' => 'Error ' . $e, 'fieldError' => array()]);
                 }
-
-                echo json_encode($returnMessage);
-            } catch (Exception $e) {
-                echo json_encode(['status' => false, 'message' => 'Error ' . $e, 'fieldError' => array()]);
+            } else {
+                echo json_encode(['status' => false, 'message' => 'Error: You do not have permission to perform this action.', 'fieldError' => array()]);
             }
         }
     }
@@ -171,12 +177,12 @@ class Employees extends Controller
 
             if (!empty($idEmployee)) {
 
-                if (getPLEditEmployee()) {
+                if (getPLFullEmployeeInfo()) {
 
                     $documentType = $this->employeeDocumentModel->getTypesDocuments();
 
                     // Poner al final Other Document.
-                    usort($documentType, function($a, $b) {
+                    usort($documentType, function ($a, $b) {
                         if ($a['name'] == 'Other Document') return 1;
                         if ($b['name'] == 'Other Document') return -1;
                         return $a['documentTypeId'] <=> $b['documentTypeId'];
@@ -239,50 +245,57 @@ class Employees extends Controller
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             $return = ['status' => false, 'message' => '', 'messageDetails' => ''];
-            try {
-                $changedFields =  (isset($_POST['changedFields']) && $_POST['changedFields'] != NULL) ? json_decode($_POST['changedFields'], true) : [];
-                $employeeId = base64_decode($_POST['employeeId']);
-                $badge = base64_decode($_POST['badge']);
-                $firstName = $_POST['firstName'];
-                $firstLastName = $_POST['firstLastName'];
 
-                if (!empty($changedFields)) {
-                    $changedFields['employeeId'] = $employeeId;
+            // Validation - Permission to edit Employee Info
+            if (getPLCreateEditDeleteInfoEmployee()) {
 
-                    // Clean fields if there are in array changeField
-                    if (isset($changedFields['firstName']) && $changedFields['firstName'] != NULL) $changedFields['firstName'] = strtoupper($changedFields['firstName']);
-                    if (isset($changedFields['secondName']) && $changedFields['secondName'] != NULL) $changedFields['secondName'] = strtoupper($changedFields['secondName']);
-                    if (isset($changedFields['thirdName']) && $changedFields['thirdName'] != NULL) $changedFields['thirdName'] = strtoupper($changedFields['thirdName']);
-                    if (isset($changedFields['firstLastName']) && $changedFields['firstLastName'] != NULL) $changedFields['firstLastName'] = strtoupper($changedFields['firstLastName']);
-                    if (isset($changedFields['secondLastName']) && $changedFields['secondLastName'] != NULL) $changedFields['secondLastName'] = strtoupper($changedFields['secondLastName']);
-                    if (isset($changedFields['thirdLastName']) && $changedFields['thirdLastName'] != NULL) $changedFields['thirdLastName'] = strtoupper($changedFields['thirdLastName']);
-                    if (isset($changedFields['contactPhone']) && $changedFields['contactPhone'] != NULL) $changedFields['contactPhone'] =  preg_replace('/[^0-9]/', '', $_POST['contactPhone']);
-                    if (isset($changedFields['personalEmail']) && $changedFields['personalEmail'] != NULL) $changedFields['personalEmail'] = trim(strtolower($_POST['personalEmail']));
-                    if (isset($changedFields['corporateEmail']) && $changedFields['corporateEmail'] != NULL) $changedFields['corporateEmail'] = trim(strtolower($_POST['corporateEmail']));
+                try {
+                    $changedFields =  (isset($_POST['changedFields']) && $_POST['changedFields'] != NULL) ? json_decode($_POST['changedFields'], true) : [];
+                    $employeeId = base64_decode($_POST['employeeId']);
+                    $badge = base64_decode($_POST['badge']);
+                    $firstName = $_POST['firstName'];
+                    $firstLastName = $_POST['firstLastName'];
 
-                    $this->employeeModel->updatedEmployee($changedFields);
+                    if (!empty($changedFields)) {
+                        $changedFields['employeeId'] = $employeeId;
+
+                        // Clean fields if there are in array changeField
+                        if (isset($changedFields['firstName']) && $changedFields['firstName'] != NULL) $changedFields['firstName'] = strtoupper($changedFields['firstName']);
+                        if (isset($changedFields['secondName']) && $changedFields['secondName'] != NULL) $changedFields['secondName'] = strtoupper($changedFields['secondName']);
+                        if (isset($changedFields['thirdName']) && $changedFields['thirdName'] != NULL) $changedFields['thirdName'] = strtoupper($changedFields['thirdName']);
+                        if (isset($changedFields['firstLastName']) && $changedFields['firstLastName'] != NULL) $changedFields['firstLastName'] = strtoupper($changedFields['firstLastName']);
+                        if (isset($changedFields['secondLastName']) && $changedFields['secondLastName'] != NULL) $changedFields['secondLastName'] = strtoupper($changedFields['secondLastName']);
+                        if (isset($changedFields['thirdLastName']) && $changedFields['thirdLastName'] != NULL) $changedFields['thirdLastName'] = strtoupper($changedFields['thirdLastName']);
+                        if (isset($changedFields['contactPhone']) && $changedFields['contactPhone'] != NULL) $changedFields['contactPhone'] =  preg_replace('/[^0-9]/', '', $_POST['contactPhone']);
+                        if (isset($changedFields['personalEmail']) && $changedFields['personalEmail'] != NULL) $changedFields['personalEmail'] = trim(strtolower($_POST['personalEmail']));
+                        if (isset($changedFields['corporateEmail']) && $changedFields['corporateEmail'] != NULL) $changedFields['corporateEmail'] = trim(strtolower($_POST['corporateEmail']));
+
+                        $this->employeeModel->updatedEmployee($changedFields);
+                    }
+                    // upload files if there are.
+                    $nameFile = $badge . '_' . substr($firstName, 0, 1) . substr($firstLastName, 0, 1) . '_' . date('mdyhis');
+                    $re = $this->uploadSaveFile($_FILES, $employeeId, $nameFile); // errorFileSave - changedFields
+                    $changesFinal = array_merge($changedFields, $re['changedFields']);
+                    $return['responseFiles'] = $re;
+                    $return['FILES'] = $_FILES;
+
+                    // Remove the element with the key 'employeeId'
+                    unset($changesFinal['employeeId']);
+
+                    // Add log
+                    if (!empty($changesFinal)) {
+                        $dataLog = ['userId' => $_SESSION['userId'], 'registerId' => $employeeId, 'action' => 'Edit', 'page' => 'Employee', 'fields' => json_encode($changesFinal)];
+                        $this->activityLogModel->saveActivityLog($dataLog);
+                        $return['status'] = true;
+                    } else {
+                        $return['message'] = 'No changes found!';
+                    }
+                } catch (Exception $e) {
+                    $return['message'] = 'An unexpected error ocurred. Please try again';
+                    $return['messageDetails'] = $e;
                 }
-                // upload files if there are.
-                $nameFile = $badge . '_' . substr($firstName, 0, 1) . substr($firstLastName, 0, 1) . '_' . date('mdyhis');
-                $re = $this->uploadSaveFile($_FILES, $employeeId, $nameFile); // errorFileSave - changedFields
-                $changesFinal = array_merge($changedFields, $re['changedFields']);
-                $return['responseFiles'] = $re;
-                $return['FILES'] = $_FILES;
-
-                // Remove the element with the key 'employeeId'
-                unset($changesFinal['employeeId']);
-
-                // Add log
-                if (!empty($changesFinal)) {
-                    $dataLog = ['userId' => $_SESSION['userId'], 'registerId' => $employeeId, 'action' => 'Edit', 'page' => 'Employee', 'fields' => json_encode($changesFinal)];
-                    $this->activityLogModel->saveActivityLog($dataLog);
-                    $return['status'] = true;
-                } else {
-                    $return['message'] = 'No changes found!';
-                }
-            } catch (Exception $e) {
-                $return['message'] = 'An unexpected error ocurred. Please try again';
-                $return['messageDetails'] = $e;
+            } else {
+                $return['message'] = 'Error: You do not have permission to perform this action.';
             }
 
             echo json_encode($return);
@@ -384,12 +397,12 @@ class Employees extends Controller
             $total_pages = ceil($numrows / $per_page);
             $registers = $this->employeeModel->readRegisters($offset, $per_page, $searchQuery, $orderby);
 
-            $return['getPLEditEmployee'] =  getPLEditEmployee();
+            $return['getPLFullEmployeeInfo'] =  getPLFullEmployeeInfo();
             $return['data'] = $registers;
             $return['offsetnumShow'] = $offsetnumShow;
             $return['offset'] = $offset;
             $return['numrows'] = $numrows;
-            $return['pagination'] = paginateRead('index.php', $page, $total_pages, 2, $searchFields, $length, $ascDesc,$billTo);
+            $return['pagination'] = paginateRead('index.php', $page, $total_pages, 2, $searchFields, $length, $ascDesc, $billTo);
         }
 
 

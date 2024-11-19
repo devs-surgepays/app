@@ -505,10 +505,6 @@ $employeeDocumentsInfo = (isset($data['employeeDocumentsInfo']) && $data['employ
 
                                         </div>
                                     </div>
-
-
-
-
                                 </div>
                                 <div class="col-md-6 col-xl-6 col-sm-12">
                                     <div class="card">
@@ -518,14 +514,6 @@ $employeeDocumentsInfo = (isset($data['employeeDocumentsInfo']) && $data['employ
                                         <div class="card-body">
                                             <!-- Photo -->
                                             <div class="row">
-                                                <?php if (!empty($data['employeeInfo']['photo'])) {
-                                                    $nameButton = 'Change Photo';
-                                                    $classButton = 'btn btn-danger';
-                                                } else {
-                                                    $nameButton = 'Select Photo';
-                                                    $classButton = 'btn btn-success';
-                                                } ?>
-
                                                 <?php if (!empty($data['employeeInfo']['photo'])) {
                                                     $name = $data['employeeInfo']['firstName'] . " " . $data['employeeInfo']['firstLastName'];
                                                     echo '<div class="col-md-3 col-sm-12 pb-4">
@@ -786,7 +774,12 @@ $employeeDocumentsInfo = (isset($data['employeeDocumentsInfo']) && $data['employ
                                 <div class="col-2 d-flex justify-content-end">
                                     <input type="hidden" id="employeeId" name="employeeId" value="<?php echo base64_encode($data['employeeInfo']['employeeId']) ?>">
                                     <input type="hidden" id="badge" name="badge" value="<?php echo base64_encode($data['employeeInfo']['badge']) ?>">
-                                    <button type="submit" class="btn btn-primary">Save Employee</button>
+                                    <?php $p = (getPLCreateEditDeleteInfoEmployee()) ? 'Yes' : 'No'; ?>
+                                    <input type="hidden" id="disabledForm" name="disabledForm" value="<?php echo $p; ?>">
+                                    <?php if (getPLCreateEditDeleteInfoEmployee()): ?>
+                                        <button type="submit" class="btn btn-primary">Save Employee</button>
+                                    <?php endif; ?>
+
                                 </div>
                             </div>
                         </form>
@@ -803,7 +796,9 @@ $employeeDocumentsInfo = (isset($data['employeeDocumentsInfo']) && $data['employ
                                     <div class="card-body" style="min-height: 880px;">
                                         <div class="row">
                                             <div class="d-flex justify-content-between pb-5">
-                                                <button id="btn-add-emEmergencyCon" class="btn btn-primary btn-round ms-auto" data-bs-toggle="modal" data-bs-target="#modalAddDocument"><i class="fa fa-plus"></i> Upload Document</button>
+                                                <?php if (getPLCreateEditDeleteInfoEmployee()): ?>
+                                                    <button id="btn-add-emEmergencyCon" class="btn btn-primary btn-round ms-auto" data-bs-toggle="modal" data-bs-target="#modalAddDocument"><i class="fa fa-plus"></i> Upload Document</button>
+                                                <?php endif; ?>
                                             </div>
 
                                             <div class="col-12">
@@ -825,16 +820,18 @@ $employeeDocumentsInfo = (isset($data['employeeDocumentsInfo']) && $data['employ
                                                                     echo '<th scope="row">' . $n++ . '</th>';
                                                                     echo '<td> <a href="' . URLROOT . '/public/documents/' . $employeeDocumentsInfo[$i]['folderName'] . '/' . $employeeDocumentsInfo[$i]['document'] . '" target="_BLANK" >' . $employeeDocumentsInfo[$i]['document'] . '</a></td>';
                                                                     echo '<td> ' . $employeeDocumentsInfo[$i]['name'] . '</td>';
-                                                                    echo '<td>
-                                                                        
-                                                                        <button id="delete_' . $employeeDocumentsInfo[$i]['employeeDocumentId'] . '_document" type="button" 
+
+                                                                    echo '<td>';
+
+                                                                    if (getPLCreateEditDeleteInfoEmployee()) {
+                                                                        echo '<button id="delete_' . $employeeDocumentsInfo[$i]['employeeDocumentId'] . '_document" type="button" 
                                                                         data-documentName="' . $employeeDocumentsInfo[$i]['document'] . '" data-nameDirDocument="' . $employeeDocumentsInfo[$i]['folderName'] . '/' . $employeeDocumentsInfo[$i]['document'] . '" 
                                                                         onclick="removeDocument(' . $employeeDocumentsInfo[$i]['employeeDocumentId'] . ')"
-                                                                        class="btn btn-sm btn-danger"><i class="fa fa-times"></i></button>
+                                                                        class="btn btn-sm btn-danger"><i class="fa fa-times"></i></button>';
+                                                                    }
 
-                                                                        <a href="' . URLROOT . '/public/documents/' . $employeeDocumentsInfo[$i]['folderName'] . '/' . $employeeDocumentsInfo[$i]['document'] . '" target="_BLANK"  class="btn btn-sm btn-info"><i class="fa fa-eye"></i></a>
-
-                                                                        </td>';
+                                                                    echo '<a href="' . URLROOT . '/public/documents/' . $employeeDocumentsInfo[$i]['folderName'] . '/' . $employeeDocumentsInfo[$i]['document'] . '" target="_BLANK"  class="btn btn-sm btn-info"><i class="fa fa-eye"></i></a>';
+                                                                    echo '</td>';
                                                                     echo '</tr>';
                                                                 }
                                                             } else {
@@ -1089,7 +1086,9 @@ $employeeDocumentsInfo = (isset($data['employeeDocumentsInfo']) && $data['employ
                                     <div class="card-body" style="min-height: 880px;">
                                         <div class="row">
                                             <div class="d-flex justify-content-between">
-                                                <button id="btn-add-emEmergencyCon" class="btn btn-primary btn-round ms-auto" data-bs-toggle="modal" data-bs-target="#modalAddEmergency"><i class="fa fa-plus"></i> Add Emergency Contact</button>
+                                                <?php if (getPLCreateEditDeleteInfoEmployee()): ?>
+                                                    <button id="btn-add-emEmergencyCon" class="btn btn-primary btn-round ms-auto" data-bs-toggle="modal" data-bs-target="#modalAddEmergency"><i class="fa fa-plus"></i> Add Emergency Contact</button>
+                                                <?php endif; ?>
                                             </div>
                                             <div class="col-12 pt-5">
                                                 <div class="table-responsive">
@@ -1114,17 +1113,16 @@ $employeeDocumentsInfo = (isset($data['employeeDocumentsInfo']) && $data['employ
                                                                     echo '<td>' . $employeeEmergencyContacts[$i]['relationshipNameEnglish'] . '</td>';
                                                                     echo '<td>' . $employeeEmergencyContacts[$i]['contactPhone'] . '</td>';
                                                                     echo '<td>' . $employeeEmergencyContacts[$i]['email'] . '</td>';
-                                                                    echo '<td>
-                                                                        
-                                                                        <button onclick="getInfoEmergeContact(' . $employeeEmergencyContacts[$i]['emergencyContactId'] . ')" id="btn-edit-emEmergencyCon" class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#modalEditEmergency"><i class="fa fa-edit"></i></button>
+                                                                    echo '<td>';
 
-
-                                                                        <button id="delete_' . $employeeEmergencyContacts[$i]['emergencyContactId'] . '" type="button" 
-                                                                        data-fullname="' . $employeeEmergencyContacts[$i]['fullName'] . '" 
-                                                                        onclick="removeEmergeContact(' . $employeeEmergencyContacts[$i]['emergencyContactId'] . ')"
-                                                                        class="btn btn-sm btn-danger"><i class="fa fa-times"></i></button>
-
-                                                                        </td>';
+                                                                    echo '<button onclick="getInfoEmergeContact(' . $employeeEmergencyContacts[$i]['emergencyContactId'] . ')" id="btn-edit-emEmergencyCon" class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#modalEditEmergency"><i class="fa fa-edit"></i></button>';
+                                                                    if (getPLCreateEditDeleteInfoEmployee()) {
+                                                                        echo '<button id="delete_' . $employeeEmergencyContacts[$i]['emergencyContactId'] . '" type="button" 
+                                                                    data-fullname="' . $employeeEmergencyContacts[$i]['fullName'] . '" 
+                                                                    onclick="removeEmergeContact(' . $employeeEmergencyContacts[$i]['emergencyContactId'] . ')"
+                                                                    class="btn btn-sm btn-danger"><i class="fa fa-times"></i></button>';
+                                                                    }
+                                                                    echo '</td>';
                                                                     echo '</tr>';
                                                                 }
                                                             } else {
@@ -1155,7 +1153,9 @@ $employeeDocumentsInfo = (isset($data['employeeDocumentsInfo']) && $data['employ
                                     <div class="card-body" style="min-height: 880px;">
                                         <div class="row">
                                             <div class="d-flex justify-content-between">
-                                                <button id="btn-add-dependent" class="btn btn-primary btn-round ms-auto" data-bs-toggle="modal" data-bs-target="#modalAddDependents"><i class="fa fa-plus"></i> Add Dependent</button>
+                                                <?php if (getPLCreateEditDeleteInfoEmployee()): ?>
+                                                    <button id="btn-add-dependent" class="btn btn-primary btn-round ms-auto" data-bs-toggle="modal" data-bs-target="#modalAddDependents"><i class="fa fa-plus"></i> Add Dependent</button>
+                                                <?php endif; ?>
                                             </div>
                                             <div class="col-12 pt-5">
                                                 <div class="table-responsive">
@@ -1178,15 +1178,17 @@ $employeeDocumentsInfo = (isset($data['employeeDocumentsInfo']) && $data['employ
                                                                     echo '<td>' . $financialDependents[$i]['fullName'] . '</td>';
                                                                     echo '<td>' . $financialDependents[$i]['relationshipNameEnglish'] . '</td>';
                                                                     echo '<td>' . $financialDependents[$i]['age'] . '</td>';
-                                                                    echo '<td>
-                                                                        <button onclick="getInfoDependent(' . $financialDependents[$i]['financialDependentId'] . ')" class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#modalEditDependents"><i class="fa fa-edit"></i></button>
-                                                                        
-                                                                        <button id="delete_' . $financialDependents[$i]['financialDependentId'] . '_dependent" type="button" 
+                                                                    echo '<td>';
+                                                                    echo '<button onclick="getInfoDependent(' . $financialDependents[$i]['financialDependentId'] . ')" class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#modalEditDependents"><i class="fa fa-edit"></i></button>';
+
+                                                                    if (getPLCreateEditDeleteInfoEmployee()) {
+                                                                        echo '<button id="delete_' . $financialDependents[$i]['financialDependentId'] . '_dependent" type="button" 
                                                                         data-fullnameDependent="' . $financialDependents[$i]['fullName'] . '" 
                                                                         onclick="removeFinancialDependent(' . $financialDependents[$i]['financialDependentId'] . ')"
-                                                                        class="btn btn-sm btn-danger"><i class="fa fa-times"></i></button>
+                                                                        class="btn btn-sm btn-danger"><i class="fa fa-times"></i></button>';
+                                                                    }
 
-                                                                        </td>';
+                                                                    echo ' </td>';
                                                                     echo '</tr>';
                                                                 }
                                                             } else {
@@ -1545,6 +1547,23 @@ $employeeDocumentsInfo = (isset($data['employeeDocumentsInfo']) && $data['employ
 
 
     $(document).ready(function() {
+
+        //disabledForm -- Process to disable form if the user do not have permissions.
+        var dForm = $("#disabledForm").val();
+        if (dForm == 'No') {
+            document.getElementById("editEmployee").querySelectorAll("input, select, button,textarea").forEach(function(element) {
+                element.disabled = true;
+            });
+            document.getElementById("modalEditEmergency").querySelectorAll("input, select, button[type='submit'],textarea").forEach(function(element) {
+                element.disabled = true;
+            });
+            document.getElementById("editDependents").querySelectorAll("input, select, button[type='submit'], textarea").forEach(function(element) {
+                element.disabled = true;
+            });
+            document.getElementById("addEmployeeSchedule").querySelectorAll("input, select, button[type='submit'], textarea").forEach(function(element) {
+                element.disabled = true;
+            });
+        }
 
         var initialEmployeeEdit = {};
         var initialEmergeEdit = {};

@@ -27,31 +27,38 @@ class EmergencyContacts extends Controller
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             $return = ['status' => false, 'message' => '', 'messageDetails' => ''];
-            try {
+            
+            // Validation - Permission to save Employee Info
+            if (getPLCreateEditDeleteInfoEmployee()) {
+                try {
 
-                $datasave = [
-                    'employeeId' => (isset($_POST['idEmpEmergContact']) && $_POST['idEmpEmergContact'] != null) ? base64_decode($_POST['idEmpEmergContact']) : null,
-                    'fullName' => (isset($_POST['fullName']) && $_POST['fullName'] != null) ? $_POST['fullName'] : null,
-                    'contactPhone' => (isset($_POST['contactPhoneEmerContact']) && $_POST['contactPhoneEmerContact'] != null) ? preg_replace('/[^0-9]/', '', $_POST['contactPhoneEmerContact']) : null,
-                    'email' => (isset($_POST['emailEmergContact']) && $_POST['emailEmergContact'] != null) ? $_POST['emailEmergContact'] : null,
-                    'relationshipId' => (isset($_POST['relationshipId']) && $_POST['relationshipId'] != null) ? $_POST['relationshipId'] : null,
-                ];
+                    $datasave = [
+                        'employeeId' => (isset($_POST['idEmpEmergContact']) && $_POST['idEmpEmergContact'] != null) ? base64_decode($_POST['idEmpEmergContact']) : null,
+                        'fullName' => (isset($_POST['fullName']) && $_POST['fullName'] != null) ? $_POST['fullName'] : null,
+                        'contactPhone' => (isset($_POST['contactPhoneEmerContact']) && $_POST['contactPhoneEmerContact'] != null) ? preg_replace('/[^0-9]/', '', $_POST['contactPhoneEmerContact']) : null,
+                        'email' => (isset($_POST['emailEmergContact']) && $_POST['emailEmergContact'] != null) ? $_POST['emailEmergContact'] : null,
+                        'relationshipId' => (isset($_POST['relationshipId']) && $_POST['relationshipId'] != null) ? $_POST['relationshipId'] : null,
+                    ];
 
-                // print('<pre>'.print_r($datasave,true).'</pre>');
+                    // print('<pre>'.print_r($datasave,true).'</pre>');
 
-                $lastInsert = $this->emergencyContactModel->saveEmergContact($datasave);
+                    $lastInsert = $this->emergencyContactModel->saveEmergContact($datasave);
 
-                if (!empty($lastInsert)) {
-                    $dataLog = ['userId' => $_SESSION['userId'], 'registerId' => $lastInsert, 'action' => 'Create', 'page' => 'Emerg. Contacts', 'fields' => json_encode($datasave)];
-                    $this->activityLogModel->saveActivityLog($dataLog);
-                    $return['status'] = true;
-                    $return['message'] = 'The record has been created successfully!';
-                } else {
-                    $return['message'] = 'An unexpected error ocurred. Please try again';
+                    if (!empty($lastInsert)) {
+                        $dataLog = ['userId' => $_SESSION['userId'], 'registerId' => $lastInsert, 'action' => 'Create', 'page' => 'Emerg. Contacts', 'fields' => json_encode($datasave)];
+                        $this->activityLogModel->saveActivityLog($dataLog);
+                        $return['status'] = true;
+                        $return['message'] = 'The record has been created successfully!';
+                    } else {
+                        $return['message'] = 'An unexpected error ocurred. Please try again';
+                    }
+                } catch (Exception $e) {
+                    $return['message'] = 'Error: ' . $e;
                 }
-            } catch (Exception $e) {
-                $return['message'] = 'Error: ' . $e;
+            } else {
+                $return['message'] = 'Error: You do not have permission to perform this action.';
             }
+
 
             echo json_encode($return);
         }
@@ -63,82 +70,95 @@ class EmergencyContacts extends Controller
 
             $return = ['status' => false, 'message' => ''];
 
-            try {
-                $idEmpEmergContact = $_POST['idEmpEmergContact_edit'];
+            // Validation - Permission to edit Employee Info
+            if (getPLCreateEditDeleteInfoEmployee()) {
 
-                if (!empty($idEmpEmergContact)) {
+                try {
+                    $idEmpEmergContact = $_POST['idEmpEmergContact_edit'];
 
-                    $data = [
-                        'emergencyContactId' => $idEmpEmergContact,
-                        'fullName' => $_POST['fullName_edit'],
-                        'contactPhone' => preg_replace('/[^0-9]/', '', $_POST['contactPhone_edit']),
-                        'relationshipId' => $_POST['relationshipId_edit'],
-                        'email' => $_POST['email_edit'],
-                        'changedFields' => $_POST['changedFields']
-                    ];
+                    if (!empty($idEmpEmergContact)) {
 
-                    $dataUpdate = [
-                        'emergencyContactId' => $data['emergencyContactId'],
-                        'fullName' => $data['fullName'],
-                        'contactPhone' => $data['contactPhone'],
-                        'relationshipId' => $data['relationshipId'],
-                        'email' => $data['email']
-                    ];
+                        $data = [
+                            'emergencyContactId' => $idEmpEmergContact,
+                            'fullName' => $_POST['fullName_edit'],
+                            'contactPhone' => preg_replace('/[^0-9]/', '', $_POST['contactPhone_edit']),
+                            'relationshipId' => $_POST['relationshipId_edit'],
+                            'email' => $_POST['email_edit'],
+                            'changedFields' => $_POST['changedFields']
+                        ];
 
-                    // clean fields for log
-                    $aChangeFields = json_decode($data['changedFields'], true);
-                    $modifiedData = [];
-                    foreach ($aChangeFields as $key => $value) {
-                        $newKey = str_replace('_edit', '', $key);
-                        $modifiedData[$newKey] = $value;
+                        $dataUpdate = [
+                            'emergencyContactId' => $data['emergencyContactId'],
+                            'fullName' => $data['fullName'],
+                            'contactPhone' => $data['contactPhone'],
+                            'relationshipId' => $data['relationshipId'],
+                            'email' => $data['email']
+                        ];
+
+                        // clean fields for log
+                        $aChangeFields = json_decode($data['changedFields'], true);
+                        $modifiedData = [];
+                        foreach ($aChangeFields as $key => $value) {
+                            $newKey = str_replace('_edit', '', $key);
+                            $modifiedData[$newKey] = $value;
+                        }
+                        // save info
+                        $this->emergencyContactModel->updateEmergeContact($dataUpdate);
+
+                        // save log
+                        $dataLog = ['userId' => $_SESSION['userId'], 'registerId' => $data['emergencyContactId'], 'action' => 'Edit', 'page' => 'Emerg. Contacts', 'fields' => json_encode($modifiedData)];
+                        $this->activityLogModel->saveActivityLog($dataLog);
+                        $return['status'] = true;
+                        $return['message'] = 'Record has been created successfully!';
+                    } else {
+                        $return['message'] = 'An unexpected error ocurred. Please try again.';
                     }
-                    // save info
-                    $this->emergencyContactModel->updateEmergeContact($dataUpdate);
-
-                    // save log
-                    $dataLog = ['userId' => $_SESSION['userId'], 'registerId' => $data['emergencyContactId'], 'action' => 'Edit', 'page' => 'Emerg. Contacts', 'fields' => json_encode($modifiedData)];
-                    $this->activityLogModel->saveActivityLog($dataLog);
-                    $return['status']=true;
-                    $return['message'] = 'Record has been created successfully!';
-
-                } else {
-                    $return['message'] = 'An unexpected error ocurred. Please try again.';
+                } catch (Exception $e) {
+                    $return['message'] = 'Error: ' . $e;
                 }
-            } catch (Exception $e) {
-                $return['message'] = 'Error: '.$e;
+            } else {
+                $return['message'] = 'Error: You do not have permission to perform this action.';
             }
+
 
             echo json_encode($return);
         }
     }
     public function removeEmergContact()
     {
+
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-            try {
+            $re = ['status' => false, 'message' => ''];
 
-                $re = ['status' => false, 'message' => ''];
+            // Validation - Permission to remove Employee Info
+            if (getPLCreateEditDeleteInfoEmployee()) {
 
-                $emergencyContactId = $_POST['idEmergencyContact'];
+                try {
 
-                $dataUpdate = [
-                    'emergencyContactId' => $emergencyContactId,
-                    'status' => 0,
-                ];
-                $this->emergencyContactModel->updateEmergeContact($dataUpdate);
+                    $emergencyContactId = $_POST['idEmergencyContact'];
 
-                // Remove the element with the key 'emergencyContactId'
-                unset($dataUpdate['emergencyContactId']);
+                    $dataUpdate = [
+                        'emergencyContactId' => $emergencyContactId,
+                        'status' => 0,
+                    ];
+                    $this->emergencyContactModel->updateEmergeContact($dataUpdate);
 
-                // save log
-                $dataLog = ['userId' => $_SESSION['userId'], 'registerId' => $emergencyContactId, 'action' => 'Delete', 'page' => 'Emerg. Contacts', 'fields' => json_encode($dataUpdate)];
-                $this->activityLogModel->saveActivityLog($dataLog);
+                    // Remove the element with the key 'emergencyContactId'
+                    unset($dataUpdate['emergencyContactId']);
 
-                $re['status'] = true;
-                $re['message'] = 'The User has been delete successufully!';
-            } catch (Exception $e) {
-                $re['status'] = false;
-                $re['message'] = 'Error ' . $e;
+                    // save log
+                    $dataLog = ['userId' => $_SESSION['userId'], 'registerId' => $emergencyContactId, 'action' => 'Delete', 'page' => 'Emerg. Contacts', 'fields' => json_encode($dataUpdate)];
+                    $this->activityLogModel->saveActivityLog($dataLog);
+
+                    $re['status'] = true;
+                    $re['message'] = 'The User has been delete successufully!';
+                } catch (Exception $e) {
+                    $re['status'] = false;
+                    $re['message'] = 'Error ' . $e;
+                }
+            } else {
+                $re['message'] = 'Error: You do not have permission to perform this action.';
             }
 
             echo json_encode($re);
@@ -147,6 +167,7 @@ class EmergencyContacts extends Controller
 
     public function getInfoEmergeContactId()
     {
+
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             $emergencyContactId = $_POST['emergencyContactId'];
@@ -154,22 +175,6 @@ class EmergencyContacts extends Controller
             $infoEmergencyContact = $this->emergencyContactModel->getInfoEmergencyContactId($emergencyContactId);
 
             echo json_encode($infoEmergencyContact);
-
-            // try {
-            //     $returnMessage = ['status' => false, 'message' => ''];
-
-
-            //     if (!empty($emergencyContactId)) {
-
-
-
-            //     } else {
-            //         $return['message'] = 'An unexpected error ocurred. Please try again.';
-            //     }
-            // } catch (Exception $e) {
-            //     $return['message'] = 'Error: '.$e;
-
-            // }
         }
     }
 }

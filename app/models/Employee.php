@@ -48,7 +48,7 @@ class Employee
         if (!getPLShowInactiveEmployee()) {
             $showEmWhere .= (!empty($query) or !empty($showEmWhere)) ? ' and em.status=1 ' : ' where em.status=1 ';
         }
-
+        
         $this->db->query("SELECT *, em.status as statusEmployee,
         concat_ws(' ', em.firstName, em.secondName,em.thirdName,em.firstLastName,em.secondLastName ) as 'fullName',
         DATE_FORMAT(hiredDate, '%M %e, %Y') AS formattedHiredDate
@@ -298,7 +298,7 @@ class Employee
         }
         $fields = '';
 
-        if (getPLEditEmployee()) {
+        if (getPLFullEmployeeInfo()) {
             // All fields bd
             $fields = "SELECT 
                     em.badge as BADGE,

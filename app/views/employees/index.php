@@ -127,7 +127,7 @@
                                         </select> entries
                                     </label>
                                 </div>
-                                <?php if (getPLEditEmployee()) { ?>
+                                <?php if (getPLCreateEditDeleteInfoEmployee()) { ?>
                                     <div><a href="<?php echo URLROOT ?>/employees/create" class="btn btn-primary btn-round"><i class="fa fa-plus"></i> Add Employee</a></div>
                                 <?php } ?>
                             </div>
@@ -259,7 +259,7 @@
                         const status = (item.statusEmployee == 1) ? '<span class="badge badge-success">Active</span>' : '<span class="badge badge-danger">Inactive</span>';
                         totalRowShow = obj.offset + rowNumber;
                         const emailCorp = (item.corporateEmail === null) ? '' : item.corporateEmail;
-                        const urlEmployee = (obj.getPLEditEmployee) ? 'edit' : 'showEmployee';
+                        const urlEmployee = (obj.getPLFullEmployeeInfo) ? 'edit' : 'showEmployee';
 
                         var row = `<tr>
                         <td>${rowNumber}</td>
