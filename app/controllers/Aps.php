@@ -37,7 +37,7 @@ class Aps extends Controller
 	
 	public function saveAP(){
 		if($_SERVER['REQUEST_METHOD']=='POST'){
-            $_POST= filter_input_array(INPUT_POST,FILTER_SANITIZE_STRING);
+            $_POST= filter_input_array(INPUT_POST,FILTER_SANITIZE_FULL_SPECIAL_CHARS);
              //print_r($_POST);
              //exit();
             $action=$_POST['Action'];
@@ -302,7 +302,7 @@ class Aps extends Controller
 
     public function approveAP(){
         if($_SERVER['REQUEST_METHOD']=='POST'){
-            $_POST= filter_input_array(INPUT_POST,FILTER_SANITIZE_STRING);
+            $_POST= filter_input_array(INPUT_POST,FILTER_SANITIZE_FULL_SPECIAL_CHARS);
             $data=[
                 "apDetailsId"=>$_POST['id'],
                 "status"=>$_POST['status']
@@ -355,7 +355,7 @@ class Aps extends Controller
         if($_SERVER['REQUEST_METHOD']=='POST'){
     //if($_POST){
         //die('Submit');
-        $_POST= filter_input_array(INPUT_POST,FILTER_SANITIZE_STRING);
+        $_POST= filter_input_array(INPUT_POST,FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         $page = (isset($_POST['page']) && !empty($_POST['page']))?$_POST['page']:1;
         $data = [
             'action'=>trim($_POST['action']),
@@ -591,7 +591,7 @@ class Aps extends Controller
 			//print_r($_POST);
 			//exit();
 			if($_SERVER['REQUEST_METHOD']=='POST'){
-        		$_POST= filter_input_array(INPUT_POST,FILTER_SANITIZE_STRING);
+        		$_POST= filter_input_array(INPUT_POST,FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 				$step = $_POST['step'];
 
 				if($step=="reasonType"){
