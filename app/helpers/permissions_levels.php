@@ -155,3 +155,24 @@ function getPLAnotherBillTo()
     if (($permissionLevelId & 720))  $permission = true;
     return $permission;
 }
+
+
+/**
+ * Method getPLAps
+ * CRUD APS module.
+ * 
+ * Super Admin - 64
+ * Development - 128
+ * WF - 512
+ * TOTAL 704
+ *
+ * @return bool
+ */
+function getPLAps()
+{
+    $permissionLevelId = $_SESSION['permissionLevelId'];
+    $permission = false;
+    if (($permissionLevelId & 704))  $permission = true;
+
+    return $permission;
+}
