@@ -3,7 +3,9 @@
    ini_set("display_errors", 1);
 class Aps extends Controller
 {
-    public $apModel = "";
+    public $apModel;
+    public $employeeScheduleModel;
+    public $employeeModel;
 
     public function __construct()
     {
