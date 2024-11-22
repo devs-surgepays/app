@@ -1,6 +1,6 @@
 <?php
-   //error_reporting(E_ALL);
-   //ini_set("display_errors", 1);
+   error_reporting(E_ALL);
+   ini_set("display_errors", 1);
 class Aps extends Controller
 {
     public $apModel;
@@ -254,10 +254,12 @@ class Aps extends Controller
                 case 12:
                     $data['newSalary']=$_POST['monto'];
                     $data['apDate1']=$_POST['diaEfectivo'];
+                    
                     if(isset($_POST['newPosition2'])){
                         $data['currentPosition']=$_POST['currentPosition'];
-                    $data['newPosition']=$_POST['newPosition2'];
+                        $data['newPosition']=$_POST['newPosition2'];
                     }
+
                     break;               
 
 
