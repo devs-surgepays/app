@@ -254,9 +254,9 @@ class Aps extends Controller
                 case 12:
                     $data['newSalary']=$_POST['monto'];
                     $data['apDate1']=$_POST['diaEfectivo'];
-                    
-                    if(isset($_POST['newPosition2'])){
-                        $data['currentPosition']=$_POST['currentPosition'];
+                    $data['currentPosition']=$_POST['currentPosition'];
+                    if(!empty($_POST['newPosition2'])){
+                        
                         $data['newPosition']=$_POST['newPosition2'];
                     }
 
