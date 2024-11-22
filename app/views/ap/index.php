@@ -1510,9 +1510,6 @@ function showAttritionReasons(step,option=null,option2=null){
       inicioHorario:{
         required:true
       },
-      finHorario:{
-        required:true
-      },
       motivo_horario:{
         required:true
       }
