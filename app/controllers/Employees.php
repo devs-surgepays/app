@@ -17,13 +17,13 @@ class Employees extends Controller
     private $areaModel = '';
     private $billModel = '';
     private $financialDependentModel = '';
-
+ 
     public function __construct()
     {
         if (!isLoggedIn()) {
             redirect('auths/index');
         }
-
+ 
         $this->departmentModel = $this->model('Department');
         $this->positionModel = $this->model('Position');
         $this->employeeModel = $this->model('Employee');
@@ -39,7 +39,7 @@ class Employees extends Controller
         $this->billModel = $this->model('Bill');
         $this->financialDependentModel = $this->model('FinancialDependent');
     }
-
+ 
     public function index()
     {
         $data = [];
@@ -48,11 +48,11 @@ class Employees extends Controller
         $data['status'] = array(array('statusId' => '1', 'statusName' => 'Active'), array('statusId' => '00', 'statusName' => 'Inactive'));
         $this->view('employees/index', $data);
     }
-
+ 
     public function create()
     {
         $data = [];
-
+ 
         // Validation - Permission to create (view) Employee Info
         if (getPLCreateEditDeleteInfoEmployee()) {
             $data['states'] = $this->employeeModel->getStates();
@@ -68,22 +68,22 @@ class Employees extends Controller
             redirect('employees/index');
         }
     }
-
+ 
     public function createEmpProcess()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-
+ 
             // Validation - Permission to create (Process) Employee Info
             if (getPLCreateEditDeleteInfoEmployee()) {
                 try {
                     $returnMessage = ['status' => false, 'message' => '', 'fieldError' => array()];
                     $data = [
-                        'firstName' => (isset($_POST['firstName']) && $_POST['firstName'] != NULL) ? strtoupper($_POST['firstName']) : null,
-                        'secondName' => (isset($_POST['secondName']) && $_POST['secondName'] != NULL) ? strtoupper($_POST['secondName']) : null,
-                        'thirdName' => (isset($_POST['thirdName']) && $_POST['thirdName'] != NULL) ? strtoupper($_POST['thirdName']) : null,
-                        'firstLastName' => (isset($_POST['firstLastName']) && $_POST['firstLastName'] != NULL) ? strtoupper($_POST['firstLastName']) : null,
-                        'secondLastName' => (isset($_POST['secondLastName']) && $_POST['secondLastName'] != NULL) ? strtoupper($_POST['secondLastName']) : null,
-                        'thirdLastName' => (isset($_POST['thirdLastName']) && $_POST['thirdLastName'] != NULL) ? strtoupper($_POST['thirdLastName']) : null,
+                        'firstName' => (isset($_POST['firstName']) && $_POST['firstName'] != NULL) ? strtoupper(trim($_POST['firstName'])) : Null,
+                        'secondName' => (isset($_POST['secondName']) && $_POST['secondName'] != NULL) ? strtoupper(trim($_POST['secondName'])) : Null,
+                        'thirdName' => (isset($_POST['thirdName']) && $_POST['thirdName'] != NULL) ? strtoupper(trim($_POST['thirdName'])) : Null,
+                        'firstLastName' => (isset($_POST['firstLastName']) && $_POST['firstLastName'] != NULL) ? strtoupper(trim($_POST['firstLastName'])) : Null,
+                        'secondLastName' => (isset($_POST['secondLastName']) && $_POST['secondLastName'] != NULL) ? strtoupper(trim($_POST['secondLastName'])) : Null,
+                        'thirdLastName' => (isset($_POST['thirdLastName']) && $_POST['thirdLastName'] != NULL) ? strtoupper(trim($_POST['thirdLastName'])) : Null,
                         'contactPhone' => preg_replace('/[^0-9]/', '', $_POST['contactPhone']),
                         'personalEmail' => trim(strtolower($_POST['personalEmail'])),
                         'dob' => $_POST['dob'],
@@ -127,25 +127,25 @@ class Employees extends Controller
                         'bonus' => (isset($_POST['bonus']) && $_POST['bonus'] != NULL) ? trim($_POST['bonus']) : Null,
                         'changedFields' => trim($_POST['changedFields']),
                     ];
-
+ 
                     // CrateBadge...
                     $newBadge = $this->employeeModel->createBadgeEmployee($data['billTo']);
                     $data['badge'] = $newBadge;
-
+ 
                     // save in employee table and add lastIdEmployee in data
                     $lastIdEmployee = $this->employeeModel->createEmployee($data);
                     $data['lastIdEmployee'] = $lastIdEmployee;
-
+ 
                     if (!empty($data['lastIdEmployee'])) {
-
+ 
                         // Save log
                         $alog = json_decode($data['changedFields'], true);
                         $alog['employeeId'] = $data['lastIdEmployee'];
                         $dataLog = ['userId' => $_SESSION['userId'], 'registerId' => $lastIdEmployee, 'action' => 'Create', 'page' => 'Employee', 'fields' => json_encode($alog)];
                         $this->activityLogModel->saveActivityLog($dataLog);
-
+ 
                         $returnMessage = ['status' => true, 'message' => '', 'fieldError' => array()];
-
+ 
                         // Documents upload
                         $nameFile = $newBadge . '_' . substr($data['firstName'], 0, 1) . substr($data['firstLastName'], 0, 1) . '_' . date('mdyhis');
                         $dataEmployeeDocument['employeeId'] = $data['lastIdEmployee'];
@@ -155,7 +155,7 @@ class Employees extends Controller
                     } else {
                         $returnMessage = ['status' => false, 'message' => 'Error Employee Table', 'fieldError' => array()];
                     }
-
+ 
                     echo json_encode($returnMessage);
                 } catch (Exception $e) {
                     echo json_encode(['status' => false, 'message' => 'Error ' . $e, 'fieldError' => array()]);
@@ -165,29 +165,29 @@ class Employees extends Controller
             }
         }
     }
-
+ 
     public function edit($badgeEmployee = '')
     {
-
+ 
         if (!empty($badgeEmployee)) {
-
+ 
             $data = [];
             $data['employeeInfo'] = $this->employeeModel->getEmployeeDetailsByBadge($badgeEmployee);
             $idEmployee = $data['employeeInfo']['employeeId'];
-
+ 
             if (!empty($idEmployee)) {
-
+ 
                 if (getPLFullEmployeeInfo()) {
-
+ 
                     $documentType = $this->employeeDocumentModel->getTypesDocuments();
-
+ 
                     // Poner al final Other Document.
                     usort($documentType, function ($a, $b) {
                         if ($a['name'] == 'Other Document') return 1;
                         if ($b['name'] == 'Other Document') return -1;
                         return $a['documentTypeId'] <=> $b['documentTypeId'];
                     });
-
+ 
                     $data['states'] = $this->employeeModel->getStates();
                     $data['departments'] = $this->departmentModel->getDeparments();
                     $data['positions'] = $this->positionModel->getPositions();
@@ -196,14 +196,14 @@ class Employees extends Controller
                     $data['areas'] = $this->areaModel->getAreas();
                     $data['bills'] = $this->billModel->getBillsTo();
                     $data['typesDocuments'] = $documentType;
-
+ 
                     $data['employeeDocumentsInfo'] = $this->employeeDocumentModel->getEmployeDocument($idEmployee);
                     $data['employeeSchedule'] = $this->employeeScheduleModel->getSchedulesEmployee($idEmployee);
                     $data['employeeEmergencyContacts'] = $this->emergencyContactsModel->getEmergencyContacts($idEmployee);
                     $data['relationship'] = $this->relationshipModel->getRelationshipsEnglish();
                     $data['superiors'] = $this->usersModel->getSuperiors();
                     $data['financialDependents'] = $this->financialDependentModel->getFinancialDependents($idEmployee);
-
+ 
                     $this->view('employees/edit', $data);
                 } else {
                     redirect('employees/index');
@@ -215,22 +215,22 @@ class Employees extends Controller
             redirect('employees/index');
         }
     }
-
+ 
     public function showEmployee($badgeEmployee = '')
     {
-
+ 
         if (!empty($badgeEmployee)) {
-
+ 
             $data = [];
             $data['employeeInfo'] = $this->employeeModel->getEmployeeReadByBadge($badgeEmployee);
-
+ 
             $idEmployee = $data['employeeInfo']['employeeId'];
-
+ 
             if (!empty($idEmployee)) {
-
+ 
                 $data['emergencyContacts'] = $this->emergencyContactsModel->getEmergencyContacts($idEmployee);
                 $data['employeeSchedule'] = $this->employeeScheduleModel->getSchedulesEmployee($idEmployee);
-
+ 
                 $this->view('employees/read', $data);
             } else {
                 redirect('employees/index');
@@ -239,37 +239,37 @@ class Employees extends Controller
             redirect('employees/index');
         }
     }
-
+ 
     public function editEmpProcess()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-
+ 
             $return = ['status' => false, 'message' => '', 'messageDetails' => ''];
-
+ 
             // Validation - Permission to edit Employee Info
             if (getPLCreateEditDeleteInfoEmployee()) {
-
+ 
                 try {
                     $changedFields =  (isset($_POST['changedFields']) && $_POST['changedFields'] != NULL) ? json_decode($_POST['changedFields'], true) : [];
                     $employeeId = base64_decode($_POST['employeeId']);
                     $badge = base64_decode($_POST['badge']);
                     $firstName = $_POST['firstName'];
                     $firstLastName = $_POST['firstLastName'];
-
+ 
                     if (!empty($changedFields)) {
                         $changedFields['employeeId'] = $employeeId;
-
+ 
                         // Clean fields if there are in array changeField
-                        if (isset($changedFields['firstName']) && $changedFields['firstName'] != NULL) $changedFields['firstName'] = strtoupper($changedFields['firstName']);
-                        if (isset($changedFields['secondName']) && $changedFields['secondName'] != NULL) $changedFields['secondName'] = strtoupper($changedFields['secondName']);
-                        if (isset($changedFields['thirdName']) && $changedFields['thirdName'] != NULL) $changedFields['thirdName'] = strtoupper($changedFields['thirdName']);
-                        if (isset($changedFields['firstLastName']) && $changedFields['firstLastName'] != NULL) $changedFields['firstLastName'] = strtoupper($changedFields['firstLastName']);
-                        if (isset($changedFields['secondLastName']) && $changedFields['secondLastName'] != NULL) $changedFields['secondLastName'] = strtoupper($changedFields['secondLastName']);
-                        if (isset($changedFields['thirdLastName']) && $changedFields['thirdLastName'] != NULL) $changedFields['thirdLastName'] = strtoupper($changedFields['thirdLastName']);
+                        if (isset($changedFields['firstName']) && $changedFields['firstName'] != NULL) $changedFields['firstName'] = strtoupper(trim($changedFields['firstName']));
+                        if (isset($changedFields['secondName']) && $changedFields['secondName'] != NULL) $changedFields['secondName'] = strtoupper(trim($changedFields['secondName']));
+                        if (isset($changedFields['thirdName']) && $changedFields['thirdName'] != NULL) $changedFields['thirdName'] = strtoupper(trim($changedFields['thirdName']));
+                        if (isset($changedFields['firstLastName']) && $changedFields['firstLastName'] != NULL) $changedFields['firstLastName'] = strtoupper(trim($changedFields['firstLastName']));
+                        if (isset($changedFields['secondLastName']) && $changedFields['secondLastName'] != NULL) $changedFields['secondLastName'] = strtoupper(trim($changedFields['secondLastName']));
+                        if (isset($changedFields['thirdLastName']) && $changedFields['thirdLastName'] != NULL) $changedFields['thirdLastName'] = strtoupper(trim($changedFields['thirdLastName']));
                         if (isset($changedFields['contactPhone']) && $changedFields['contactPhone'] != NULL) $changedFields['contactPhone'] =  preg_replace('/[^0-9]/', '', $_POST['contactPhone']);
-                        if (isset($changedFields['personalEmail']) && $changedFields['personalEmail'] != NULL) $changedFields['personalEmail'] = trim(strtolower($_POST['personalEmail']));
-                        if (isset($changedFields['corporateEmail']) && $changedFields['corporateEmail'] != NULL) $changedFields['corporateEmail'] = trim(strtolower($_POST['corporateEmail']));
-
+                        if (isset($changedFields['personalEmail']) && $changedFields['personalEmail'] != NULL) $changedFields['personalEmail'] = trim(strtolower(trim($_POST['personalEmail'])));
+                        if (isset($changedFields['corporateEmail']) && $changedFields['corporateEmail'] != NULL) $changedFields['corporateEmail'] = trim(strtolower(trim($_POST['corporateEmail'])));
+ 
                         $this->employeeModel->updatedEmployee($changedFields);
                     }
                     // upload files if there are.
@@ -278,10 +278,10 @@ class Employees extends Controller
                     $changesFinal = array_merge($changedFields, $re['changedFields']);
                     $return['responseFiles'] = $re;
                     $return['FILES'] = $_FILES;
-
+ 
                     // Remove the element with the key 'employeeId'
                     unset($changesFinal['employeeId']);
-
+ 
                     // Add log
                     if (!empty($changesFinal)) {
                         $dataLog = ['userId' => $_SESSION['userId'], 'registerId' => $employeeId, 'action' => 'Edit', 'page' => 'Employee', 'fields' => json_encode($changesFinal)];
@@ -297,14 +297,14 @@ class Employees extends Controller
             } else {
                 $return['message'] = 'Error: You do not have permission to perform this action.';
             }
-
+ 
             echo json_encode($return);
         }
     }
-
+ 
     public function getDataRows()
     {
-
+ 
         $action = (isset($_REQUEST['action']) && $_REQUEST['action'] != NULL) ? $_REQUEST['action'] : '';
         $page = (isset($_REQUEST['page']) && $_REQUEST['page'] != NULL) ? $_REQUEST['page'] : '';
         $searchFields = (isset($_REQUEST['search']) && $_REQUEST['search'] != NULL) ? $_REQUEST['search'] : '';
@@ -312,28 +312,28 @@ class Employees extends Controller
         $ascDesc = (isset($_REQUEST['ascDesc']) && $_REQUEST['ascDesc'] != NULL) ? $_REQUEST['ascDesc'] : '';
         $billTo = (isset($_REQUEST['billTo']) && $_REQUEST['billTo'] != NULL) ? $_REQUEST['billTo'] : '';
         $return = array();
-
+ 
         if ($action == 'ajaxDataRows') {
-
+ 
             $orderby = " em.badge desc";
             $countField = 0;
             $searchQuery = '';
-
+ 
             $per_page = $length; // number of records you want to display
             $offset = ($page - 1) * $per_page;
             $offsetnumShow = ($page - 1) * $per_page + 1;
-
+ 
             if (!empty($ascDesc)) {
                 if ($ascDesc[0] == "fa fa-sort-up") $orderby = "em.createdAt asc";
                 else if ($ascDesc[0] == "fa fa-sort-down") $orderby = "em.createdAt desc";
                 // if ($ascDesc[1] == "fas fa-sort-up") $orderby = "date_retained asc";
                 // else if ($ascDesc[1] == "fas fa-sort-down") $orderby = "date_retained desc";
             }
-
+ 
             if (!empty($searchFields)) { // Count fields full
                 for ($i = 0; $i < count($searchFields); $i++) if ($searchFields[$i] != "") $countField++;
             }
-
+ 
             if ($countField > 0) {
                 $fielDB = array(
                     0 => array("badge", 'equal'),
@@ -348,20 +348,20 @@ class Employees extends Controller
                 );
                 $searchQuery = '';
                 $op = false;
-
+ 
                 for ($i = 0; $i < count($fielDB); $i++) {
-
+ 
                     $fielname = $fielDB[$i][0];
                     $type = $fielDB[$i][1];
                     $value = $searchFields[$i];
-
-
+ 
+ 
                     if (!empty($value)) {
-
+ 
                         if ($op) $searchQuery .= ' and ';
-
+ 
                         if ($type == 'equal') {
-
+ 
                             $op = true;
                             $searchQuery .= " " . $fielname . " = " . $value . "";
                         } else if ($type == 'equalString') {
@@ -381,7 +381,7 @@ class Employees extends Controller
                     }
                 }
             }
-
+ 
             // BILL TO
             if (getPLAnotherBillTo()) {
                 $return['loandingCard'] = 1;
@@ -390,13 +390,13 @@ class Employees extends Controller
                 $return['loandingCard'] = 0;
                 $searchQuery .=  (!empty($searchQuery)) ? ' and em.billTo=1' : ' em.billTo=1';
             }
-
+ 
             $return['searchQuery'] = $searchQuery;
             $countTotal = $this->employeeModel->countRegisterEmployee($searchQuery);
             $numrows = $countTotal['numrows'];
             $total_pages = ceil($numrows / $per_page);
             $registers = $this->employeeModel->readRegisters($offset, $per_page, $searchQuery, $orderby);
-
+ 
             $return['getPLFullEmployeeInfo'] =  getPLFullEmployeeInfo();
             $return['data'] = $registers;
             $return['offsetnumShow'] = $offsetnumShow;
@@ -404,17 +404,17 @@ class Employees extends Controller
             $return['numrows'] = $numrows;
             $return['pagination'] = paginateRead('index.php', $page, $total_pages, 2, $searchFields, $length, $ascDesc, $billTo);
         }
-
-
+ 
+ 
         echo json_encode($return);
     }
-
+ 
     public function getInfoCard()
     {
         // BILL TO
         if (getPLAnotherBillTo()) $idBillTo = $_POST['status'];
         else $idBillTo =  1;
-
+ 
         $data = [];
         $data['TotalEmployeeActive'] = $this->employeeModel->getTotalEmployeeActive($idBillTo);
         $data['CustomerServicesActive'] = $this->employeeModel->getTotalEmployeeCustomerServices($idBillTo);
@@ -422,65 +422,65 @@ class Employees extends Controller
         $data['status'] = $_POST['status'];
         echo json_encode($data);
     }
-
-
+ 
+ 
     function build_search_query($search_terms, $fieldsArray)
     {
         $terms = explode(' ', $search_terms);
         $conditions = array();
         $term_conditions = [];
-
+ 
         foreach ($terms as $term) {
-
+ 
             for ($i = 0; $i < count($fieldsArray); $i++)
                 array_push($term_conditions, "" . $fieldsArray[$i] . " LIKE '%" . addslashes($term) . "%'"); // create the query for each field Ex. firstName LIKE '%test%'
-
+ 
             $conditions[] = "(" . implode(" OR ", $term_conditions) . ")";
         }
-
+ 
         return implode(" AND ", $conditions);
     }
-
+ 
     public function uploadSaveFile($FILES, $IdEmployee, $nameFile)
     {
         $errorSave = [];
         $changedFields = [];
         $dataEmployeeDocument['employeeId'] = $IdEmployee;
-
+ 
         if (!empty($FILES['photo']['tmp_name'])) {
             $rePhoto = $this->handleFileUpload($FILES['photo'], 'photo', $nameFile . '_photo');
             $dataEmployeeDocument['photo'] = $rePhoto['nameFile'];
-
+ 
             if ($rePhoto['status']) {
-
+ 
                 $this->employeeModel->updatedEmployee($dataEmployeeDocument);
                 $changedFields['photo'] = $rePhoto['nameFile'];
             } else $errorSave['Photo'] = $rePhoto['messageError'];
         } else $errorSave['Photo'] = 'Field Empty';
-
+ 
         $re = [
             'changedFields' => $changedFields,
             'errorSave' => $errorSave,
         ];
         return $re;
     }
-
+ 
     // Function to handle file upload
     function handleFileUpload($file, $nameDir, $nameFile, $maxFileSize = 5)
     {
         $maxFileSize = $maxFileSize * 1024 * 1024; // Specify the max file size (e.g., 5MB)
         $targetDir = $_SERVER['DOCUMENT_ROOT'] . "/app/public/documents/{$nameDir}/";
         if (!is_dir($targetDir)) mkdir($targetDir, 0777, true); //directory exists
-
+ 
         $re = ['status' => false, 'messageError' => '', 'nameFile' => '',];
-
+ 
         // Create a name for the file
         $fileExtension = strtolower(pathinfo($file["name"], PATHINFO_EXTENSION));
         $nameFinally = $nameFile . '.' . $fileExtension;
-
+ 
         $targetFilePath = $targetDir . $nameFinally;
         $re['targetFilePath'] = $targetFilePath;
-
+ 
         if (in_array($fileExtension,  array("jpg", "png", "jpeg", "pdf"))) {
             // Validate file size
             if ($file["size"] <= $maxFileSize) {
@@ -498,13 +498,13 @@ class Employees extends Controller
         }
         return $re;
     }
-
+ 
     public function getEmployeeByBagde($badge = null)
     {
         $namesEmployee = $this->employeeModel->getEmployeeByBadge($badge);
         echo json_encode($namesEmployee);
     }
-
+ 
     public function getCitiesByStateId($stateId = null)
     {
         $cities = $this->employeeModel->getCitiesByStatesId($stateId);
