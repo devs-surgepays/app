@@ -435,4 +435,11 @@ class Employee
         $re = $this->db->resultSetAssoc();
         return $re;
     }
+
+    public function getSalarioEmployee($employeeId){
+        $this->db->query('SELECT salary FROM hr_surgepays.employees where employeeId=:employeeId;');
+        $this->db->bind('employeeId', $employeeId);
+        $re = $this->db->resultSetFetch();
+        return $re['salary'];
+    }
 }

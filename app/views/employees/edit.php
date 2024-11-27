@@ -693,10 +693,16 @@ $employeeDocumentsInfo = (isset($data['employeeDocumentsInfo']) && $data['employ
                                                         <div class="form-group form-group-default">
                                                             <label for="Name">Salary</label>
                                                             <div class="input-group">
-                                                                <input disabled id="Name" type="password" value="<?php echo $data['employeeInfo']['salary']; ?>" class="form-control" placeholder="Fill Name">
-                                                                <span class="input-group-text">
-                                                                    <i class="fas fa-eye" id="togglePassword"></i>
-                                                                </span>
+                                                                <?php
+                                                                    $di =  (empty($data['employeeInfo']['salary']) || $data['employeeInfo']['salary'] <= 0) ? '' : 'disabled';
+                                                                    $typeField = ($di == 'disabled') ? 'password' : 'text';
+                                                                ?>
+                                                                <input <?php echo $di; ?> id="salary" name="salary" type="<?php echo $typeField ?>" value="<?php echo $data['employeeInfo']['salary']; ?>" class="form-control">
+                                                                <?php if ($di == 'disabled') { ?>
+                                                                    <span class="input-group-text">
+                                                                        <i class="fas fa-eye" id="togglePassword"></i>
+                                                                    </span>
+                                                                <?php } ?>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2364,7 +2370,7 @@ $employeeDocumentsInfo = (isset($data['employeeDocumentsInfo']) && $data['employ
 
         $('#togglePassword').on('click', function() {
             // Get the input field
-            var input = $('#Name');
+            var input = $('#salary');
 
             // Check the current type of the input field
             if (input.attr('type') === 'password') {
@@ -2403,7 +2409,6 @@ $employeeDocumentsInfo = (isset($data['employeeDocumentsInfo']) && $data['employ
         var changedFields = {};
         var ignoredFields = [
             'hiredDateOld',
-            'salary',
             'endDate',
             'reHirable',
             'status'
