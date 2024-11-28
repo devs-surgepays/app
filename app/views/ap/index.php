@@ -1768,7 +1768,7 @@ function readData(page,where='',example_length,camposAscDesc,firstload=''){
             
             break;
         }
-        switch(v.aprovedByWF){
+        switch(v.aprovedByWf){
           case 1:
             cell8.innerHTML = '<span class="badge badge-success">Approved</span>';
             break;

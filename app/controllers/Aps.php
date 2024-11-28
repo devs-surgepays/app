@@ -310,14 +310,14 @@ class Aps extends Controller
                 "status"=>$_POST['status']
             ];
             //Getting permission level
-            $permissionLevel = $_SESSION['permissionLevelId'];
+            echo $permissionLevel = $_SESSION['permissionLevelId'];
             if($permissionLevel&104){
                 $data['aprovedByM']=$data['status'];
                 $data['byMUser']=$_SESSION['userId'];
             }else if($permissionLevel&16){
                 $data['aprovedByHR']=$data['status'];
                 $data['byHRUser']=$_SESSION['userId'];
-            }else if($permissionLevel&512){
+            }else if($permissionLevel&640){
                 $data['aprovedByWf']=$data['status'];
                 $data['byWfUSer']=$_SESSION['userId'];
             }else if($permissionLevel&4){
