@@ -79,6 +79,7 @@ class Aps extends Controller
                     $data['reason1']="Vacation";
                     $data['apDate1']=$_POST["inicioVacaciones"];
                     $data['apDate2']=$_POST["finVacaciones"];
+                    $data['apDate3']=$_POST["fechaPago"];
                     break;
                 case 4:
                     $data['currentAccount']=$_POST['currentDepartment'];

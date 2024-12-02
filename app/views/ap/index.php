@@ -208,6 +208,12 @@
                                   <label>Cantidad de Días</label>
                                     </div>
                                 </div>
+                                <div class="col-sm-12">
+                                    <div class="form-floating form-floating-custom mb-3">
+                                    <input class="form-control" type="date" placeholder="Dia" name="fechaPago" id="fechaPago">
+                                    <label>Fecha de Pago</label>
+                                    </div>
+                                </div>
                                </div>
                             <!-- TRASLADO CAMBIO DE PUESTO -->
                              <div id="traslados" class="toggleable">
@@ -736,6 +742,9 @@
 
 
 <script>
+  function htmlEntities(str) {
+    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
   //This button open createModal in order to create a new Leave
 $("#createModal").click(function(){
   $("#Action").val("Insert");
@@ -1982,7 +1991,12 @@ $(document).on('click', '.updateModal', function(){
       $('#addbadge').trigger('keyup');
       $("#addLeaveType").val(myObj.apTypeId);
       var apType = myObj.apTypeId;
-      $("#addComments").val(myObj.comment)
+      
+      const parser = new DOMParser();
+      const htmlString = myObj.comment;
+      const decodedText = parser.parseFromString(htmlString, 'text/html').body.textContent;
+      $("#addComments").val(decodedText)
+      //console.log(decodedText);
       //showSetLeaveAreas(apType)
       console.log(apType)
       switch(apType){
@@ -2026,6 +2040,7 @@ $(document).on('click', '.updateModal', function(){
           hideAllAndShow("vacaciones");
           $("#inicioVacaciones").val(myObj.apDate1);
           $("#finVacaciones").val(myObj.apDate2);
+          $("#fechaPago").val(myObj.apDate3);
           calculateDays();
           break;
         case 4:
