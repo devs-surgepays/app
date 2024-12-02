@@ -266,6 +266,12 @@
                                     </label>
                                   </div>
                                   <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="tipoIncapacidad" id="asesuisa" value="ASESUISA">
+                                    <label class="form-check-label" for="asesuisa">
+                                    ASESUISA
+                                    </label>
+                                  </div>
+                                  <div class="form-check">
                                     <input class="form-check-input" type="radio" name="tipoIncapacidad" id="particular" value="Particular">
                                     <label class="form-check-label" for="particular">
                                       Particular
@@ -2035,6 +2041,8 @@ $(document).on('click', '.updateModal', function(){
           $("#finIncapacidad").val(myObj.apDate2);
           if(myObj.reason1=="ISSS"){
             $("#isss").prop('checked', true);
+          }else if(myObj.reason1=="ASESUISA"){
+            $("#asesuisa").prop('checked', true);
           }else{
             $("#particular").prop('checked', true);
           }
