@@ -1647,6 +1647,8 @@ function showAttritionReasons(step,option=null,option2=null){
             // Convert time difference from milliseconds to days
             var dayDifference = timeDifference / (1000 * 3600 * 24);
 
+            dayDifference = dayDifference + 1;
+
             $("#totalDias").val(dayDifference);
         }
   function getTotalOT() {

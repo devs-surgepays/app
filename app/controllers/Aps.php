@@ -311,7 +311,7 @@ class Aps extends Controller
                 "status"=>$_POST['status']
             ];
             //Getting permission level
-            echo $permissionLevel = $_SESSION['permissionLevelId'];
+            $permissionLevel = $_SESSION['permissionLevelId'];
             if($permissionLevel&104){
                 $data['aprovedByM']=$data['status'];
                 $data['byMUser']=$_SESSION['userId'];
@@ -332,18 +332,34 @@ class Aps extends Controller
             //Getting Employee Info by badge
             $employeeInfo = $this->employeeModel->getEmployeeByBadge($apInfo['badge']);
             //Updating employee Schedule for Schedule Change aprove
-            //Verifing if ap Id equal schedule change
-            if($apInfo['apTypeId']==7){
-                //Verifying if status is approve
-                if($data['status']==1){
-                    $schedule['scheduleId']=$apInfo['scheduleId'];
-                    $schedule['status']=1;
-                    //Turn On last schedule
-                    $this->employeeScheduleModel->editEmployeeSchedule($schedule);
-                    //Turn Off old schedules
-                    $this->employeeScheduleModel->updateOldSchedules($apInfo['scheduleId'],$employeeInfo['employeeId']);
-                }
+            //Verifing if ap Id equal schedule change newSalary
+            switch($apInfo['apTypeId']){
+                case 7:
+                    if($data['status']==1){
+                        $schedule['scheduleId']=$apInfo['scheduleId'];
+                        $schedule['status']=1;
+                        //Turn On last schedule
+                        $this->employeeScheduleModel->editEmployeeSchedule($schedule);
+                        //Turn Off old schedules
+                        $this->employeeScheduleModel->updateOldSchedules($apInfo['scheduleId'],$employeeInfo['employeeId']);
+                    }
+                    break;
+                case 12:
+                    if($data['status']==1){
+                        echo "test";
+                    }
             }
+            // if($apInfo['apTypeId']==7){
+            //     //Verifying if status is approve
+            //     if($data['status']==1){
+            //         $schedule['scheduleId']=$apInfo['scheduleId'];
+            //         $schedule['status']=1;
+            //         //Turn On last schedule
+            //         $this->employeeScheduleModel->editEmployeeSchedule($schedule);
+            //         //Turn Off old schedules
+            //         $this->employeeScheduleModel->updateOldSchedules($apInfo['scheduleId'],$employeeInfo['employeeId']);
+            //     }
+            // }
             $data['response']="success";
             $data['message']="you gave approval to this leave";
             echo json_encode($data);
