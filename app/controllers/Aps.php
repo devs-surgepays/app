@@ -254,6 +254,7 @@ class Aps extends Controller
                     break;
                 case 12:
                     $data['newSalary']=$_POST['monto'];
+                    $data['reason1']="Ajuste Salarial";
                     $data['apDate1']=$_POST['diaEfectivo'];
                     $data['currentPosition']=$_POST['currentPosition'];
                     if(!empty($_POST['newPosition2'])){
@@ -345,9 +346,15 @@ class Aps extends Controller
                     }
                     break;
                 case 12:
-                    if($data['status']==1){
-                        echo "test";
-                    }
+                    //if($data['byHRUser']){
+                        if($data['status']==1){
+                            $saveData['employeeId']=$employeeInfo['employeeId'];
+                            $saveData['salary']=$apInfo['newSalary'];
+                            $this->employeeModel->updatedEmployee($saveData);
+                        }
+
+                    //}
+                    
             }
             // if($apInfo['apTypeId']==7){
             //     //Verifying if status is approve

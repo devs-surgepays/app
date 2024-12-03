@@ -266,19 +266,19 @@
                                   <label for="">Tipo Incapacidad</label>
                                 <div class="d-flex">
                                   <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="tipoIncapacidad" id="isss" value="ISSS">
+                                    <input class="form-check-input" type="radio" name="tipoIncapacidad" id="isss" value="" onChange="getIncapacidad('isss')">
                                     <label class="form-check-label" for="isss">
                                       Seguro Social
                                     </label>
                                   </div>
                                   <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="tipoIncapacidad" id="asesuisa" value="ASESUISA">
+                                    <input class="form-check-input" type="radio" name="tipoIncapacidad" id="asesuisa" value="" onChange="getIncapacidad('asesuisa')">
                                     <label class="form-check-label" for="asesuisa">
                                     ASESUISA
                                     </label>
                                   </div>
                                   <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="tipoIncapacidad" id="particular" value="Particular">
+                                    <input class="form-check-input" type="radio" name="tipoIncapacidad" id="particular" value="" onChange="getIncapacidad('particular')">
                                     <label class="form-check-label" for="particular">
                                       Particular
                                     </label>
@@ -558,7 +558,7 @@
 										<option value="Voluntary">Voluntario</option>
 										<option value="Involuntary">Involuntario</option>
 									</select>
-									<label for="monto">Tipo de Retiro</label>
+									<label for="tipoRetiro">Tipo de Retiro</label>
 								  </div>
 							  </div>
 							  
@@ -596,7 +596,7 @@
 						  <div id="ajusteSalarial" class="toggleable">
 							  <div class="col-sm-12">
 							  	<div class="form-floating form-floating-custom mb-3">
-								  	<input type="text" class="form-control money2" name="monto" id="monto" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$">
+								  	<input type="number" class="form-control money2" name="monto" id="monto" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$">
 									<label for="monto">Monto</label>
 								  </div>
 							  </div>
@@ -781,7 +781,7 @@ $(".grid-filter").on("change",function(){
   });
 });
 
-  $('.money2').mask("#,##0.00", {reverse: true});
+  //$('.money2').mask("#,##0.00", {reverse: true});
 	const addForm = $("#createApForm")
   const approveForm = $("#approveForm")
 	const initialState = {};
@@ -836,6 +836,29 @@ $(".grid-filter").on("change",function(){
 	
 	    
   });
+
+  function getIncapacidad(id){
+    switch(id){
+            case "isss":
+              console.log("ISSS")
+              $("#isss").val("ISSS");
+              $("#asesuisa").val("");
+              $("#particular").val("");
+              break;
+            case "asesuisa":
+              console.log("ASESUISA");
+              $("#isss").val("");
+              $("#asesuisa").val("ASESUISA");
+              $("#particular").val("");
+              break;
+            case "particular":
+              console.log("Particulares");
+              $("#isss").val("");
+              $("#asesuisa").val("");
+              $("#particular").val("Particular");
+              break;
+          } 
+  }
 	
 $(".tipoSus").on('change',function(){
   if($(this).is(":checked")){
@@ -1600,6 +1623,7 @@ function showAttritionReasons(step,option=null,option2=null){
     var initialState = {};
     $('#addAPButton').find('input, select, textarea').each(function() {
        initialState[$(this).attr('name')] = $(this).val();
+       //console.log($(this).val())
     });
      return initialState;
   }
@@ -1630,6 +1654,7 @@ function showAttritionReasons(step,option=null,option2=null){
             $('#createApForm').find('input,select,textarea').each(function() {
                 var name = $(this).attr('name');
                 var currentValue = $(this).val();
+                console.log(currentValue)
                 if (currentValue !== initialState[name]) {
                     changedFields[name] = currentValue;
                 }
@@ -2056,6 +2081,17 @@ $(document).on('click', '.updateModal', function(){
           hideAllAndShow("incapacidad");
           $("#inicioIncapacidad").val(myObj.apDate1);
           $("#finIncapacidad").val(myObj.apDate2);
+          switch(myObj.reason1){
+            case "ISSS":
+              console.log("ISSS")
+              break;
+            case "ASESUISA":
+              console.log("ASESUISA");
+              break;
+            case "Particular":
+              console.log("Particulares");
+              break;
+          }
           if(myObj.reason1=="ISSS"){
             $("#isss").prop('checked', true);
           }else if(myObj.reason1=="ASESUISA"){
@@ -2106,7 +2142,7 @@ $(document).on('click', '.updateModal', function(){
           $("#finAusencia").val(myObj.apDate2);
           break;
         case 10:
-        hideAllAndShow("horasExtra");
+          hideAllAndShow("horasExtra");
           $("#fechaOt").val(myObj.apDate1);
           $("#inicioOt").val(myObj.startTime);
           $("#finOt").val(myObj.endTime);
@@ -2117,13 +2153,14 @@ $(document).on('click', '.updateModal', function(){
           $("#tipoRetiro").val(myObj.withdrawalType);
           $("#fechaRetiro").val(myObj.apDate1);
           showAttritionReasons('reasonType',myObj.attritionsId1);
-          console.log(myObj.attritionsId2)
+          
           if(myObj.attritionsId2){
             showAttritionReasons('reasonsDetail',myObj.attritionsId1,myObj.attritionsId2);
           }
           break;
         case 12:
           hideAllAndShow("ajusteSalarial");
+          console.log(myObj.newSalary)
           $("#monto").val(myObj.newSalary);
           $("#diaEfectivo").val(myObj.apDate1);
           setPosition('newPosition2',myObj.newPosition);
