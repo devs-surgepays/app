@@ -93,7 +93,7 @@ function getPLShowInactiveEmployee()
     if (($permissionLevelId & 4))  $permission = false; // Supervisor
     if (($permissionLevelId & 8))  $permission = false; // Manager Account
     if (($permissionLevelId & 16))  $permission = true; // HR
-    if (($permissionLevelId & 32))  $permission = false; // Operation Manager
+    if (($permissionLevelId & 32))  $permission = true; // Operation Manager
     if (($permissionLevelId & 64))  $permission = true; // Super Admin
     if (($permissionLevelId & 128))  $permission = true; // Development
     if (($permissionLevelId & 256))  $permission = false; // External person
