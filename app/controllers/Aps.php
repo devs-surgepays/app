@@ -99,6 +99,7 @@ class Aps extends Controller
                     }
                     break;
                 case 6:
+                    $data['apDate1'] = date("Y-m-d");
                     $data['reason1']=$_POST['tipoSancion'];
                     if(isset($_POST['septimo'])){
                         $data['reason2']=($_POST['septimo']=="Yes")?"Septimo":"";
@@ -354,6 +355,18 @@ class Aps extends Controller
                         }
 
                     //}
+                    break;
+                case 11:
+                        //if($data['byHRUser']){
+                        if($data['status']==1){
+                            $saveData['employeeId']=$employeeInfo['employeeId'];
+                            $saveData['status']=0;
+                            $saveData['endDate']=$apInfo['apDate1'];
+                                $this->employeeModel->updatedEmployee($saveData);
+                        }
+    
+                        //}
+                    break;
                     
             }
             // if($apInfo['apTypeId']==7){

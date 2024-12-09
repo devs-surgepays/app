@@ -292,19 +292,19 @@
                              <div id="sanciones" class="toggleable">
                              <div class="d-flex">
                                   <div class="form-check">
-                                    <input class="form-check-input tipoSus" type="radio" name="tipoSancion" id="sancionVerbal" value="Verbal">
+                                    <input class="form-check-input tipoSus" type="radio" name="tipoSancion" id="sancionVerbal" value="" onChange="setSanciones('sancionVerbal')">
                                     <label class="form-check-label" for="sancionVerbal">
                                       Verbal
                                     </label>
                                   </div>
                                   <div class="form-check">
-                                    <input class="form-check-input tipoSus" type="radio" name="tipoSancion" id="sancionEscrita" value="Escrita">
+                                    <input class="form-check-input tipoSus" type="radio" name="tipoSancion" id="sancionEscrita" value="" onChange="setSanciones('sancionEscrita')">
                                     <label class="form-check-label" for="sancionEscrita">
                                       Escrita
                                     </label>
                                   </div>
                                   <div class="form-check">
-                                    <input class="form-check-input tipoSus" type="radio" name="tipoSancion" id="suspension" value="Suspension">
+                                    <input class="form-check-input tipoSus" type="radio" name="tipoSancion" id="suspension"  value="" onChange="setSanciones('suspension')">
                                     <label class="form-check-label" for="suspension">
                                       Suspensón
                                     </label>
@@ -860,16 +860,45 @@ $(".grid-filter").on("change",function(){
           } 
   }
 	
-$(".tipoSus").on('change',function(){
-  if($(this).is(":checked")){
-    if($(this).val()=="Suspension"){
-      //console.log("suspension");
-      $("#diasSuspension").show()
-    }else{
-      $("#diasSuspension").hide()
-    }
+  function setSanciones(id){
+    switch(id){
+            case "sancionVerbal":
+              console.log("sancionVerbal")
+              $("#suspension").val("");
+              $("#sancionVerbal").val("Verbal");
+              $("#sancionEscrita").val("")
+              $("#diasSuspension").hide()
+              break;
+            case "sancionEscrita":
+              console.log("sancionEscrita");
+              $("#sancionVerbal").val("");
+              $("#suspension").val("");
+              $("#sancionEscrita").val("Escrita");
+              $("#diasSuspension").hide()
+              break;
+            case "suspension":
+              console.log("suspension");
+              $("#sancionVerbal").val("");
+              $("#sancionEscrita").val("");
+              $("#suspension").val("Suspension");
+              $("#diasSuspension").show()
+              break;
+          } 
+          
   }
-})
+
+// $(".tipoSus").on('change',function(){
+//   if($(this).is(":checked")){
+//     var id = $(this).attr('id')
+//     setSanciones(id)
+//     if(id=="suspension"){
+//       //console.log("suspension");
+//       $("#diasSuspension").show()
+//     }else{
+//       $("#diasSuspension").hide()
+//     }
+//   }
+// })
 
   function getData() {
     var badge = $("#addbadge").val();
@@ -2110,13 +2139,16 @@ $(document).on('click', '.updateModal', function(){
           switch(myObj.reason1){
             case "Verbal":
               $("#sancionVerbal").prop('checked', true);
+              $("#diasSuspension").hide()
               break;
             case "Escrita":
               $("#sancionEscrita").prop('checked', true);
+              $("#diasSuspension").hide()
               break;
             case "Suspension":
               $("#suspension").prop('checked', true);
-              $('#tiempopermiso').trigger('change');
+              //$('#diasSuspension').trigger('change');
+              $("#diasSuspension").show()
               $("#inicioSuspension").val(myObj.apDate1);
               $("#finSuspension").val(myObj.apDate2);
               break;
