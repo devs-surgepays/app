@@ -150,8 +150,8 @@ class EmployeesDocuments extends Controller
                                     $tabType = $dataPost['tabType'];
 
                                     if ($tabType == 'EmployeeArchive') {
-                                        $datasave['comment'] = $_POST['commentsArchives'];
-                                        $datasave['apDetailsId'] = $_POST['apidReferencia'];
+                                        $datasave['comment'] = (isset($_POST['commentsArchives']) && $_POST['commentsArchives'] != null) ? $_POST['commentsArchives'] : null;
+                                        $datasave['apDetailsId'] = (isset($_POST['apidReferencia']) && $_POST['apidReferencia'] != null) ? $_POST['apidReferencia'] : null;
                                         $pageTab = 'Emp. Archive';
                                         $lastInsertId = $this->employeeDocumentModel->saveEmployeeArchive($datasave); // save in database - employee_archives
                                     } else {
