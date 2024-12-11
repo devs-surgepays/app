@@ -172,4 +172,13 @@ FROM
 	$getOrders = $this->db->resultSet();
 	return $getOrders;
 	}
+
+    public function getLeavesByemployee($badge){
+        $this->db->query("SELECT ap.apDetailsId,ap.createdAt, apt.name FROM hr_surgepays.ap_details  as ap
+        inner join ap_types as apt on apt.apTypeId = ap.apTypeId
+        where ap.apTypeId in (1,2,5) and ap.badge=:badge order by ap.createdAt desc");
+         $this->db->bind(":badge",$badge);
+        $row = $this->db->resultSetAssoc();
+		return $row;
+    }
 }

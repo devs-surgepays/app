@@ -19,9 +19,30 @@ class EmployeeDocument
         return $lastInsertId;
     }
 
+    public function saveEmployeeArchive($data)
+    {
+        $data = [
+            'employeeId' => $data['employeeId'],
+            'documentTypeId' => $data['documentTypeId'],
+            'document' => $data['document'],
+            'comment' => $data['comment'],
+            'apDetailsId' => $data['apDetailsId']
+        ];
+        $this->db->insertQuery('hr_surgepays.employee_archives', $data);
+        $lastInsertId = $this->db->lastinsertedId();
+        return $lastInsertId;
+    }
+
     public function getEmployeDocument($employeeId)
     {
         $this->db->query('SELECT * FROM hr_surgepays.employee_documents ed inner join documents_type dt on dt.documentTypeId =  ed.documentTypeId WHERE ed.employeeId = :employeeId AND ed.status = 1;');
+        $this->db->bind(':employeeId', $employeeId);
+        $result = $this->db->resultSetAssoc();
+        return $result;
+    }
+    public function getEmployeArchive($employeeId)
+    {
+        $this->db->query('SELECT * FROM hr_surgepays.employee_archives ed inner join documents_type dt on dt.documentTypeId =  ed.documentTypeId WHERE ed.employeeId = :employeeId AND ed.status = 1;');
         $this->db->bind(':employeeId', $employeeId);
         $result = $this->db->resultSetAssoc();
         return $result;
@@ -41,9 +62,13 @@ class EmployeeDocument
     {
         $this->db->updateQuery('hr_surgepays.employee_documents', $dataFields, 'employeeDocumentId=:employeeDocumentId');
     }
+    public function updateEmployeeArchive($dataFields)
+    {
+        $this->db->updateQuery('hr_surgepays.employee_archives', $dataFields, 'employeeArchiveId=:employeeArchiveId');
+    }
 
-    public function getTypesDocuments() {
-        $this->db->query('SELECT * FROM hr_surgepays.documents_type where status=1 and folderName is not null;');
+    public function getTypesDocuments($type) {
+        $this->db->query("SELECT * FROM hr_surgepays.documents_type where status=1 and type='$type' and folderName is not null;");
         $result = $this->db->resultSetAssoc();
         return $result;
     }

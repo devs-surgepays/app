@@ -17,6 +17,7 @@ class Employees extends Controller
     private $areaModel = '';
     private $billModel = '';
     private $financialDependentModel = '';
+    private $apModel = '';
 
     public function __construct()
     {
@@ -38,6 +39,7 @@ class Employees extends Controller
         $this->areaModel = $this->model('Area');
         $this->billModel = $this->model('Bill');
         $this->financialDependentModel = $this->model('FinancialDependent');
+        $this->apModel = $this->model('Ap');
     }
 
     public function index()
@@ -174,15 +176,22 @@ class Employees extends Controller
             $data = [];
             $data['employeeInfo'] = $this->employeeModel->getEmployeeDetailsByBadge($badgeEmployee);
             $idEmployee = $data['employeeInfo']['employeeId'];
+            $badge = $data['employeeInfo']['badge'];
 
             if (!empty($idEmployee)) {
 
                 if (getPLFullEmployeeInfo()) {
 
-                    $documentType = $this->employeeDocumentModel->getTypesDocuments();
+                    $documentType = $this->employeeDocumentModel->getTypesDocuments('docs');
+                    $documentTypeArchives = $this->employeeDocumentModel->getTypesDocuments('archives');
 
                     // Poner al final Other Document.
                     usort($documentType, function ($a, $b) {
+                        if ($a['name'] == 'Other Document') return 1;
+                        if ($b['name'] == 'Other Document') return -1;
+                        return $a['documentTypeId'] <=> $b['documentTypeId'];
+                    });
+                    usort($documentTypeArchives, function ($a, $b) {
                         if ($a['name'] == 'Other Document') return 1;
                         if ($b['name'] == 'Other Document') return -1;
                         return $a['documentTypeId'] <=> $b['documentTypeId'];
@@ -196,8 +205,11 @@ class Employees extends Controller
                     $data['areas'] = $this->areaModel->getAreas();
                     $data['bills'] = $this->billModel->getBillsTo();
                     $data['typesDocuments'] = $documentType;
+                    $data['typesDocArchives'] = $documentTypeArchives;
+                    $data['levelsEmployee'] = $this->apModel->getLeavesByemployee($badge);
 
                     $data['employeeDocumentsInfo'] = $this->employeeDocumentModel->getEmployeDocument($idEmployee);
+                    $data['employeeArchivesInfo'] = $this->employeeDocumentModel->getEmployeArchive($idEmployee);
                     $data['employeeSchedule'] = $this->employeeScheduleModel->getSchedulesEmployee($idEmployee);
                     $data['employeeEmergencyContacts'] = $this->emergencyContactsModel->getEmergencyContacts($idEmployee);
                     $data['relationship'] = $this->relationshipModel->getRelationshipsEnglish();

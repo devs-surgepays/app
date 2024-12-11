@@ -9,6 +9,7 @@ $afps = (isset($data['afps']) && $data['afps'] != NULL) ? $data['afps'] : [];
 $areas = (isset($data['areas']) && $data['areas'] != NULL) ? $data['areas'] : [];
 $bills = (isset($data['bills']) && $data['bills'] != NULL) ? $data['bills'] : [];
 $typesDocuments = (isset($data['typesDocuments']) && $data['typesDocuments'] != NULL) ? $data['typesDocuments'] : [];
+$typesDocArchives = (isset($data['typesDocArchives']) && $data['typesDocArchives'] != NULL) ? $data['typesDocArchives'] : [];
 $employeeInfo = (isset($data['employeeInfo']) && $data['employeeInfo'] != NULL) ? $data['employeeInfo'] : [];
 $superiors = (isset($data['superiors']) && $data['superiors'] != NULL) ? $data['superiors'] : [];
 $employeeSchedule = (isset($data['employeeSchedule']) && $data['employeeSchedule'] != NULL) ? $data['employeeSchedule'] : [];
@@ -17,7 +18,8 @@ $data['employeeInfo']['contactPhone'] = (isset($data['employeeInfo']['contactPho
 $relationship = (isset($data['relationship']) && $data['relationship'] != NULL) ? $data['relationship'] : [];
 $financialDependents = (isset($data['financialDependents']) && $data['financialDependents'] != NULL) ? $data['financialDependents'] : [];
 $employeeDocumentsInfo = (isset($data['employeeDocumentsInfo']) && $data['employeeDocumentsInfo'] != NULL) ? $data['employeeDocumentsInfo'] : [];
-
+$levelsEmployee = (isset($data['levelsEmployee']) && $data['levelsEmployee'] != NULL) ? $data['levelsEmployee'] : [];
+$employeeArchivesInfo = (isset($data['employeeArchivesInfo']) && $data['employeeArchivesInfo'] != NULL) ? $data['employeeArchivesInfo'] : [];
 ?>
 <style>
     .card-header h5::after {
@@ -166,6 +168,9 @@ $employeeDocumentsInfo = (isset($data['employeeDocumentsInfo']) && $data['employ
                     </li>
                     <li class="nav-item submenu" role="presentation">
                         <a class="nav-link " id="tab-financial-dependents" data-bs-toggle="pill" href="#financial-dependents" role="tab" aria-controls="financial-dependents" aria-selected="true">Financial Dependents</a>
+                    </li>
+                    <li class="nav-item submenu" role="presentation">
+                        <a class="nav-link " id="tab-employee-archive" data-bs-toggle="pill" href="#employee-archive" role="tab" aria-controls="employee-archive" aria-selected="true">Employee Archive</a>
                     </li>
 
                 </ul>
@@ -821,6 +826,7 @@ $employeeDocumentsInfo = (isset($data['employeeDocumentsInfo']) && $data['employ
                                                         <tbody>
                                                             <?php if (!empty($employeeDocumentsInfo)) {
                                                                 $n = 1;
+                                                                $tabT = 'EmployeeDocument';
                                                                 for ($i = 0; $i < count($employeeDocumentsInfo); $i++) {
                                                                     echo '<tr>';
                                                                     echo '<th scope="row">' . $n++ . '</th>';
@@ -831,7 +837,9 @@ $employeeDocumentsInfo = (isset($data['employeeDocumentsInfo']) && $data['employ
 
                                                                     if (getPLCreateEditDeleteInfoEmployee()) {
                                                                         echo '<button id="delete_' . $employeeDocumentsInfo[$i]['employeeDocumentId'] . '_document" type="button" 
-                                                                        data-documentName="' . $employeeDocumentsInfo[$i]['document'] . '" data-nameDirDocument="' . $employeeDocumentsInfo[$i]['folderName'] . '/' . $employeeDocumentsInfo[$i]['document'] . '" 
+                                                                        data-documentName="' . $employeeDocumentsInfo[$i]['document'] . '" 
+                                                                        data-table="' . $tabT . '"
+                                                                        data-nameDirDocument="' . $employeeDocumentsInfo[$i]['folderName'] . '/' . $employeeDocumentsInfo[$i]['document'] . '" 
                                                                         onclick="removeDocument(' . $employeeDocumentsInfo[$i]['employeeDocumentId'] . ')"
                                                                         class="btn btn-sm btn-danger"><i class="fa fa-times"></i></button>';
                                                                     }
@@ -1212,6 +1220,75 @@ $employeeDocumentsInfo = (isset($data['employeeDocumentsInfo']) && $data['employ
                         </div>
                     </div>
 
+                    <!-- Employee Employee Archive -->
+                    <div class="tab-pane fade " id="employee-archive" role="tabpanel" aria-labelledby="tab-employee-archive">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5>Employee Archive</h5>
+                                    </div>
+                                    <div class="card-body" style="min-height: 880px;">
+                                        <div class="row">
+                                            <div class="d-flex justify-content-between pb-5">
+                                                <?php if (getPLCreateEditDeleteInfoEmployee()): ?>
+                                                    <button id="btn-add-employeeArchive" class="btn btn-primary btn-round ms-auto" data-bs-toggle="modal" data-bs-target="#modalAddArchive"><i class="fa fa-plus"></i> Upload Archive</button>
+                                                <?php endif; ?>
+                                            </div>
+
+                                            <div class="col-12">
+                                                <div class="table-responsive">
+                                                    <table id="tb-EmergencyContact" class="table table-hover mt-5">
+                                                        <thead>
+                                                            <tr>
+                                                                <th scope="col">#</th>
+                                                                <th scope="col">Name</th>
+                                                                <th style="width: 30%;" scope="col">Type</th>
+                                                                <th style="width: 30%;" scope="col">Comment</th>
+                                                                <th scope="col">Managment</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <?php if (!empty($employeeArchivesInfo)) {
+                                                                $n = 1;
+                                                                $tabT = 'EmployeeArchive';
+                                                                for ($i = 0; $i < count($employeeArchivesInfo); $i++) {
+                                                                    echo '<tr>';
+                                                                    echo '<th scope="row">' . $n++ . '</th>';
+                                                                    echo '<td> <a href="' . URLROOT . '/public/documents/' . $employeeArchivesInfo[$i]['folderName'] . '/' . $employeeArchivesInfo[$i]['document'] . '" target="_BLANK" >' . $employeeArchivesInfo[$i]['document'] . '</a></td>';
+                                                                    echo '<td> ' . $employeeArchivesInfo[$i]['name'] . '</td>';
+                                                                    echo '<td> ' . $employeeArchivesInfo[$i]['comment'] . '</td>';
+
+                                                                    echo '<td>';
+
+                                                                    if (getPLCreateEditDeleteInfoEmployee()) {
+                                                                        echo '<button id="delete_' . $employeeArchivesInfo[$i]['employeeArchiveId'] . '_document" type="button" 
+                                                                        data-documentName="' . $employeeArchivesInfo[$i]['document'] . '"
+                                                                        data-table="' . $tabT . '"
+                                                                        data-nameDirDocument="' . $employeeArchivesInfo[$i]['folderName'] . '/' . $employeeArchivesInfo[$i]['document'] . '" 
+                                                                        onclick="removeDocument(' . $employeeArchivesInfo[$i]['employeeArchiveId'] . ')"
+                                                                        class="btn btn-sm btn-danger"><i class="fa fa-times"></i></button>';
+                                                                    }
+
+                                                                    echo '<a href="' . URLROOT . '/public/documents/' . $employeeArchivesInfo[$i]['folderName'] . '/' . $employeeArchivesInfo[$i]['document'] . '" target="_BLANK"  class="btn btn-sm btn-info"><i class="fa fa-eye"></i></a>';
+                                                                    echo '</td>';
+                                                                    echo '</tr>';
+                                                                }
+                                                            } else {
+                                                                echo '<tr><td class="text-center" colspan="6">No data</td></tr>';
+                                                            }
+                                                            ?>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -1517,6 +1594,76 @@ $employeeDocumentsInfo = (isset($data['employeeDocumentsInfo']) && $data['employ
                 </div>
             </div>
         </div>
+        <!-- Upload Archive -->
+        <div class="modal fade" id="modalAddArchive" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalAddArchiveLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="modalAddArchiveLabel">Upload Emp. Archive</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form id="formUploadArchive">
+                        <div class="modal-body">
+                            <div class="row pt-3">
+                                <div class="col-12">
+                                    <div class="form-group form-group-default">
+                                        <label>Archive Type <span class="text-danger">*</span> </label>
+                                        <select class="form-control" id="docTypeArchive" name="docTypeArchive" placeholder="">
+                                            <option value="">Select</option>
+                                            <?php
+                                            for ($i = 0; $i < count($typesDocArchives); $i++) {
+                                                echo '<option value="' . $typesDocArchives[$i]['documentTypeId'] . '">' . $typesDocArchives[$i]['name'] . '</option>';
+                                            }
+                                            ?>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-6 docNameOtherArchive" style="display: none;">
+                                    <div class="form-group form-group-default">
+                                        <label>Document Name <span class="text-danger">*</span> </label>
+                                        <input class="form-control" type="text" name="nameDocumentOtherArchive" id="nameDocumentOtherArchive">
+                                    </div>
+                                </div>
+
+                                <div id="fileDropzoneArchive" class="dropzone dropzoneMax" class="dropzone mb-3"></div>
+                                <span class="msg-dropzone-archive text-danger"></span>
+
+
+                                <div class="col-6 idap">
+                                    <div class="form-group">
+                                        <label>Level Referencial (APId)</label>
+                                        <select class="form-control" id="apidReferencia" name="apidReferencia" placeholder="">
+                                            <option value="">Select</option>
+                                            <?php
+                                            for ($i = 0; $i < count($levelsEmployee); $i++) {
+                                                echo '<option value="' . $levelsEmployee[$i]['apDetailsId'] . '">Id:' . $levelsEmployee[$i]['apDetailsId'] . ' | '. $levelsEmployee[$i]['name'] . ' ' . $levelsEmployee[$i]['createdAt'] . '</option>';
+                                            }
+                                            ?>
+                                        </select>
+                                    </div>
+                                </div> 
+
+                                <div class="col-6 commentsArchives">
+                                    <div class="form-group">
+                                        <label>Comments</label>
+                                        <input class="form-control" type="text" name="commentsArchives" id="commentsArchives">
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+                        </div>
+                        <div class="modal-footer">
+                            <input type="hidden" id="idEmpUploadArchive" name="idEmpUploadArchive" value="<?php echo base64_encode($data['employeeInfo']['employeeId']) ?>">
+                            <button type="button" id="btn-cancelUpload" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" id="uploadButton" class="btn btn-success">Add Archive</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
 
 
         <!-- END-MODAL -->
@@ -1547,6 +1694,28 @@ $employeeDocumentsInfo = (isset($data['employeeDocumentsInfo']) && $data['employ
             this.on("error", function(file, errorMessage) {
                 this.removeFile(file); // Remove the file if there's an error
                 $(".msg-dropzone").html(errorMessage);
+            });
+        }
+    });
+    var myDropzoneArchive = new Dropzone("#fileDropzoneArchive", {
+        url: '#',
+        autoProcessQueue: false, // Prevent auto-upload
+        addRemoveLinks: true,
+        maxFilesize: 5, // MB
+        maxFiles: 1, // Maximum number of files
+        acceptedFiles: '.pdf, .jpg, .png', // Allowed file types
+        init: function() {
+            this.on("addedfile", function(file) {
+                $(".msg-dropzone-archive").html("");
+
+                if (this.files.length > this.options.maxFiles) {
+                    this.removeFile(file);
+                    $(".msg-dropzone-archive").html("You can only upload one file.");
+                }
+            });
+            this.on("error", function(file, errorMessage) {
+                this.removeFile(file); // Remove the file if there's an error
+                $(".msg-dropzone-archive").html(errorMessage);
             });
         }
     });
@@ -1587,7 +1756,7 @@ $employeeDocumentsInfo = (isset($data['employeeDocumentsInfo']) && $data['employ
             }, '', newURL);
         });
         // Valid tab names
-        var validTabs = ['general-information', 'schedule', 'emergency-contacts', 'financial-dependents', 'employee-documents'];
+        var validTabs = ['general-information', 'schedule', 'emergency-contacts', 'financial-dependents', 'employee-documents','employee-archive'];
 
         // Check if there's a tab parameter in the URL when the page loads
         var urlParams = new URLSearchParams(window.location.search);
@@ -1762,6 +1931,14 @@ $employeeDocumentsInfo = (isset($data['employeeDocumentsInfo']) && $data['employ
                 $(".docNameOther").show(1000)
             } else {
                 $(".docNameOther").hide(1000)
+
+            }
+        })
+        $('#docTypeArchive').on('change', function() {
+            if (this.value == 16) {
+                $(".docNameOtherArchive").show(1000)
+            } else {
+                $(".docNameOtherArchive").hide(1000)
 
             }
         })
@@ -2011,6 +2188,8 @@ $employeeDocumentsInfo = (isset($data['employeeDocumentsInfo']) && $data['employ
                 formData.append('docType', docType);
                 formData.append('idEmpUpload', idEmpUpload);
                 formData.append('nameDocumentOther', nameDocumentOther);
+                formData.append('tabType', 'EmployeeDocument');
+
 
                 console.log(myDropzone.files)
 
@@ -2037,6 +2216,96 @@ $employeeDocumentsInfo = (isset($data['employeeDocumentsInfo']) && $data['employ
                         if (obj.status) {
                             myDropzone.removeAllFiles(); // Clear files after successful upload
                             $("#docType").val("");
+                            swal(obj.message, {
+                                icon: "success",
+                                buttons: {
+                                    confirm: {
+                                        className: "btn btn-success",
+                                    },
+                                },
+                            }).then((willReload) => {
+                                if (willReload) {
+                                    location.reload();
+                                }
+                            });
+
+                        } else {
+                            swal('Error', obj.message, {
+                                icon: "error",
+                                buttons: {
+                                    confirm: {
+                                        className: "btn btn-danger",
+                                    },
+                                },
+                            });
+                        }
+
+                    }
+                })
+            }
+        });
+
+        $("#formUploadArchive").validate({
+            rules: {
+                docTypeArchive: {
+                    required: true,
+                },
+                commentsArchives: {
+                    required: false,
+                    maxlength: 25,
+                }
+            },
+            messages: {
+                docType: {
+                    required: "Please select a document type."
+                }
+            },
+            submitHandler: function(form) {
+                // This function is called when the form is valid
+                var docType = $('#docTypeArchive').val();
+                var idEmpUpload = $('#idEmpUploadArchive').val();
+                var nameDocumentOther = $('#nameDocumentOtherArchive').val();
+                var commentsArchives = $('#commentsArchives').val();
+                var apidReferencia = $('#apidReferencia').val();
+                var myDropzoneArchive = Dropzone.forElement("#fileDropzoneArchive");
+
+                if (myDropzoneArchive.files.length === 0) {
+                    $(".msg-dropzone-archive").html("This field is required");
+                    return;
+                }
+                
+                // Create a FormData object
+                var formData = new FormData();
+                formData.append('docType', docType);
+                formData.append('idEmpUpload', idEmpUpload);
+                formData.append('nameDocumentOther', nameDocumentOther);
+                formData.append('commentsArchives', commentsArchives);
+                formData.append('apidReferencia', apidReferencia);
+                formData.append('tabType', 'EmployeeArchive');
+
+                // Add all files from Dropzone
+                myDropzoneArchive.files.forEach(function(file) {
+                    formData.append('files[]', file);
+                });
+
+                console.log(formData)
+                // SEND
+                $.ajax({
+                    url: '<?php echo URLROOT; ?>/EmployeesDocuments/uploadDocument',
+                    method: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    beforeSend: function() {
+                        //wait
+                    },
+                    success: function(data) {
+                        console.log(data)
+                        var obj = JSON.parse(data);
+
+                        if (obj.status) {
+                            myDropzoneArchive.removeAllFiles(); // Clear files after successful upload
+                            $("#docTypeArchive").val("");
                             swal(obj.message, {
                                 icon: "success",
                                 buttons: {
@@ -2684,8 +2953,10 @@ $employeeDocumentsInfo = (isset($data['employeeDocumentsInfo']) && $data['employ
     function removeDocument(employeeDocumentId) {
         let div = document.getElementById("delete_" + employeeDocumentId + "_document");
         let fullname = div.dataset.documentname;
+        let tabTypeDoc = div.dataset.table;
         let namedirdocument = div.dataset.namedirdocument;
         var text = "" + fullname + " file  will be delete.";
+
 
         swal({
             title: "Are you sure?",
@@ -2710,8 +2981,11 @@ $employeeDocumentsInfo = (isset($data['employeeDocumentsInfo']) && $data['employ
 
                 var param = {
                     'employeeDocumentId': employeeDocumentId,
-                    'nameDir': namedirdocument
+                    'nameDir': namedirdocument,
+                    'tabType': tabTypeDoc,
                 };
+
+                // console.log(param)
 
                 $.ajax({
                     url: '<?php echo URLROOT; ?>/EmployeesDocuments/removeDocument',

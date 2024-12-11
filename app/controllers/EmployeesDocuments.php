@@ -30,6 +30,7 @@ class EmployeesDocuments extends Controller
 
                     $employeeDocumentId = $_POST['employeeDocumentId'];
                     $nameDir = $_POST['nameDir'];
+                    $tabType = $_POST['tabType'];
 
                     $filePath = $_SERVER['DOCUMENT_ROOT'] . "/app/public/documents/{$nameDir}";
 
@@ -41,16 +42,25 @@ class EmployeesDocuments extends Controller
                         if (unlink($filePath)) {
 
                             $dataUpdate = [
-                                'employeeDocumentId' => $employeeDocumentId,
                                 'status' => 0,
                             ];
-                            $this->employeeDocumentModel->updateEmployeeDocument($dataUpdate);
 
-                            // Remove the element with the key 'employeeDocumentId'
-                            unset($dataUpdate['employeeDocumentId']);
+                            if ($tabType == 'EmployeeArchive') {
+                                $pageTab = 'Emp. Archive';
+                                $dataUpdate['employeeArchiveId'] =  $employeeDocumentId;
+                                $this->employeeDocumentModel->updateEmployeeArchive($dataUpdate);
+                                unset($dataUpdate['employeeArchiveId']); // Remove the element with the key 'employeeDocumentId'
+
+                            } else {
+                                $pageTab = 'Emp. Document';
+                                $dataUpdate['employeeDocumentId'] =  $employeeDocumentId;
+                                $this->employeeDocumentModel->updateEmployeeDocument($dataUpdate);
+                                unset($dataUpdate['employeeDocumentId']); // Remove the element with the key 'employeeDocumentId'
+                            }
+
 
                             // save log
-                            $dataLog = ['userId' => $_SESSION['userId'], 'registerId' => $employeeDocumentId, 'action' => 'Delete', 'page' => 'Emp. Document', 'fields' => json_encode($dataUpdate)];
+                            $dataLog = ['userId' => $_SESSION['userId'], 'registerId' => $employeeDocumentId, 'action' => 'Delete', 'page' => $pageTab, 'fields' => json_encode($dataUpdate)];
                             $this->activityLogModel->saveActivityLog($dataLog);
 
                             $re['status'] = true;
@@ -59,7 +69,7 @@ class EmployeesDocuments extends Controller
                             $re['message'] = "Error deleting the file.";
                         }
                     } else {
-                        $re['message'] = "File does not exist.";
+                        $re['message'] = "File does not exist." . $filePath;
                     }
                 } catch (Exception $e) {
                     $re['status'] = false;
@@ -88,7 +98,8 @@ class EmployeesDocuments extends Controller
                     $dataPost = [
                         'employeeId' => (isset($_POST['idEmpUpload']) && $_POST['idEmpUpload'] != null) ? base64_decode($_POST['idEmpUpload']) : null,
                         'docType' => (isset($_POST['docType']) && $_POST['docType'] != null) ? $_POST['docType'] : null,
-                        'fileData' => (isset($_FILES['files']) && $_FILES['files'] != null) ? $_FILES['files'] : null
+                        'fileData' => (isset($_FILES['files']) && $_FILES['files'] != null) ? $_FILES['files'] : null,
+                        'tabType' => (isset($_POST['tabType']) && $_POST['tabType'] != null) ? $_POST['tabType'] : null,
                     ];
 
                     // Create name file
@@ -102,7 +113,7 @@ class EmployeesDocuments extends Controller
                         $sizeDocument = $dataPost['fileData']['size'][0];
                         $tmp_nameDocument = $dataPost['fileData']['tmp_name'][0];
 
-                        if ($dataPost['docType'] == 9) {
+                        if ($dataPost['docType'] == 9 || $dataPost['docType'] == 16) {
                             $nameDocType = $_POST['nameDocumentOther'];
                         } else {
                             $nameDocType = $infoDocType['name'];
@@ -136,10 +147,19 @@ class EmployeesDocuments extends Controller
                                         'document' => $nameFinally
                                     ];
 
-                                    // save in database
-                                    $lastInsertId = $this->employeeDocumentModel->saveEmployeeDocument($datasave);
+                                    $tabType = $dataPost['tabType'];
 
-                                    $dataLog = ['userId' => $_SESSION['userId'], 'registerId' => $lastInsertId, 'action' => 'Create', 'page' => 'Emp. Document', 'fields' => json_encode($datasave)];
+                                    if ($tabType == 'EmployeeArchive') {
+                                        $datasave['comment'] = $_POST['commentsArchives'];
+                                        $datasave['apDetailsId'] = $_POST['apidReferencia'];
+                                        $pageTab = 'Emp. Archive';
+                                        $lastInsertId = $this->employeeDocumentModel->saveEmployeeArchive($datasave); // save in database - employee_archives
+                                    } else {
+                                        $pageTab = 'Emp. Document';
+                                        $lastInsertId = $this->employeeDocumentModel->saveEmployeeDocument($datasave); // save in database - employee_documents
+                                    }
+
+                                    $dataLog = ['userId' => $_SESSION['userId'], 'registerId' => $lastInsertId, 'action' => 'Create', 'page' => $pageTab, 'fields' => json_encode($datasave)];
                                     $this->activityLogModel->saveActivityLog($dataLog);
 
 
