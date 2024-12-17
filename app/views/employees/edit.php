@@ -1244,6 +1244,7 @@ $employeeArchivesInfo = (isset($data['employeeArchivesInfo']) && $data['employee
                                                                 <th scope="col">#</th>
                                                                 <th scope="col">Name</th>
                                                                 <th style="width: 30%;" scope="col">Type</th>
+                                                                <th style="width: 30%;" scope="col">Level Referencial</th>
                                                                 <th style="width: 30%;" scope="col">Comment</th>
                                                                 <th scope="col">Managment</th>
                                                             </tr>
@@ -1257,6 +1258,7 @@ $employeeArchivesInfo = (isset($data['employeeArchivesInfo']) && $data['employee
                                                                     echo '<th scope="row">' . $n++ . '</th>';
                                                                     echo '<td> <a href="' . URLROOT . '/public/documents/' . $employeeArchivesInfo[$i]['folderName'] . '/' . $employeeArchivesInfo[$i]['document'] . '" target="_BLANK" >' . $employeeArchivesInfo[$i]['document'] . '</a></td>';
                                                                     echo '<td> ' . $employeeArchivesInfo[$i]['name'] . '</td>';
+                                                                    echo '<td> ' . $employeeArchivesInfo[$i]['apDetailsId'] . '</td>';
                                                                     echo '<td> ' . $employeeArchivesInfo[$i]['comment'] . '</td>';
 
                                                                     echo '<td>';
