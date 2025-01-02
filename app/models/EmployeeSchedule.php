@@ -81,6 +81,7 @@ class EmployeeSchedule
                         INNER JOIN areas ar ON ar.areaId = em.areaId
                         WHERE 
                             es.status = 1 
+                            AND em.billTo = 1
                             AND es.$dayToday != '-OFF-' 
                             AND es.createdAt = (
                                 SELECT MAX(es2.createdAt)

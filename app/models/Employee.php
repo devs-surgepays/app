@@ -431,7 +431,7 @@ class Employee
         FROM
             hr_surgepays.employees
         WHERE
-            status=1 and MONTH(dob) = MONTH(CURDATE()) order by DAY(dob) asc;");
+            status=1 and billTo=1 and MONTH(dob) = MONTH(CURDATE()) order by DAY(dob) asc;");
         $re = $this->db->resultSetAssoc();
         return $re;
     }
