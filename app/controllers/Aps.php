@@ -399,7 +399,7 @@ class Aps extends Controller
         $data = [
             'action'=>trim($_POST['action']),
             'arrayCampos'=>$_POST['search'],
-            'order_by'=>'a.apDetailsId asc',
+            'order_by'=>'a.apDetailsId desc',
             'length'=>$_POST['length'],
             'page'=>$page,
             'per_page'=>'',
@@ -417,7 +417,7 @@ class Aps extends Controller
         $data = [
             'action'=>'',
             'arrayCampos'=>'',
-            'order_by'=>'a.apDetailsId asc',
+            'order_by'=>'a.apDetailsId desc',
             'length'=>10,
             'page'=>1,
             'per_page'=>'',

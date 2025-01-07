@@ -31,10 +31,12 @@ class Ap {
     }
 
     public function searchEmployeeByBadge($badge){
-        $this->db->query("SELECT e.employeeId,CONCAT(COALESCE(e.firstName, ''), ' ', COALESCE(e.secondName, ''), ' ', COALESCE(e.firstLastName, ''), ' ', COALESCE(e.secondLastName, '')) AS fullname,p.positionName,d.name as departmentName,p.positionId,d.departmentId FROM hr_surgepays.employees e
-            JOIN hr_surgepays.positions p ON p.positionId = e.positionId
-            JOIN hr_surgepays.departments d ON d.departmentId = e.departmentId
-            WHERE e.badge =:badge");
+        $showEmWhere = getPLEmployeeTable(false);
+        $this->db->query("SELECT em.employeeId,CONCAT(COALESCE(em.firstName, ''), ' ', COALESCE(em.secondName, ''), ' ', COALESCE(em.firstLastName, ''), ' ', COALESCE(em.secondLastName, '')) AS fullname,p.positionName,d.name as departmentName,p.positionId,d.departmentId 
+        FROM hr_surgepays.employees em
+            JOIN hr_surgepays.positions p ON p.positionId = em.positionId
+            JOIN hr_surgepays.departments d ON d.departmentId = em.departmentId
+            WHERE em.badge =:badge $showEmWhere");
         $this->db->bind(":badge",$badge);
         $row = $this->db->single();
         //print_r($row);
@@ -94,19 +96,20 @@ class Ap {
     }
 
     public function countRegisters($search){
-
+        $showEmWhere = getPLEmployeeTable(false);
         if ($search!="") {
             $this->db->query("SELECT count(*) as total 
                                 FROM hr_surgepays.ap_details a 
-                                JOIN hr_surgepays.employees e ON e.badge=a.badge 
+                                JOIN hr_surgepays.employees em ON em.badge=a.badge 
                                 JOIN hr_surgepays.users u ON u.userId=a.createdBy 
-                                JOIN hr_surgepays.ap_types t ON t.apTypeId = a.apTypeId WHERE $search order by a.apDetailsId asc");
+                                JOIN hr_surgepays.ap_types t ON t.apTypeId = a.apTypeId WHERE $search $showEmWhere order by a.apDetailsId asc");
         }else{
+            $showEmWhere = getPLEmployeeTable(true);
             $this->db->query("SELECT count(*) as total
                                 FROM hr_surgepays.ap_details a
-                                JOIN hr_surgepays.employees e ON e.badge=a.badge
+                                JOIN hr_surgepays.employees em ON em.badge=a.badge
                                 JOIN hr_surgepays.users u ON u.userId=a.createdBy
-                                JOIN hr_surgepays.ap_types t ON t.apTypeId = a.apTypeId order by a.apDetailsId  asc");
+                                JOIN hr_surgepays.ap_types t ON t.apTypeId = a.apTypeId $showEmWhere order by a.apDetailsId  asc");
         }
 
 
@@ -118,14 +121,15 @@ class Ap {
     }
 
     public function getData($offset,$per_page,$search,$orderby){
+        $showEmWhere = getPLEmployeeTable(false);
 		$date_now = date('Y-m-d').'%';
 		//echo "select firstname,lastname,email_address,email_status,CAST(email_open_datetime AS DATE) as date_opened,delivered,received,unsubscribe from mailCampaigns.contacts  ORDER BY $orderby limit $offset,$per_page;";
-		//echo "SELECT a.apDetailsId,concat(e.firstName,' ',e.firstLastName) as fullName,a.badge,date(a.createdAt) as createdAt,u.username,t.name,a.status FROM hr_surgepays.ap_details a JOIN hr_surgepays.employees e ON e.badge=a.badge JOIN hr_surgepays.users u ON u.userId=a.createdBy JOIN hr_surgepays.ap_types t ON t.apTypeId = a.apTypeId WHERE ".$search."   ORDER BY ".$orderby;
+		//echo "SELECT a.apDetailsId,concat(em.firstName,' ',em.firstLastName) as fullName,a.badge,date(a.createdAt) as createdAt,u.username,t.name,a.status FROM hr_surgepays.ap_details a JOIN hr_surgepays.employees em ON em.badge=a.badge JOIN hr_surgepays.users u ON u.userId=a.createdBy JOIN hr_surgepays.ap_types t ON t.apTypeId = a.apTypeId WHERE ".$search." ".$showEmWhere."   ORDER BY ".$orderby;
 
 				if ($search!="") {
 					$this->db->query("SELECT 
     a.apDetailsId,
-    CONCAT(e.firstName, ' ', e.firstLastName) AS fullName,
+    CONCAT(em.firstName, ' ', em.firstLastName) AS fullName,
     a.badge,
     DATE(a.createdAt) AS createdAt,
     u.username,
@@ -138,16 +142,17 @@ class Ap {
 FROM
     hr_surgepays.ap_details a
         JOIN
-    hr_surgepays.employees e ON e.badge = a.badge
+    hr_surgepays.employees em ON em.badge = a.badge
         JOIN
     hr_surgepays.users u ON u.userId = a.createdBy
         JOIN
-    hr_surgepays.ap_types t ON t.apTypeId = a.apTypeId WHERE $search   ORDER BY $orderby  limit $offset,$per_page;");
+    hr_surgepays.ap_types t ON t.apTypeId = a.apTypeId WHERE $search $showEmWhere ORDER BY $orderby  limit $offset,$per_page;");
 					
 				}else{
+                    $showEmWhere = getPLEmployeeTable(true);
 					$this->db->query("SELECT 
     a.apDetailsId,
-    CONCAT(e.firstName, ' ', e.firstLastName) AS fullName,
+    CONCAT(em.firstName, ' ', em.firstLastName) AS fullName,
     a.badge,
     DATE(a.createdAt) AS createdAt,
     u.username,
@@ -160,11 +165,11 @@ FROM
 FROM
     hr_surgepays.ap_details a
         JOIN
-    hr_surgepays.employees e ON e.badge = a.badge
+    hr_surgepays.employees em ON em.badge = a.badge
         JOIN
     hr_surgepays.users u ON u.userId = a.createdBy
         JOIN
-    hr_surgepays.ap_types t ON t.apTypeId = a.apTypeId ORDER BY $orderby limit $offset,$per_page;");
+    hr_surgepays.ap_types t ON t.apTypeId = a.apTypeId $showEmWhere ORDER BY $orderby limit $offset,$per_page;");
 					
 				}				
 			

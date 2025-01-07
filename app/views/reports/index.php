@@ -99,50 +99,95 @@
 
         $("#download_employees").click(() => {
 
-            if ($("#employee_status").val() == "" || $("#employee_status").val() == null) {
+if ($("#employee_status").val() == "" || $("#employee_status").val() == null) {
 
-                $("#status_error").attr("hidden", false);
-                return;
+    $("#status_error").attr("hidden", false);
+    return;
 
-            } else {
+} else {
 
-                try {
+    try {
 
-                    $("#status_error").attr("hidden", true);
-                    let frm = new FormData();
-                    frm.append("employee_status", $("#employee_status").val());
-                    frm.append("employee_billTo", $("#employee_billTo").val());
-                    fetch('<?php echo URLROOT; ?>/reports/exportEmployeesByStatus', {
-                            method: "POST",
-                            body: frm
-                        })
-                        .then((response) => response.json())
-                        .then((data) => {
-                            console.log($("#employee_status").val())
-                            console.log(data);
-                            const now = new Date();
-                            const year = now.getFullYear();
-                            const month = String(now.getMonth() + 1).padStart(2, '0');
-                            const day = String(now.getDate()).padStart(2, '0');
-                            const dateStr = `${year}-${month}-${day}`;
+        $("#status_error").attr("hidden", true);
+        let frm = new FormData();
+        frm.append("employee_status", $("#employee_status").val());
+        frm.append("employee_billTo", $("#employee_billTo").val());
+        fetch('<?php echo URLROOT; ?>/reports/exportEmployeesByStatus', {
+                method: "POST",
+                body: frm
+            })
+            .then((response) => response.json())
+            .then((data) => {
 
-                            let processedData = data.map(item => ({
-                                Badge: item.badge,
-                                firstName: item.firstName
-                            }));
+                console.log($("#employee_status").val())
+                console.log(data);
+                const now = new Date();
+                const year = now.getFullYear();
+                const month = String(now.getMonth() + 1).padStart(2, '0');
+                const day = String(now.getDate()).padStart(2, '0');
+                const dateStr = `${year}-${month}-${day}`;
 
-                            let ws = XLSX.utils.json_to_sheet(data);
-                            let wb = XLSX.utils.book_new();
-                            XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-                            XLSX.writeFile(wb, 'employees_' + dateStr + '.xlsx');
-                        });
+                let targetHeaders = ["BADGE", "EDAD", "FECHA DE INGRESO SURGEPAYS", "FECHA DE CONTRATACION", "FECHA DE NACIMIENTO", "FECHA DE EXPEDICION DUI", "FECHA DE EXPIRACION DUI", "SALARIO"]; // Add any headers you want to format here, including the date column
 
-                } catch (error) {
-                    console.error('Error fetching or exporting data:', error);
-                }
+                // Create a worksheet from the data
+                let ws = XLSX.utils.json_to_sheet(data);
 
-            }
-        });
+                // Find the header row and get column index dynamically based on the header name
+                let headers = ws['!rows'] ? ws['!rows'][0] : Object.keys(data[0]); // Get the headers (first row)
+
+                // Loop through the target headers
+                targetHeaders.forEach(targetHeader => {
+                    // Find the column index of the header
+                    let targetColumnIndex = -1;
+                    let columnLetter = '';
+
+                    // Loop over headers to find the index
+                    for (let i = 0; i < headers.length; i++) {
+                        if (headers[i] === targetHeader) {
+                            targetColumnIndex = i;
+                            columnLetter = XLSX.utils.encode_col(targetColumnIndex); // Get the column letter (e.g., "A", "B")
+                            break;
+                        }
+                    }
+
+                    // If the target column is found, apply formatting
+                    if (targetColumnIndex !== -1) {
+                        // Apply specific formatting based on column name
+                        for (let row = 0; row < data.length; row++) {
+                            let cellAddress = `${columnLetter}${row + 2}`; // Adjust row index to account for header row
+                            let cell = ws[cellAddress];
+
+                            if (cell) {
+                                // if (targetHeader === "FECHA DE INGRESO SURGEPAYS" || targetHeader === "FECHA DE CONTRATACION" || targetHeader === "FECHA DE NACIMIENTO" || targetHeader === "FECHA DE EXPEDICION DUI" || targetHeader === "FECHA DE EXPIRACION DUI") {
+                                //     // If it's the date column, apply date formatting
+                                //     cell.t = 'd'; // Set the type to 'd' (date)
+                                //     cell.z = 'dd/mm/yyyy'; // Example date format: yyyy-mm-dd
+                                // } else 
+                                if (targetHeader === "SALARIO") {
+                                    // Apply formatting for other columns like BADGE or EDAD
+                                    cell.t = 'n'; // Set the type to 'n' (number)
+                                    cell.z = '_($* #,##0.00_);_($* (#,##0.00);_($* "-"??_);_(@_)';  // Apply number format: plain number with no commas or decimals
+                                } else if (targetHeader === "BADGE" || targetHeader === "EDAD") {
+                                    // Apply formatting for other columns like BADGE or EDAD
+                                    cell.t = 'n'; // Set the type to 'n' (number)
+                                    cell.z = '0';  // Apply number format: plain number with no commas or decimals
+                                }
+                            }
+                        }
+                    }
+                });
+
+                let wb = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+                XLSX.writeFile(wb, 'employees_' + dateStr + '.xlsx');
+            });
+
+    } catch (error) {
+        console.error('Error fetching or exporting data:', error);
+    }
+
+}
+});
 
         $("#download_aps").click(() => {
             if ($("#ap_type").val() == "" || $("#ap_type").val() == null || $("#ap_approval_option").val() == "" || $("#ap_approval_option").val() == null || $("#date_range").val() == "" || $("#date_range").val() == null) {

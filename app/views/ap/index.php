@@ -22,6 +22,42 @@
             </div>
           </div>
           <div class="card-body">
+          <div class="modal fade" id="viewModal" tabindex="-1" role="dialog" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header border-0">
+                    <h5 class="modal-title">
+                      <span class="fw-mediumbold"> View</span>
+                      <span class="fw-light"> Leave </span>
+                      </h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <form action="#" id="viewForm" method="POST" enctype>
+                  <div class="modal-body">
+                  
+                  <p><b>Leave #:</b> <span id="viewId"></span></p>
+                  <p><b>Badge:</b> <span id="viewBadge"></span></p>
+                  <p><b>Leave Type:</b> <span id="viewLeaveType"></span></p> 
+                  <p><b>Motivo:</b> <span id="viewMotivo"></span></p>
+                  <div id="viewArea"></div>
+                  <p><b>Comments:</b><br><span id="viewComments"></span></p>
+                  </div>
+                  <div class="modal-footer border-0">
+                    <!-- <button type="submit" id="saveApApproval" class="btn btn-primary">
+                      Save
+                    </button> -->
+                    <button type="button" class="btn btn-danger closeModal" data-dismiss="modal">
+                      Close
+                    </button>
+                  </div>
+                  <input type="hidden" id="leave_id" name="leave_id">
+                  
+                  </form>
+                </div>
+              </div>
+            </div>
           
             <div class="modal fade" id="approveModal" tabindex="-1" role="dialog" aria-hidden="true">
               <div class="modal-dialog" role="document">
@@ -757,28 +793,74 @@ $("#createModal").click(function(){
 function resetform(){
   $(".grid-filter").val("");
   $('#searchCreatedAt').daterangepicker({
-      opens: 'left'
+      opens: 'left',
+      autoUpdateInput: false,
+      locale: {
+          cancelLabel: 'Clear'
+      }
     // }, function(start, end, label) {
     //   console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
     // });
   });
+
+  $('#searchCreatedAt').on('apply.daterangepicker', function(ev, picker) {
+      $(this).val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
+      var nowhere = camposValue();
+      var example_length = 10;
+      var camposAscDesc = "";
+		  readData(1,nowhere,example_length,camposAscDesc,'');
+      console.log("reset apply")
+  });
+
+  $('#searchCreatedAt').on('cancel.daterangepicker', function(ev, picker) {
+      $(this).val('');
+      console.log("reset cancel")
+  });
+
+  var nowhere = camposValue();
+    var example_length = 10;
+    var camposAscDesc = "";
+	  //var	firstload='YES';
+		readData(1,nowhere,example_length,camposAscDesc,'');
+
 }
 
-//this action get all changed fields 
-$(".grid-filter").on("change",function(){
-  $('#add-row').find('input, select,textarea').each(function() {
-            initialState[$(this).attr('name')] = $(this).val();
-        });
-        console.table(initialState)
-})
+// //this action get all changed fields 
+// $(".grid-filter").on("change",function(){
+//   $('#add-row').find('input, select,textarea').each(function() {
+//             initialState[$(this).attr('name')] = $(this).val();
+//         });
+//         console.table(initialState)
+// })
 
   $(function() {
     $('#searchCreatedAt').daterangepicker({
-      opens: 'left'
+      opens: 'left',
+      autoUpdateInput: false,
+      locale: {
+          cancelLabel: 'Clear'
+      }
     // }, function(start, end, label) {
     //   console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
     // });
   });
+
+  $('#searchCreatedAt').on('apply.daterangepicker', function(ev, picker) {
+      $(this).val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
+      var nowhere = camposValue();
+    var example_length = 10;
+    var camposAscDesc = "";
+	  //var	firstload='YES';
+		readData(1,nowhere,example_length,camposAscDesc,'');
+    console.log("apply datepicker")
+  });
+
+  $('#searchCreatedAt').on('cancel.daterangepicker', function(ev, picker) {
+      $(this).val('');
+      console.log("cancel datepicker")
+  });
+  //$('#searchCreatedAt').trigger("change")
+  
 });
 
   //$('.money2').mask("#,##0.00", {reverse: true});
@@ -1878,15 +1960,16 @@ function readData(page,where='',example_length,camposAscDesc,firstload=''){
         }
 				
 				cell10.innerHTML = `<div class="form-button-action">
-                        <button type="button" title="" class="btn btn-link btn-lg btn-success aproveModal" data-leaveId="${v.apDetailsId}" data-bs-toggle="modal" data-bs-target="#approveModal">
+                        <button type="button" title="" class="btn btn-link btn-success aproveModal" data-leaveId="${v.apDetailsId}" data-bs-toggle="modal" data-bs-target="#approveModal">
                         <i class="fas fa-check-double"></i>
                         </button>
-                        <button type="button" class="btn btn-link btn-lg ${btnwarning} updateModal" data-bs-toggle="modal" data-bs-target="#addRowModal" data-leaveId="${v.apDetailsId}" ${enable}>
+                        <button type="button" class="btn btn-link ${btnwarning} updateModal" data-bs-toggle="modal" data-bs-target="#addRowModal" data-leaveId="${v.apDetailsId}" ${enable}>
                           <i class="fa fa-edit"></i>
                         </button>
                         <button type="button" class="btn btn-link" ${printButton}>
                          <i class="fa fa-print"></i>
                         </button>
+                        
                       </div>`;
 				/*cell8.innerHTML = v.address2;
 				cell7.innerHTML = v.city;
@@ -1925,10 +2008,10 @@ function camposValue(){
 		var name = $( "#searchFullname" ).val();
 		var badge = $( "#searchBadge" ).val();
 		var bydate = $( "#searchCreatedAt" ).val();
-    var spltDate = bydate.split("-")
-  var start,end;
-   start = spltDate[0].trim()
-   end = spltDate[1].trim()
+    //var spltDate = bydate.split("-")
+  //var start,end;
+  // start = spltDate[0].trim()
+  // end = spltDate[1].trim()
 	var user = $( "#searchCreatedBy" ).val();
 	var aptype = $( "#searchLeaveType" ).val();
 	var status_m = $( "#searchByM" ).val();
@@ -2030,10 +2113,196 @@ $("#saveApApproval").on("click",function(e){
 		}
 })
 
+$(document).on('click', '.viewModal', function(){
+  var leaveId = $(this).data("leaveid");
+  //$("#actionspan").text("View");
+  //$("#addAPButton").hide()
+  //$("#Action").val("View");
+  $("#viewId").html(leaveId);
+  console.log(leaveId);
+  $.ajax({
+    url:"<?Php echo URLROOT; ?>/aps/getleave/"+leaveId,
+    type:"GET",
+    success:function(data){
+      console.log(data)
+      var myObj = JSON.parse(data)
+      $("#viewBadge").html(myObj.badge);
+      //$('#addbadge').trigger('keyup');
+      //$("#addLeaveType").val(myObj.apTypeId);
+      var apType = myObj.apTypeId;
+      
+      const parser = new DOMParser();
+      const htmlString = myObj.comment;
+      const decodedText = parser.parseFromString(htmlString, 'text/html').body.textContent;
+      $("#viewComments").html(decodedText)
+      $("#viewMotivo").html(myObj.reason1)
+      switch(apType){
+        case 1:
+          $("#viewLeaveType").html("Permiso Con Gose")
+          
+          if(myObj.reason2=="Horas"){
+            htmlArea = `<p><b>Tipo:</b> ${myObj.reason2}</p>`
+            htmlArea += `<p><b>Dia:</b> ${myObj.apDate1}</p>`
+            htmlArea += `<p><b>Hora Inicio:</b> ${myObj.startTime}</p>`
+            htmlArea += `<p><b>Hora Fin:</b> ${myObj.endTime}</p>`
+          }else{
+            htmlArea = `<p><b>Tipo:</b> ${myObj.reason2}</p>`
+            htmlArea += `<p><b>Dia Inicio:</b> ${myObj.apDate1}</p>`
+            htmlArea += `<p><b>Dia Fin:</b> ${myObj.apDate2}</p>`
+          }
+          
+          break;
+        case 2: 
+          hideAllAndShow("permisoConSinGoce") 
+          setReasons('motivo_permiso',1,myObj.reason1);
+          //console.log(myObj.reason1);
+          $("#dia1").val(myObj.apDate1);
+          var reason2 = myObj.reason2;
+          if(reason2=="Horas"){
+            $("#tiempopermiso").val("Horas");
+            $('#tiempopermiso').trigger('change');
+            $("#hora_inicio").val(myObj.startTime);
+            $("#hora_final").val(myObj.endTime)
+          }else{
+            $("#tiempopermiso").val("Dias");
+            $('#tiempopermiso').trigger('change');
+            $("#dia2").val(myObj.apDate2);
+          }
+          break;
+        case 3:
+          hideAllAndShow("vacaciones");
+          $("#inicioVacaciones").val(myObj.apDate1);
+          $("#finVacaciones").val(myObj.apDate2);
+          $("#fechaPago").val(myObj.apDate3);
+          calculateDays();
+          break;
+        case 4:
+          hideAllAndShow("traslados")
+          setDespartment(myObj.newAccount);
+          setPosition('newPosition',myObj.newPosition);
+          $("#inicioPrueba").val(myObj.apDate1);
+          $("#finPrueba").val(myObj.apDate2);
+          break;
+        case 5:
+          hideAllAndShow("incapacidad");
+          $("#inicioIncapacidad").val(myObj.apDate1);
+          $("#finIncapacidad").val(myObj.apDate2);
+          switch(myObj.reason1){
+            case "ISSS":
+              console.log("ISSS")
+              break;
+            case "ASESUISA":
+              console.log("ASESUISA");
+              break;
+            case "Particular":
+              console.log("Particulares");
+              break;
+          }
+          if(myObj.reason1=="ISSS"){
+            $("#isss").prop('checked', true);
+          }else if(myObj.reason1=="ASESUISA"){
+            $("#asesuisa").prop('checked', true);
+          }else{
+            $("#particular").prop('checked', true);
+          }
+
+          if(myObj.reason2=="Prorroga"){
+            $("#prorroga").prop('checked', true);
+            $("#prorroga").val("Yes")
+          }
+          break;
+        case 6:
+          hideAllAndShow("sanciones");
+          switch(myObj.reason1){
+            case "Verbal":
+              $("#sancionVerbal").prop('checked', true);
+              $("#diasSuspension").hide()
+              break;
+            case "Escrita":
+              $("#sancionEscrita").prop('checked', true);
+              $("#diasSuspension").hide()
+              break;
+            case "Suspension":
+              $("#suspension").prop('checked', true);
+              //$('#diasSuspension').trigger('change');
+              $("#diasSuspension").show()
+              $("#inicioSuspension").val(myObj.apDate1);
+              $("#finSuspension").val(myObj.apDate2);
+              break;
+          }
+          break;
+        case 7:
+          hideAllAndShow("cambiohorario")
+          setReasons('motivo_horario',3,myObj.reason1);
+          $("#inicioHorario").val(myObj.apDate1);
+          $("#finHorario").val(myObj.apDate2);
+          getLastSchedule(myObj.scheduleId,"Edit");
+          break;
+        case 8:
+          hideAllAndShow("cambiodialibre");
+          setReasons('motivo_cambio',2,myObj.reason1);
+          $("#fechaSolicitud").val(myObj.apDate1);
+          $("#diaAsignado").val(myObj.apDate2);
+          $("#diaSolicitado").val(myObj.apDate3);
+          break;
+        case 9:
+          hideAllAndShow("ausencia");
+          $("#inicioAusencia").val(myObj.apDate1);
+          $("#finAusencia").val(myObj.apDate2);
+          break;
+        case 10:
+          hideAllAndShow("horasExtra");
+          $("#fechaOt").val(myObj.apDate1);
+          $("#inicioOt").val(myObj.startTime);
+          $("#finOt").val(myObj.endTime);
+          getTotalOT();
+          break;
+        case 11:
+          hideAllAndShow("retiros");
+          $("#tipoRetiro").val(myObj.withdrawalType);
+          $("#fechaRetiro").val(myObj.apDate1);
+          showAttritionReasons('reasonType',myObj.attritionsId1);
+          
+          if(myObj.attritionsId2){
+            showAttritionReasons('reasonsDetail',myObj.attritionsId1,myObj.attritionsId2);
+          }
+          break;
+        case 12:
+          hideAllAndShow("ajusteSalarial");
+          console.log(myObj.newSalary)
+          $("#monto").val(myObj.newSalary);
+          $("#diaEfectivo").val(myObj.apDate1);
+          setPosition('newPosition2',myObj.newPosition);
+          break;
+
+      }
+      $("#viewArea").html(htmlArea)
+
+    }
+  })
+  const form = document.getElementById('createApForm');
+  $("#addLeaveType").attr("disabled",true)
+  if (form) {
+        const elements = form.elements;
+        for (let i = 0; i < elements.length; i++) {
+            const element = elements[i];
+            if (element.tagName.toLowerCase() === 'button') {
+                continue; // Skip buttons
+            }
+
+            if (element.tagName.toLowerCase() === 'input' || element.tagName.toLowerCase() === 'textarea' || element.tagName.toLowerCase() === 'select') {
+                element.disabled = true; // Set input and textarea to readonly
+            } else if (element.tagName.toLowerCase() === 'select') {
+                element.disabled = true; // Disable select elements
+            }
+        }
+    }
+})
+
 $(document).on('click', '.updateModal', function(){
   var leaveId = $(this).data("leaveid");
   $("#actionspan").text("Update");
-  $("#addAPButton").text("Edit")
+  $("#addAPButton").text("Edit").show();
   $("#Action").val("Update");
   $("#apId").val(leaveId);
   console.log(leaveId)
