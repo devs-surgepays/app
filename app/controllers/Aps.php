@@ -1,6 +1,6 @@
 <?php
-//    error_reporting(E_ALL);
-//    ini_set("display_errors", 1);
+   error_reporting(E_ALL);
+   ini_set("display_errors", 1);
 class Aps extends Controller
 {
     public $apModel;
@@ -437,11 +437,11 @@ class Aps extends Controller
         //print_r($data['arrayCampos']);
         $count=0;
         $addWhere="";
-        $camposBase=array("fullName","e.badge","bydate","u.username","t.apTypeId","a.aprovedByM","a.aprovedByHR","a.aprovedByWf","a.aprovedBySup","a.printed");
-        $fieldSearch=array("e.firstName", "e.secondName", "e.thirdName", "e.firstLastName", "e.secondLastName", "e.thirdLastName");
+        $camposBase=array("fullName","em.badge","bydate","u.username","t.apTypeId","a.aprovedByM","a.aprovedByHR","a.aprovedByWf","a.aprovedBySup","a.printed");
+        $fieldSearch=array("em.firstName", "em.secondName", "em.thirdName", "em.firstLastName", "em.secondLastName", "em.thirdLastName");
         $fields = array(
             0=>array("name"=>"fullname","type"=>"multifield","values"=>$fieldSearch),
-            1=>array("name"=>"e.badge","type"=>"equal"),
+            1=>array("name"=>"em.badge","type"=>"equal"),
             2=>array("name"=>"bydate","type"=>"range"),
             3=>array("name"=>"u.username","type"=>"like"),
             4=>array("name"=>"t.apTypeId","type"=>"equal"),
@@ -452,7 +452,8 @@ class Aps extends Controller
         );
         if($data['arrayCampos']){
             for($index=0;$index<sizeof($data['arrayCampos']);$index++){
-                $count += ($data['arrayCampos'][$index]!='')?1:0;
+                //$count += ($data['arrayCampos'][$index]!='')?1:0;
+                $count += (isset($arrayFields[5]) && $arrayFields[5] !== '')?1:0;
                 
                     if(!empty($data['arrayCampos'][$index])){
                         if($fields[$index]['name']=="fullname"){//$index==0

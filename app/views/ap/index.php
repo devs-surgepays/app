@@ -719,33 +719,37 @@
                     <td>
                       <select id="searchByM" type="text" class="form-control grid-filter">
                         <option value="">Select...</option>
-                        <option value="0">Pending</option>
+                        <option value="00">Pending</option>
                         <option value="1">Approved</option>
-                        <option value="3">Rejected</option>
+                        <option value="2">Rejected</option>
+                        <option value="3">Cancelled</option>
                       </select>
                     </td>
                     <td>
                       <select id="searchByHR" type="text" class="form-control grid-filter">
                         <option value="">Select...</option>
-                        <option value="0">Pending</option>
+                        <option value="00">Pending</option>
                         <option value="1">Approved</option>
-                        <option value="3">Rejected</option>
+                        <option value="2">Rejected</option>
+                        <option value="3">Cancelled</option>
                       </select>
                     </td>
                     <td>
                       <select id="searchByWF" type="text" class="form-control grid-filter">
                         <option value="">Select...</option>
-                        <option value="0">Pending</option>
+                        <option value="00">Pending</option>
                         <option value="1">Approved</option>
-                        <option value="3">Rejected</option>
+                        <option value="2">Rejected</option>
+                        <option value="3">Cancelled</option>
                       </select>
                     </td>
                     <td>
                       <select id="searchBySup" type="text" class="form-control grid-filter">
                         <option value="">Select...</option>
-                        <option value="0">Pending</option>
+                        <option value="00">Pending</option>
                         <option value="1">Approved</option>
-                        <option value="3">Rejected</option>
+                        <option value="2">Rejected</option>
+                        <option value="3">Cancelled</option>
                       </select>
                     </td>
                     <td style="text-align:center;">
