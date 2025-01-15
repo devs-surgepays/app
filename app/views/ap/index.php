@@ -666,10 +666,26 @@
                             <label for="addComments">Comments</label>
                           </div>
                         </div>
-                        <div class="col-sm-12">
-                          <div class="form-floating form-floating-custom mb-3">
-                            <div id="aprovedByArea">
+                        <style>
+                          div#aprovedByArea>p{
+                            margin-bottom:0.2rem;
+                          },
+                          #aproval{
+                            color: #1572e8 ;
+                            font-size: 85%!important;
+                            transform: translate3d(0,-10px,0);
+                            top: 0;
+                            opacity: 1;
+                            padding: .375rem 0 .75rem;
 
+                          }
+                        </style>
+
+                        <div class="col-sm-12 mt-3">
+                          <div class="form-floating form-floating-custom mb-3">
+                          <span style="color: #1572e8 ;font-size: 85%!important;transform: translate3d(0,-10px,0);top: 0;opacity: 1;padding: .375rem 0 .75rem;">Aproval</span>
+                            <div id="aprovedByArea">
+                            <span class="badge badge-warning">Pending</span>
                             </div>
                           </div>
                         </div>
@@ -2386,7 +2402,7 @@
   
 
   $(document).on('click', '.updateModal', function() {
-    $("#aprovedByArea").html("")
+    //$("#aprovedByArea").html("")
     var leaveId = $(this).data("leaveid");
     $("#actionspan").text("Update");
     $("#addAPButton").text("Edit").show();
@@ -2569,13 +2585,13 @@
               texto = '<span class="badge badge-secondary">Cancelled</span> '+uname;
               break;
             default:
-              texto =""
+              texto ='<span class="badge badge-warning">Pending</span>'
           }
 
           return texto;
         }
         
-        var apbody="";
+        var apbody='';
         var aproval=""
           if(myObj.M){
               console.log(myObj.M)
