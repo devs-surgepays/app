@@ -305,6 +305,11 @@ class Aps extends Controller
         echo json_encode($row);
     }
 
+    public function getEmpName($userId){
+        $row = $this->apModel->getEmployeeName($userId);
+        echo json_encode($row);
+    }
+
     public function approveAP(){
         if($_SERVER['REQUEST_METHOD']=='POST'){
             $_POST= filter_input_array(INPUT_POST,FILTER_SANITIZE_FULL_SPECIAL_CHARS);
@@ -314,16 +319,20 @@ class Aps extends Controller
             ];
             //Getting permission level
             $permissionLevel = $_SESSION['permissionLevelId'];
-            if($permissionLevel&104){
+            if($permissionLevel&96){
+                //32+64
                 $data['aprovedByM']=$data['status'];
                 $data['byMUser']=$_SESSION['userId'];
             }else if($permissionLevel&16){
+                //16
                 $data['aprovedByHR']=$data['status'];
                 $data['byHRUser']=$_SESSION['userId'];
             }else if($permissionLevel&640){
+                //128+512
                 $data['aprovedByWf']=$data['status'];
                 $data['byWfUSer']=$_SESSION['userId'];
-            }else if($permissionLevel&4){
+            }else if($permissionLevel&8){
+                //8
                 $data['aprovedBySup']=$data['status'];
                 $data['bySupUser']=$_SESSION['userId'];
             } 

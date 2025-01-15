@@ -666,7 +666,13 @@
                             <label for="addComments">Comments</label>
                           </div>
                         </div>
+                        <div class="col-sm-12">
+                          <div class="form-floating form-floating-custom mb-3">
+                            <div id="aprovedByArea">
 
+                            </div>
+                          </div>
+                        </div>
                       </div>
                       <input type="hidden" id="addEmployeeId" name="addEmployeeId">
                       <input type="hidden" id="idApType" name="idApType">
@@ -697,7 +703,7 @@
                     <th>By M</th>
                     <th>By HR</th>
                     <th>By WF</th>
-                    <th>By Sup</th>
+                    <th>By SS</th>
                     <th style="width: 10%">Action</th>
                   </tr>
                   <tr>
@@ -792,6 +798,7 @@
   }
   //This button open createModal in order to create a new Leave
   $("#createModal").click(function() {
+    $("#aprovedByArea").html("")
     $("#Action").val("Insert");
     $("#actionspan").text("Create");
     $("#addAPButton").text("Create");
@@ -2020,6 +2027,7 @@
               iconButton = "fa fa-edit";
 
             }
+            <?php if($_SESSION['permissionLevelId']&760): ?>
 
             cell10.innerHTML = `<div class="form-button-action">
                         <button type="button" title="" class="btn btn-link btn-success aproveModal" data-leaveId="${v.apDetailsId}" data-bs-toggle="modal" data-bs-target="#approveModal">
@@ -2033,6 +2041,17 @@
                         </button>
                         
                       </div>`;
+            <?php else: ?>
+              cell10.innerHTML = `<div class="form-button-action">
+                        <button type="button" class="btn btn-link ${btnwarning} updateModal" data-bs-toggle="modal" data-bs-target="#addRowModal" data-leaveId="${v.apDetailsId}" ${enable}>
+                          <i class="${iconButton}"></i>
+                        </button>
+                        <button type="button" class="btn btn-link" ${printButton}>
+                         <i class="fa fa-print"></i>
+                        </button>
+                        
+                      </div>`;
+              <?php endif; ?>
             /*cell8.innerHTML = v.address2;
             cell7.innerHTML = v.city;
             cell8.innerHTML = v.state;
@@ -2180,7 +2199,7 @@
 
   $(document).on('click', '.viewModal', function() {
     var leaveId = $(this).data("leaveid");
-    //$("#actionspan").text("View");
+    $("#actionspan").text("View");
     //$("#addAPButton").hide()
     //$("#Action").val("View");
     $("#viewId").html(leaveId);
@@ -2364,7 +2383,10 @@
     }
   })
 
+  
+
   $(document).on('click', '.updateModal', function() {
+    $("#aprovedByArea").html("")
     var leaveId = $(this).data("leaveid");
     $("#actionspan").text("Update");
     $("#addAPButton").text("Edit").show();
@@ -2534,7 +2556,51 @@
 
         }
 
+        const getAproval = (status,uname) =>{
+          let texto;
+          switch(status){
+            case 1: 
+              texto = '<span class="badge badge-success">Approved</span> '+uname;
+              break;
+            case 2: 
+              texto = '<span class="badge badge-danger">Rejected</span> '+uname;
+              break;
+            case 3:
+              texto = '<span class="badge badge-secondary">Cancelled</span> '+uname;
+              break;
+            default:
+              texto =""
+          }
 
+          return texto;
+        }
+        
+        var apbody="";
+        var aproval=""
+          if(myObj.M){
+              console.log(myObj.M)
+              aproval = getAproval(myObj.aprovedByM,myObj.M)
+              apbody += `<p>${aproval}</p>`
+            }
+          if(myObj.HR){
+            console.log(myObj.HR)
+              aproval = getAproval(myObj.aprovedByHR,myObj.HR)
+              apbody += `<p>${aproval}</p>`
+            }
+          if(myObj.WF){
+            console.log(myObj.WF)
+              aproval = getAproval(myObj.aprovedByWf,myObj.WF)
+              apbody += `<p>${aproval}</p>`
+            }
+          if(myObj.SS){
+            console.log(myObj.SS)
+              aproval = getAproval(myObj.aprovedBySup,myObj.SS)
+              apbody += `<p>${aproval}</p>`
+            }
+          
+            $("#aprovedByArea").html(apbody)
+
+        
         if (myObj.aprovedByM >= 1 || myObj.aprovedByHR >= 1) {
 
           $('#addAPButton').hide();
@@ -2579,6 +2645,33 @@
 
     }
   })
+
+  function getEmpName(userId,rol,apbody){
+    
+    $.ajax({
+        url: '<?php echo URLROOT; ?>/aps/getEmpName/'+userId,
+        type: 'GET',
+        success: function(response) {
+          myObj = JSON.parse(response)
+          console.log(myObj)
+          
+          if (myObj.msg == "success") {
+            if(rol=="M"){
+              apbody += `<p><b>Manager:</b>${myObj.fullname}<p>`
+            }else if(rol=="HR"){
+              apbody += `<p><b>HR:</b>${myObj.fullname}<p>`
+            }else if(rol=="WF"){
+              apbody += `<p><b>WF:</b>${myObj.fullname}<p>`
+            }else if(rol=="SS"){
+              apbody +=`<p><b>SS:</b>${myObj.fullname}<p>`
+            }
+            var apheading="<h6>Approved By:</h6>";
+            $("#aprovedByArea").html(apheading+apbody)
+          }
+          
+        }
+      })
+  }
 
   function setScheduleInputs(day, inVal, outVal, lunchVal, checked) {
     if (checked == true) {

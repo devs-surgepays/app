@@ -14,7 +14,17 @@ class Ap {
     }
 
     public function getSingleLeave($leaveId){
-        $this->db->query("SELECT * FROM hr_surgepays.ap_details WHERE apDetailsId=:leaveId;");
+        //$this->db->query("SELECT * FROM hr_surgepays.ap_details WHERE apDetailsId=:leaveId;");
+        $this->db->query("SELECT ap.*,
+(select if (ap.aprovedByM>0, CONCAT(COALESCE(eu.firstName, ''), ' ', COALESCE(eu.firstLastName, '')),NULL ) as 'fullname' 
+from users as us left JOIN employees eu ON us.employeeId = eu.employeeId where us.userId = ap.byMUser) as 'M',
+(select if (ap.aprovedByHR>0, CONCAT(COALESCE(eu.firstName, ''), ' ', COALESCE(eu.firstLastName, '')),NULL ) as 'fullname' 
+from users as us left JOIN employees eu ON us.employeeId = eu.employeeId where us.userId = ap.byHRUser) as 'HR',
+(select if (ap.aprovedByWf>0, CONCAT(COALESCE(eu.firstName, ''), ' ', COALESCE(eu.firstLastName, '')),NULL ) as 'fullname' 
+from users as us left JOIN employees eu ON us.employeeId = eu.employeeId where us.userId = ap.byWfUSer) as 'WF',
+(select if (ap.aprovedBySup>0, CONCAT(COALESCE(eu.firstName, ''), ' ', COALESCE(eu.firstLastName, '')),NULL ) as 'fullname' 
+from users as us left JOIN employees eu ON us.employeeId = eu.employeeId where us.userId = ap.bySupUser) as 'SS'
+FROM hr_surgepays.ap_details ap WHERE apDetailsId=:leaveId");
         $this->db->bind(":leaveId",$leaveId);
 		$row = $this->db->single();
 		return $row;
@@ -44,6 +54,22 @@ class Ap {
             $row['msg']="success";
         }else{
             $row['msg']="error";
+        }
+        return $row;
+    }
+
+    public function getEmployeeName($userId){
+        $this->db->query("SELECT u.username,CONCAT(COALESCE(em.firstName, ''), ' ', COALESCE(em.firstLastName, '')) AS fullname
+        FROM hr_surgepays.users u 
+        JOIN hr_surgepays.employees em ON u.employeeId = em.employeeId
+        WHERE u.userId =:userId ");
+        $this->db->bind(":userId",$userId);
+        $row = $this->db->single();
+        //print_r($row);
+        if($row){
+            $row['msg']="success";
+        }else{
+            $row= ['msg' => "error"];
         }
         return $row;
     }
