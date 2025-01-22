@@ -192,7 +192,8 @@ function getPLAnotherBillTo()
  * SUP - 4
  * Account MAN - 8
  * Op Man - 32
- * TOTAL 748
+ * HR - 16
+ * TOTAL 764
  *
  * @return bool
  */
@@ -200,7 +201,7 @@ function getPLAps()
 {
     $permissionLevelId = $_SESSION['permissionLevelId'];
     $permission = false;
-    if (($permissionLevelId & 748))  $permission = true;
+    if (($permissionLevelId & 764))  $permission = true;
 
     return $permission;
 }
