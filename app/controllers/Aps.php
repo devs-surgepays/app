@@ -461,8 +461,8 @@ class Aps extends Controller
         );
         if($data['arrayCampos']){
             for($index=0;$index<sizeof($data['arrayCampos']);$index++){
-                //$count += ($data['arrayCampos'][$index]!='')?1:0;
-                $count += (isset($arrayFields[5]) && $arrayFields[5] !== '')?1:0;
+                $count += (isset($data['arrayCampos'][$index]) && $data['arrayCampos'][$index]!=='')?1:0;
+                //$count += (isset($arrayFields[5]) && $arrayFields[5] !== '')?1:0;
                 
                     if(!empty($data['arrayCampos'][$index])){
                         if($fields[$index]['name']=="fullname"){//$index==0
