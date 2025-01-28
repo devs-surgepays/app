@@ -148,6 +148,7 @@ FROM hr_surgepays.ap_details ap WHERE apDetailsId=:leaveId");
 
     public function getData($offset,$per_page,$search,$orderby){
         $showEmWhere = getPLEmployeeTable(false);
+        $getApSAA = (getPLSAA()==false)?" AND a.apTypeId not in (11,12)":"";
 		$date_now = date('Y-m-d').'%';
 		//echo "select firstname,lastname,email_address,email_status,CAST(email_open_datetime AS DATE) as date_opened,delivered,received,unsubscribe from mailCampaigns.contacts  ORDER BY $orderby limit $offset,$per_page;";
 		//echo "SELECT a.apDetailsId,concat(em.firstName,' ',em.firstLastName) as fullName,a.badge,date(a.createdAt) as createdAt,u.username,t.name,a.status FROM hr_surgepays.ap_details a JOIN hr_surgepays.employees em ON em.badge=a.badge JOIN hr_surgepays.users u ON u.userId=a.createdBy JOIN hr_surgepays.ap_types t ON t.apTypeId = a.apTypeId WHERE ".$search." ".$showEmWhere."   ORDER BY ".$orderby;
@@ -172,7 +173,7 @@ FROM
         JOIN
     hr_surgepays.users u ON u.userId = a.createdBy
         JOIN
-    hr_surgepays.ap_types t ON t.apTypeId = a.apTypeId WHERE $search $showEmWhere ORDER BY $orderby  limit $offset,$per_page;");
+    hr_surgepays.ap_types t ON t.apTypeId = a.apTypeId WHERE $search $showEmWhere $getApSAA ORDER BY $orderby  limit $offset,$per_page;");
 					
 				}else{
                     $showEmWhere = getPLEmployeeTable(true);
@@ -195,7 +196,7 @@ FROM
         JOIN
     hr_surgepays.users u ON u.userId = a.createdBy
         JOIN
-    hr_surgepays.ap_types t ON t.apTypeId = a.apTypeId $showEmWhere ORDER BY $orderby limit $offset,$per_page;");
+    hr_surgepays.ap_types t ON t.apTypeId = a.apTypeId $showEmWhere $getApSAA  ORDER BY $orderby limit $offset,$per_page;");
 					
 				}				
 			

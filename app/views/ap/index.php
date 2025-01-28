@@ -178,7 +178,13 @@
                               <option value="">Select...</option>
                               <?php
                               foreach ($data['apTypes'] as $items) {
-                                echo "<option value='" . $items['apTypeId'] . "'>" . $items['name'] . "</option>";
+                                if($items['apTypeId']== 11 || $items['apTypeId']==12)
+                                {
+                                  echo (getPLSAA()==true)?"<option value='" . $items['apTypeId'] . "'>" . $items['name'] . "</option>":"";
+                                }else{
+                                  echo "<option value='" . $items['apTypeId'] . "'>" . $items['name'] . "</option>";
+                                }
+                                
                               }
                               ?>
                             </select>
@@ -733,7 +739,13 @@
                         <option value="">Select...</option>
                         <?php
                         foreach ($data['apTypes'] as $items) {
-                          echo "<option value='" . $items['apTypeId'] . "'>" . $items['name'] . "</option>";
+                          if($items['apTypeId']== 11 || $items['apTypeId']==12)
+                          {
+                            echo (getPLSAA()==true)?"<option value='" . $items['apTypeId'] . "'>" . $items['name'] . "</option>":"";
+                          }else{
+                            echo "<option value='" . $items['apTypeId'] . "'>" . $items['name'] . "</option>";
+                          }
+                          
                         }
                         ?>
                       </select>
