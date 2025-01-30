@@ -1,6 +1,7 @@
 <?php
 define('ENVIRONMENT', 'prod');
-
+error_reporting(E_ALL);
+ini_set("display_errors", 1);
 if (ENVIRONMENT == 'development' || ENVIRONMENT == 'dev') {
  
   // error_reporting(E_ALL);
@@ -16,7 +17,7 @@ if (ENVIRONMENT == 'development' || ENVIRONMENT == 'dev') {
   $user = 'hrsurge';
   $pass = '01cNSZZEwK1t';
   #$url_root = 'https://hr-surge.com/app';
-  $url_root = "https://hr-surgepays.com/app"
+  $url_root = 'https://hr-surgepays.com/app'
 }
   // DB Params
   define('DB_HOST', $host);
