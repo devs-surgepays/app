@@ -1,6 +1,7 @@
 <?php
 define('ENVIRONMENT', 'prod');
-
+ error_reporting(E_ALL);
+ ini_set("display_errors", 1);
 if (ENVIRONMENT == 'development' || ENVIRONMENT == 'dev') {
  
   // error_reporting(E_ALL);
