@@ -50,7 +50,7 @@ ini_set("display_errors", 1);
                     <div class="card border-light-subtle shadow-sm">
                         <div class="row g-0">
                             <div class="col-12 col-md-8">
-                                <img class="img-fluid rounded-start w-100 h-100 object-fit-cover" loading="logo" src="<?php echo URLROOT; ?>/assets/img/surgepays-building1.jpg" alt="Welcome back you've been missed!">
+                                <img class="img-fluid rounded-start w-100 h-100 object-fit-cover" loading="logo" src="<?php echo URLROOT; ?>/assets/img/surgepaysBuilding25.jpeg" alt="Welcome back you've been missed!">
                             </div>
                             <div class="col-12 col-md-4 wrap-center">
                                 <div class="col-12">
