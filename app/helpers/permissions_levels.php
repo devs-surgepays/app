@@ -128,6 +128,7 @@ function getPLSAA()
     $permissionLevelId = $_SESSION['permissionLevelId'];
     $permission = false;
 
+    if (($permissionLevelId & 512))  $permission = false; // WF
     if (($permissionLevelId & 2))  $permission = false; // Regular Agent
     if (($permissionLevelId & 4))  $permission = false; // Supervisor
     if (($permissionLevelId & 8))  $permission = false; // Manager Account
@@ -136,7 +137,7 @@ function getPLSAA()
     if (($permissionLevelId & 64))  $permission = true; // Super Admin
     if (($permissionLevelId & 128))  $permission = true; // Development
     if (($permissionLevelId & 256))  $permission = false; // External person
-    if (($permissionLevelId & 512))  $permission = false; // WF
+    
 
     return $permission;
 }
