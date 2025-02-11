@@ -319,11 +319,7 @@ class Aps extends Controller
             ];
             //Getting permission level
             $permissionLevel = $_SESSION['permissionLevelId'];
-            if($permissionLevel&96){
-                //32+64
-                $data['aprovedByM']=$data['status'];
-                $data['byMUser']=$_SESSION['userId'];
-            }else if($permissionLevel&16){
+            if($permissionLevel&16){
                 //16
                 $data['aprovedByHR']=$data['status'];
                 $data['byHRUser']=$_SESSION['userId'];
@@ -331,6 +327,10 @@ class Aps extends Controller
                 //128+512
                 $data['aprovedByWf']=$data['status'];
                 $data['byWfUSer']=$_SESSION['userId'];
+            }else  if($permissionLevel&96){
+                //32+64
+                $data['aprovedByM']=$data['status'];
+                $data['byMUser']=$_SESSION['userId'];
             }else if($permissionLevel&8){
                 //8
                 $data['aprovedBySup']=$data['status'];
