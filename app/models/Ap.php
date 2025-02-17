@@ -213,4 +213,73 @@ FROM
         $row = $this->db->resultSetAssoc();
 		return $row;
     }
+
+    public function getApsByFilters($filters){
+        $query = "SELECT 
+                        apd.badge as 'BADGE',
+                        concat_ws(' ',em.firstName,em.secondName,em.thirdName,em.firstLastName,em.secondLastName,em.thirdLastName) as 'Full Name', 
+                        apt.name as 'AP Detail',
+                        -- em.superiorId,
+                        u.username as 'Processed by',
+                        apd.apDate1 as 'Initial Date',
+                        apd.apDate2 as 'End Date',
+                        apd.comment as 'Comments', 
+                        -- IF(aprovedByHR=1, 'YES', 'NO') as 'aprovedByHR',
+                        CASE
+                            WHEN apd.aprovedByHR = -1 THEN 'All'
+                            WHEN apd.aprovedByHR = 00 THEN 'Pending'
+                            WHEN apd.aprovedByHR = 1 THEN 'Approved'
+                            WHEN apd.aprovedByHR = 2 THEN 'Rejected'
+                            WHEN apd.aprovedByHR = 3 THEN 'Cancelled'
+                            ELSE ''
+                        END AS 'aprovedByHR',
+                        
+                        (select if (us.employeeId>0, CONCAT(COALESCE(eu.firstName, ''), ' ', COALESCE(eu.firstLastName, '')), CONCAT(COALESCE(us.firstName, ''), ' ', COALESCE(us.firstLastName, '')) ) as 'fullname' 
+                        from users as us left JOIN employees eu ON us.employeeId = eu.employeeId where us.userId = em.superiorId) as 'Superior Name'
+
+                        FROM hr_surgepays.ap_details apd 
+                        inner join hr_surgepays.employees em on em.badge = apd.badge
+                        inner join hr_surgepays.users u on u.userId = apd.createdBy
+                        inner join hr_surgepays.ap_types apt on apt.apTypeId = apd.apTypeId
+                        WHERE apd.apDate1 >= :b_date and apd.apDate1 <= :f_date";
+
+        if($filters["apTypeId"] > -1 && $filters["aprovedByHR"] > -1) {
+
+            //where apd.apDate1 >= date('2024-12-01') and apd.apDate1 < date('2024-12-31')
+            $query.=" AND apd.apTypeId = :apTypeId AND apd.aprovedByHR = :aprovedByHR order by apd.apDate1 asc";
+            $this->db->query($query);
+            $this->db->bind(":apTypeId", $filters["apTypeId"]);
+            $this->db->bind(":aprovedByHR", $filters["aprovedByHR"]);
+            $this->db->bind(":b_date", $filters["b_date"]);
+            $this->db->bind(":f_date", $filters["f_date"]);
+
+        } else {
+
+            if($filters["apTypeId"] > -1) {
+
+                $query.=" AND apd.apTypeId = :apTypeId order by apd.apDate1 asc";
+                $this->db->query($query);
+                $this->db->bind(":apTypeId", $filters["apTypeId"]);
+                $this->db->bind(":b_date", $filters["b_date"]);
+                $this->db->bind(":f_date", $filters["f_date"]);
+
+            } else if($filters["aprovedByHR"] > -1) {
+
+                $query.=" AND apd.aprovedByHR = :aprovedByHR order by apd.apDate1 asc";
+                $this->db->query($query);
+                $this->db->bind(":aprovedByHR", $filters["aprovedByHR"]);
+                $this->db->bind(":b_date", $filters["b_date"]);
+                $this->db->bind(":f_date", $filters["f_date"]);
+
+            } else {
+                $this->db->query($query);
+                $this->db->bind(":b_date", $filters["b_date"]);
+                $this->db->bind(":f_date", $filters["f_date"]);
+            }
+        }
+
+        
+        $result = $this->db->resultSetAssoc();
+		return $result;
+    }
 }

@@ -49,4 +49,22 @@ class Reports extends Controller
         $employees = $this->employeeModel->getEmployeesByStatus($status,$idBillTo);
         echo json_encode($employees);
     }
+
+    public function exportApsByFilters()
+    {
+        $dates = $_POST["date_range"];
+        $exploded_dates = explode(" - ", $dates);
+        $b_date = str_replace("/", "-", $exploded_dates[0]);
+        $f_date = str_replace("/", "-", $exploded_dates[1]);
+
+        $filters = [
+            "apTypeId" => (isset($_POST["ap_type"]) && $_POST["ap_type"]) ? $_POST["ap_type"] : "",
+            "aprovedByHR" => (isset($_POST["ap_approval_option"]) && $_POST["ap_approval_option"]) ? $_POST["ap_approval_option"] : "",
+            "b_date" => $b_date,
+            "f_date" => $f_date
+        ];
+        
+        $aps = $this->apModel->getApsByFilters($filters);
+        echo json_encode($aps);
+    }
 }
