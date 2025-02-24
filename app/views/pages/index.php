@@ -114,7 +114,7 @@ $num = 1;
                             </div>
                             <div class="col col-stats ms-3 ms-sm-0">
                                 <div class="numbers">
-                                    <p class="card-category">Leaves Created Today</p>
+                                    <p class="card-category">AP's Created Today</p>
                                     <h4 class="card-title">0</h4>
                                 </div>
                             </div>
