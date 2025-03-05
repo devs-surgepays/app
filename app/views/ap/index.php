@@ -298,6 +298,7 @@
                           </div>
                           <input type="hidden" name="currentPosition" id="currentPosition">
                           <input type="hidden" name="currentDepartment" id="currentDepartment">
+                          <input type="hidden" name="currentSalary" id="currentSalary">
                         </div>
                         <!-- INCAPACIDAD -->
                         <div id="incapacidad" class="toggleable">
@@ -1071,6 +1072,7 @@
           $("#addEmployeeId").val(myObj.employeeId)
           $("#currentPosition").val(myObj.positionId)
           $("#currentDepartment").val(myObj.departmentId);
+          $("#currentSalary").val(myObj.salary);
           $('#addLeaveType').prop('disabled', false);
         }
       }
@@ -1749,7 +1751,6 @@
     }
   })
 
-
   $("#addAPButton").click(function(e) {
     e.preventDefault();
     //validator.myForm;
@@ -1984,7 +1985,7 @@
             switch (v.aprovedByM) {
               case 1:
                 cell6.innerHTML = '<span class="badge badge-success">Approved</span>';
-                printButton = "";
+                  printButton = "enabled";
                 break;
               case 2:
                 cell6.innerHTML = '<span class="badge badge-danger">Rejected</span>';
@@ -2000,7 +2001,7 @@
             switch (v.aprovedByHR) {
               case 1:
                 cell7.innerHTML = '<span class="badge badge-success">Approved</span>';
-                printButton = "";
+                  printButton = "enabled";
 
                 break;
               case 2:
@@ -2017,6 +2018,7 @@
             switch (v.aprovedByWf) {
               case 1:
                 cell8.innerHTML = '<span class="badge badge-success">Approved</span>';
+                  printButton = "enabled";
                 break;
               case 2:
                 cell8.innerHTML = '<span class="badge badge-danger">Rejected</span>';
@@ -2032,6 +2034,7 @@
             switch (v.aprovedBySup) {
               case 1:
                 cell9.innerHTML = '<span class="badge badge-success">Approved</span>';
+                  printButton = "enabled";
                 break;
               case 2:
                 cell9.innerHTML = '<span class="badge badge-danger">Rejected</span>';
@@ -2064,7 +2067,7 @@
                         <button type="button" class="btn btn-link ${btnwarning} updateModal" data-bs-toggle="modal" data-bs-target="#addRowModal" data-leaveId="${v.apDetailsId}" ${enable}>
                           <i class="${iconButton}"></i>
                         </button>
-                        <button type="button" class="btn btn-link" ${printButton}>
+                        <button type="button" class="btn btn-link createPDF" onClick="createPDF(${v.apDetailsId}, '${v.name}', '${v.fullName}')" ${printButton}>
                          <i class="fa fa-print"></i>
                         </button>
                         
@@ -2074,7 +2077,7 @@
                         <button type="button" class="btn btn-link ${btnwarning} updateModal" data-bs-toggle="modal" data-bs-target="#addRowModal" data-leaveId="${v.apDetailsId}" ${enable}>
                           <i class="${iconButton}"></i>
                         </button>
-                        <button type="button" class="btn btn-link" ${printButton}>
+                        <button type="button" class="btn btn-link createPDF" onClick="createPDF(${v.apDetailsId}, '${v.name}', '${v.fullName}')" ${printButton}>
                          <i class="fa fa-print"></i>
                         </button>
                         
@@ -2412,6 +2415,7 @@
   })
 
   
+  
 
   $(document).on('click', '.updateModal', function() {
     //$("#aprovedByArea").html("")
@@ -2672,7 +2676,7 @@
       //$("#"+day+"Lunch").prop("disabled",false).rules('add', {required: true});
 
     }
-  })
+  });
 
   function getEmpName(userId,rol,apbody){
     
@@ -2718,4 +2722,48 @@
       });
     }
   }
+
+  async function createPDF(leaveId, leaveType, fullName) {
+
+    let frm = new FormData();
+    frm.append("leaveId", leaveId);
+    frm.append("leaveType", leaveType);
+
+    const response = await fetch('<?php echo URLROOT; ?>/aps/downloadPDF', {
+      method: "POST",
+      body: frm
+    });
+
+    const pdf_data = await response.json();
+
+    const url = pdf_data.url;  
+    const existingPdfBytes = await fetch(url).then(res => res.arrayBuffer());
+
+    const pdfDoc = await PDFLib.PDFDocument.load(existingPdfBytes);
+
+    const page = pdfDoc.getPages()[0];
+
+    const { width, height } = page.getSize();
+
+    pdf_data.info.forEach((p) => {
+      if(p.t == null) p.t = "";
+      page.drawText(p.t, p.d);
+    });
+
+    const pdfBytes = await pdfDoc.save();
+
+    const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+
+    const today = new Date();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    const year = today.getFullYear();
+    
+    link.download = 'AP_'+day+month+year;
+
+    link.click();
+  }
+
 </script>

@@ -27,6 +27,8 @@
   </div>
 </footer>
 
+<script src="https://unpkg.com/pdf-lib/dist/pdf-lib.js"></script>
+
 <script src="<?php echo URLROOT ?>/assets/js/core/jquery-3.7.1.min.js"></script>
 <script src="<?php echo URLROOT ?>/assets/js/core/popper.min.js"></script>
 <script src="<?php echo URLROOT ?>/assets/js/core/bootstrap.min.js"></script>

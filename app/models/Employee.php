@@ -220,6 +220,7 @@ class Employee
             em.badge as badge,
             em.photo,
             em.personalEmail,
+            em.career,
             concat_ws(" ",em.firstName,em.secondName,em.thirdName,em.firstLastName,em.secondLastName,em.thirdLastName) as fullname,
             em.contactPhone AS contactPhone,
             em.homePhone AS homePhone,
@@ -232,6 +233,7 @@ class Employee
             em.hiredDateOld as hiredDateOld,
             em.contractType as contractType,
             em.workHours as workHours,
+            em.salary as salary,
             IF (em.bonus=1, "Yes","No") as bonus
             FROM
             employees em

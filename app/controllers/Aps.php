@@ -1,11 +1,13 @@
 <?php
-//    error_reporting(E_ALL);
-//    ini_set("display_errors", 1);
+   error_reporting(E_ALL);
+   ini_set("display_errors", 0);
 class Aps extends Controller
 {
     public $apModel;
     public $employeeScheduleModel;
     public $employeeModel;
+    public $departmentModel;
+    public $positionModel;
 
     public function __construct()
     {
@@ -15,6 +17,8 @@ class Aps extends Controller
         $this->apModel = $this->model('Ap');
         $this->employeeScheduleModel = $this->model('EmployeeSchedule');
         $this->employeeModel = $this->model('Employee');
+        $this->departmentModel = $this->model('Department');
+        $this->positionModel = $this->model('Position');
     }
 
     public function index(){
@@ -258,6 +262,7 @@ class Aps extends Controller
                     $data['reason1']="Ajuste Salarial";
                     $data['apDate1']=$_POST['diaEfectivo'];
                     $data['currentPosition']=$_POST['currentPosition'];
+                    $data['currentSalary']=$_POST['currentSalary'];
                     if(!empty($_POST['newPosition2'])){
                         
                         $data['newPosition']=$_POST['newPosition2'];
@@ -669,5 +674,372 @@ class Aps extends Controller
             $row = $this->employeeScheduleModel->getEmployeeSchedulebyId($id);
         }
         echo json_encode($row);
+    }
+
+    public function downloadPDF() {
+
+        $leaveId = $_POST["leaveId"];
+        $leaveTypeName = $_POST["leaveType"];
+
+        $leave = $this->getSingleLeave($leaveId);
+        if(!$leave) {
+            echo json_encode(0);
+            exit();
+        }
+
+        $this->getDocumentByType($leave, $leaveTypeName);
+       
+    }
+
+    protected function getDocumentByType($leave, $leaveTypeName) {
+
+        $apTypeId = $leave["apTypeId"];
+
+        if($apTypeId == 1 || $apTypeId == 2 || $apTypeId == 3 || $apTypeId == 5) {
+            $this->solicitudLicenciaTemplate($leave, $leaveTypeName);
+        } else if($apTypeId == 4 || $apTypeId == 11 || $apTypeId == 12) {
+            $this->movimientosTemplate($leave, $leaveTypeName);
+        } else if ($apTypeId == 6 || $apTypeId == 9) {
+            $this->amonestacionesTemplate($leave, $leaveTypeName);
+        } else {
+            throw new Exception("Error Processing PDF", 1);
+        }
+
+    }
+
+    private function solicitudLicenciaTemplate($leave, $leaveTypeName) {
+
+        $employee = $this->employeeModel->getEmployeeReadByBadge($leave["badge"]);
+
+        $datee = new DateTime($leave["createdAt"]);
+        
+        $pdf_data["url"] = URLROOT."/public/documents/Aps/solicitudLicencias.pdf";
+
+        $pdf_data["info"] = [
+            [
+                't' => ucwords(strtolower(html_entity_decode($employee["fullname"]))),
+                'd' => ['x' => 190, 'y' => 630, 'size' => 10]// 'color' => [0, 0.53, 0.71]
+            ],
+            [
+                't' => ucwords(strtolower(html_entity_decode($employee["positionName"]))),
+                'd' => ['x' => 120, 'y' => 610, 'size' => 10]
+            ],
+            [
+                't' => $leave["badge"],
+                'd' => ['x' => 175, 'y' => 590, 'size' => 10]
+            ],
+            [
+                't' => html_entity_decode($leave["reason1"]),
+                'd' => ['x' => 129, 'y' => 457, 'size' => 10]
+            ]            
+        ];
+
+        $locale = 'es_SV';
+
+        $date = DateTime::createFromFormat('d/m/Y', $datee->format('d/m/Y'));
+
+        $formatter = new IntlDateFormatter(
+            $locale,
+            IntlDateFormatter::LONG,
+            IntlDateFormatter::NONE,
+            'America/El_Salvador',
+            IntlDateFormatter::GREGORIAN
+        );
+
+        $pdf_data["info"][] = [
+            't' => $formatter->format($date),
+            'd' => ['x' => 355, 'y' => 647, 'size' => 10]
+        ];
+
+        if(strlen($leave["comment"]) > 0) {
+            if(strlen($leave["comment"]) > 70) {
+                $firstComment = substr($leave["comment"], 0, 70);
+                $secondComment = substr($leave["comment"], 70);
+
+                $pdf_data["info"][] = [
+                    't' => html_entity_decode($firstComment),
+                    'd' => ['x' => 215, 'y' => 350, 'size' => 10, 'lineHeight' => 14, 'maxWidth' => 315]
+                ];
+        
+                $pdf_data["info"][] = [
+                    't' => html_entity_decode($secondComment),
+                    'd' => ['x' => 88, 'y' => 325, 'size' => 10, 'lineHeight' => 14, 'maxWidth' => 430]
+                ];
+            } else {
+                $pdf_data["info"][] = [
+                    't' => html_entity_decode($leave["comment"]),
+                    'd' => ['x' => 215, 'y' => 350, 'size' => 10, 'lineHeight' => 14, 'maxWidth' => 315]
+                ];
+            }
+        }
+
+        if($leave["apTypeId"] == 2) {
+            // con goce
+            $pdf_data["info"][] = [
+                't' => 'X',
+                'd' => ['x' => 316, 'y' => 210, 'size' => 12]
+            ];
+        } else if($leave["apTypeId"] == 1) {
+            $pdf_data["info"][] = [
+                't' => 'X',
+                'd' => ['x' => 126, 'y' => 210, 'size' => 12]
+            ];
+        }
+
+        if($leave["reason2"] != "Horas") {
+
+            $apDate1 = new DateTime($leave["apDate1"]);
+            $apDate2 = new DateTime($leave["apDate2"]);
+
+            $totalDays = $this->getTotalDays($apDate1,$apDate2);
+
+            $pdf_data["info"][] = [
+                't' => $apDate1->format('d/m/Y'),
+                'd' => ['x' => 165, 'y' => 550, 'size' => 10]
+            ];
+
+            $pdf_data["info"][] = [
+                't' => '-',
+                'd' => ['x' => 222, 'y' => 550, 'size' => 10]
+            ];
+
+            $pdf_data["info"][] = [
+                't' => $apDate2->format('d/m/Y'),
+                'd' => ['x' => 233, 'y' => 550, 'size' => 10]
+            ];
+
+            $pdf_data["info"][] = [
+                't' => strval($totalDays),
+                'd' => ['x' => 360, 'y' => 550, 'size' => 10]
+            ];
+        } else {
+            $apDate1 = new DateTime($leave["apDate1"]);
+            $explodedStartTime = explode(":", $leave["startTime"]);
+            $explodedEndTime = explode(":", $leave["endTime"]);
+            $startTime = $explodedStartTime[0].":".$explodedStartTime[1];
+            $endTime = $explodedEndTime[0].":".$explodedEndTime[1];
+
+            $totalTime = $this->getTotalTime($startTime, $endTime);
+
+            $pdf_data["info"][] = [
+                't' => $apDate1->format('d/m/Y'),
+                'd' => ['x' => 166, 'y' => 510, 'size' => 9]
+            ];
+            $pdf_data["info"][] = [
+                't' => $startTime,
+                'd' => ['x' => 250, 'y' => 510, 'size' => 9]
+            ];
+            $pdf_data["info"][] = [
+                't' => $endTime,
+                'd' => ['x' => 308, 'y' => 510, 'size' => 9]
+            ];
+            $pdf_data["info"][] = [
+                't' => $totalTime[0],
+                'd' => ['x' => 375, 'y' => 510, 'size' => 9]
+            ];
+            $pdf_data["info"][] = [
+                't' => $totalTime[1],
+                'd' => ['x' => 400, 'y' => 510, 'size' => 9]
+            ];
+        }
+
+        echo json_encode($pdf_data);
+
+    }
+
+    private function movimientosTemplate($leave, $leaveTypeName) {
+
+        $employee = $this->employeeModel->getEmployeeReadByBadge($leave["badge"]);
+
+        $created_date = new DateTime($leave["createdAt"]);
+        $apDate = new DateTime($leave["apDate1"]);
+
+        $apDate = new DateTime($leave["apDate1"]);
+        
+        $pdf_data["url"] = URLROOT."/public/documents/Aps/movimientos.pdf";
+
+        $pdf_data["info"] = [
+            [
+                't' => ucwords(strtolower(html_entity_decode($employee["fullname"]))),
+                'd' => ['x' => 112, 'y' => 606, 'size' => 9, 'lineHeight' => 9, 'maxWidth' => 135]
+            ],
+            [
+                't' => strval($leave["badge"]),
+                'd' => ['x' => 110, 'y' => 586, 'size' => 10]
+            ],
+            [
+                't' => $created_date->format('d/m/Y'),
+                'd' => ['x' => 110, 'y' => 626, 'size' => 10]
+            ],
+            [
+                't' => $apDate->format('d/m/Y'),
+                'd' => ['x' => 305, 'y' => 606, 'size' => 10]
+            ],
+ 
+        ];
+
+        if($leave["apTypeId"] == 11) {
+
+            if($employee["hiredDateOld"] != NULL && $employee["hiredDateOld"] != "") {
+                $hiredDate = new DateTime($employee["hiredDateOld"]);
+            } else {
+                $hiredDate = new DateTime($employee["hiredDate"]);
+            }    
+
+            $pdf_data["info"][] = [
+                't' => $hiredDate->format('d/m/Y'),
+                'd' => ['x' => 170, 'y' => 320, 'size' => 9]
+            ];
+            $pdf_data["info"][] = [
+                't' => $leave["reason1"],
+                'd' => ['x' => 170, 'y' => 300, 'size' => 9]
+            ];
+            $pdf_data["info"][] = [
+                't' => ucwords(strtolower(html_entity_decode($employee["positionName"]))),
+                'd' => ['x' => 170, 'y' => 282, 'size' => 9]
+            ];
+            $pdf_data["info"][] = [
+                't' => '$ '.strval($employee["salary"]),
+                'd' => ['x' => 170, 'y' => 260, 'size' => 9]
+            ];
+            
+        } else if($leave["apTypeId"] == 4) {
+
+            $currentPosition = $this->positionModel->getPositionById($leave["currentPosition"]);
+            $newPosition = $this->positionModel->getPositionById($leave["newPosition"]);
+
+            $currentAccount = $this->departmentModel->getDepartmentById($leave["currentAccount"]);
+            $newAccount = $this->departmentModel->getDepartmentById($leave["newAccount"]);
+
+            $pdf_data["info"][] = [
+                    't' => ucwords(strtolower(html_entity_decode($currentPosition["positionName"]))),
+                    'd' => ['x' => 140, 'y' => 503, 'size' => 9]
+            ];
+            $pdf_data["info"][] = [
+                't' => ucwords(strtolower(html_entity_decode($newPosition["positionName"]))),
+                'd' => ['x' => 140, 'y' => 483, 'size' => 9]
+            ];
+
+            $pdf_data["info"][] = [
+                't' => ucwords(strtolower(html_entity_decode($currentAccount["name"]))),
+                'd' => ['x' => 200, 'y' => 422, 'size' => 9]
+            ];
+            $pdf_data["info"][] = [
+                't' => ucwords(strtolower(html_entity_decode($newAccount["name"]))),
+                'd' => ['x' => 200, 'y' => 403, 'size' => 9]
+            ];
+            $pdf_data["info"][] = [
+                't' => html_entity_decode($leave["comment"]),
+                'd' => ['x' => 130, 'y' => 383, 'size' => 9, 'lineHeight' => 14, 'maxWidth' => 420]
+            ];
+
+        } else {
+
+            $currentPosition = $this->positionModel->getPositionById($leave["currentPosition"]);
+
+            if($leave["newPosition"] != NULL && $leave["newPosition"] != "") {
+                $newPosition = $this->positionModel->getPositionById($leave["newPosition"]);
+                $newPositionName = $newPosition["positionName"];
+            } else {
+                $newPositionName = "";
+            }
+
+            $raise = ($leave["newSalary"] - $leave["currentSalary"]);
+
+            $pdf_data["info"][] = [
+                    't' => ucwords(strtolower(html_entity_decode($currentPosition["positionName"]))),
+                    'd' => ['x' => 140, 'y' => 503, 'size' => 9]
+            ];
+            $pdf_data["info"][] = [
+                't' => ucwords(strtolower(html_entity_decode($newPositionName))),
+                'd' => ['x' => 140, 'y' => 483, 'size' => 9]
+            ];
+            $pdf_data["info"][] = [
+                't' => '$ '.strval($leave["currentSalary"]),
+                'd' => ['x' => 138, 'y' => 462, 'size' => 9]
+            ];
+            $pdf_data["info"][] = [
+                't' => '$ '.strval($leave["newSalary"]),
+                'd' => ['x' => 139, 'y' => 443, 'size' => 9]
+            ];
+            $pdf_data["info"][] = [
+                't' => '$ '.strval($raise),
+                'd' => ['x' => 300, 'y' => 463, 'size' => 9]
+            ];
+
+            $pdf_data["info"][] = [
+                't' => html_entity_decode($leave["comment"]),
+                'd' => ['x' => 130, 'y' => 383, 'size' => 9, 'lineHeight' => 13, 'maxWidth' => 420]
+            ];
+
+        }
+
+        echo json_encode($pdf_data);
+
+    }
+
+    private function amonestacionesTemplate($leave, $leaveTypeName) {
+
+        $pdf_data["url"] = URLROOT."/public/documents/Aps/amonestaciones.pdf";
+
+        $employee = $this->employeeModel->getEmployeeReadByBadge($leave["badge"]);
+
+        $apDate1 = new DateTime($leave["apDate1"]);
+
+        $pdf_data["info"] = [
+            [
+                't' => ucwords(strtolower(html_entity_decode($employee["fullname"]))),
+                'd' => ['x' => 110, 'y' => 656, 'size' => 11]
+            ],
+            [
+                't' => strval($leave["badge"]),
+                'd' => ['x' => 178, 'y' => 640, 'size' => 11]
+            ],
+            [
+                't' => $apDate1->format('d/m/Y'),
+                'd' => ['x' => 98, 'y' => 623, 'size' => 11]
+            ],
+            [
+                't' => $leaveTypeName,
+                'd' => ['x' => 190, 'y' => 605, 'size' => 11]
+            ],
+            [
+                't' => $leave["reason1"],
+                'd' => ['x' => 105, 'y' => 589, 'size' => 11]
+            ],
+            [
+                't' => html_entity_decode($leave["comment"]),
+                'd' => ['x' => 85, 'y' => 530, 'size' => 11, 'lineHeight' => 13, 'maxWidth' => 430]
+            ],
+        ];
+
+        $pdf_data["info"][] = [
+            't' => $apDate1->format('d/m/Y'),
+            'd' => ['x' => 205, 'y' => 237, 'size' => 8.5]
+        ];
+
+        echo json_encode($pdf_data);
+
+    }
+
+    private function getTotalTime($startTime, $endTime)
+    {
+        $startHour = new DateTime($startTime);
+        $endHour = new DateTime($endTime);
+
+        $totalTime = $startHour->diff($endHour);
+
+        $totalHours = strval($totalTime->h);
+        $totalMinutes = strval($totalTime->i);
+
+        $total = [$totalHours, $totalMinutes];
+        return $total;
+    }
+
+    private function getTotalDays($apDate1, $apDate2)
+    {
+        $totalDays = $apDate1->diff($apDate2);
+
+        return $totalDays->days + 1;
     }
 }

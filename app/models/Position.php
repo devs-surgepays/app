@@ -27,4 +27,11 @@ class Position
         $result = $this->db->resultSetAssoc();
         return $result;
     }
+
+    public function getPositionById($positionId) {
+        $this->db->query('SELECT * FROM hr_surgepays.positions where positionId=:positionId;');
+        $this->db->bind(':positionId', $positionId);
+        $result = $this->db->resultSetFetch();
+        return $result;
+    }
 }

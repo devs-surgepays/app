@@ -13,4 +13,11 @@ class Department
         $result = $this->db->resultSetAssoc();
         return $result;
     }
+
+    public function getDepartmentById($departmentId) {
+        $this->db->query('SELECT * FROM hr_surgepays.departments where departmentId=:departmentId;');
+        $this->db->bind(':departmentId', $departmentId);
+        $result = $this->db->resultSetFetch();
+        return $result;
+    }
 }

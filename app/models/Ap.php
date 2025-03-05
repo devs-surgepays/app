@@ -42,7 +42,8 @@ FROM hr_surgepays.ap_details ap WHERE apDetailsId=:leaveId");
 
     public function searchEmployeeByBadge($badge){
         $showEmWhere = getPLEmployeeTable(false);
-        $this->db->query("SELECT em.employeeId,CONCAT(COALESCE(em.firstName, ''), ' ', COALESCE(em.secondName, ''), ' ', COALESCE(em.firstLastName, ''), ' ', COALESCE(em.secondLastName, '')) AS fullname,p.positionName,d.name as departmentName,p.positionId,d.departmentId 
+        $this->db->query("SELECT em.employeeId,CONCAT(COALESCE(em.firstName, ''), ' ', COALESCE(em.secondName, ''), ' ', COALESCE(em.firstLastName, ''), ' ', COALESCE(em.secondLastName, '')) AS fullname,p.positionName,d.name as departmentName,p.positionId,d.departmentId,
+        em.salary 
         FROM hr_surgepays.employees em
             JOIN hr_surgepays.positions p ON p.positionId = em.positionId
             JOIN hr_surgepays.departments d ON d.departmentId = em.departmentId
