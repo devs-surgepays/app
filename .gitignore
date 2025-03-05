@@ -1,4 +1,6 @@
 # ignore all logs
-*.pdf
-public/documents/
+#*.pdf
+public/documents/photo
+public/documents/solvenciaPNC
+public/documents/antecedentesPenales
 app/config/config.php
