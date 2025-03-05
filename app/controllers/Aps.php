@@ -713,7 +713,7 @@ class Aps extends Controller
 
         $datee = new DateTime($leave["createdAt"]);
         
-        $pdf_data["url"] = URLROOT."/public/documents/Aps/solicitudLicencias.pdf";
+        $pdf_data["url"] = URLROOT."/public/documents/APs/solicitudLicencias.pdf";
 
         $pdf_data["info"] = [
             [
@@ -856,7 +856,7 @@ class Aps extends Controller
 
         $apDate = new DateTime($leave["apDate1"]);
         
-        $pdf_data["url"] = URLROOT."/public/documents/Aps/movimientos.pdf";
+        $pdf_data["url"] = URLROOT."/public/documents/APs/movimientos.pdf";
 
         $pdf_data["info"] = [
             [
@@ -980,7 +980,7 @@ class Aps extends Controller
 
     private function amonestacionesTemplate($leave, $leaveTypeName) {
 
-        $pdf_data["url"] = URLROOT."/public/documents/Aps/amonestaciones.pdf";
+        $pdf_data["url"] = URLROOT."/public/documents/APs/amonestaciones.pdf";
 
         $employee = $this->employeeModel->getEmployeeReadByBadge($leave["badge"]);
 
