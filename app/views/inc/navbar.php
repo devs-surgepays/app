@@ -195,7 +195,7 @@
                       <div class="avatar-item bg-info rounded-circle">
                         <i class="fa fa-solid fa-list-alt"></i>
                       </div>
-                      <span class="text">Leaves</span>
+                      <span class="text">Ap's</span>
                     </div>
                   </a>
                 <?php }else{ ?>

@@ -118,7 +118,6 @@ class Employees extends Controller
                         'afpNumber' => (isset($_POST['afpNumber']) && $_POST['afpNumber'] != NULL) ? trim($_POST['afpNumber']) : Null,
                         'salary' => trim($_POST['salary']),
                         'billTo' => (isset($_POST['billTo']) && $_POST['billTo'] != NULL) ? trim($_POST['billTo']) : 1,
-                        'thirdLastName' => trim($_POST['thirdLastName']),
                         'birthMunicipality' => trim($_POST['birthMunicipality']),
                         'birthDeparment' => trim($_POST['birthDeparment']),
                         'homePhone' => trim($_POST['homePhone']),

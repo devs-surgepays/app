@@ -20,10 +20,10 @@
         <div class="card">
           <div class="card-header">
             <div class="d-flex align-items-center">
-              <h4 class="card-title">Manage Leaves</h4>
+              <h4 class="card-title">Manage AP's</h4>
               <button id="createModal" class="btn btn-primary btn-round ms-auto" data-bs-toggle="modal" data-bs-target="#addRowModal">
                 <i class="fa fa-plus"></i>
-                Create New Leave
+                Create New AP
               </button>
             </div>
           </div>
@@ -36,7 +36,7 @@
                   <div class="modal-header border-0">
                     <h5 class="modal-title">
                       <span class="fw-mediumbold"> View</span>
-                      <span class="fw-light"> Leave </span>
+                      <span class="fw-light"> AP </span>
                     </h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                       <span aria-hidden="true">&times;</span>
@@ -45,9 +45,9 @@
                   <form action="#" id="viewForm" method="POST" enctype>
                     <div class="modal-body">
 
-                      <p><b>Leave #:</b> <span id="viewId"></span></p>
+                      <p><b>AP #:</b> <span id="viewId"></span></p>
                       <p><b>Badge:</b> <span id="viewBadge"></span></p>
-                      <p><b>Leave Type:</b> <span id="viewLeaveType"></span></p>
+                      <p><b>AP Type:</b> <span id="viewLeaveType"></span></p>
                       <p><b>Motivo:</b> <span id="viewMotivo"></span></p>
                       <div id="viewArea"></div>
                       <p><b>Comments:</b><br><span id="viewComments"></span></p>
@@ -72,7 +72,7 @@
                 <div class="modal-content">
                   <div class="modal-header border-0">
                     <h5 class="modal-title">
-                      <span class="fw-mediumbold"> Leave</span>
+                      <span class="fw-mediumbold"> AP</span>
                       <span class="fw-light"> Approval </span>
                     </h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -81,8 +81,8 @@
                   </div>
                   <form action="#" id="approveForm" method="POST" enctype>
                     <div class="modal-body">
-                      <p class="small">Give your approval feedback for this Leave</p>
-                      <p>Leave #: <span id="showId"></span></p>
+                      <p class="small">Give your approval feedback for this AP</p>
+                      <p>AP #: <span id="showId"></span></p>
                       <ul class="list-inline text-center">
                         <li>
                           <div class="form-check">
@@ -134,7 +134,7 @@
                   <div class="modal-header border-0">
                     <h5 class="modal-title">
                       <span class="fw-mediumbold" id="actionspan"> Create</span>
-                      <span class="fw-light"> Leave </span>
+                      <span class="fw-light"> AP </span>
                     </h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                       <span aria-hidden="true">&times;</span>
@@ -188,7 +188,7 @@
                               }
                               ?>
                             </select>
-                            <label>Leave type</label>
+                            <label>AP type</label>
                           </div>
                         </div>
                         <!-- change Area -->
@@ -676,7 +676,7 @@
                         <style>
                           div#aprovedByArea>p{
                             margin-bottom:0.2rem;
-                          },
+                          }
                           #aproval{
                             color: #1572e8 ;
                             font-size: 85%!important;
@@ -717,12 +717,12 @@
               <table id="add-row" class="display table table-striped table-hover">
                 <thead>
                   <tr>
-                    <th>Leave #</th>
+                    <th>AP #</th>
                     <th>Employee Name</th>
                     <th>Badge</th>
                     <th>Created At</th>
                     <th>Created By</th>
-                    <th>Leave Type</th>
+                    <th>AP Type</th>
                     <th>By M</th>
                     <th>By HR</th>
                     <th>By WF</th>

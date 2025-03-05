@@ -70,7 +70,7 @@
                     <li class="nav-item">
                         <a href="<?php echo URLROOT; ?>/aps">
                             <i class="fa fa-solid fa-list-alt"></i>
-                            <p>Leaves</p>
+                            <p>Ap's</p>
                         </a>
                     </li>
                 <?php } ?>
