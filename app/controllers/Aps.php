@@ -1,6 +1,6 @@
 <?php
    error_reporting(E_ALL);
-   ini_set("display_errors", 0);
+   ini_set("display_errors", 1);
 class Aps extends Controller
 {
     public $apModel;
@@ -80,7 +80,7 @@ class Aps extends Controller
                     
                     break;
                 case 3:
-                    $data['reason1']="Vacation";
+                    $data['reason1']="Vacación";
                     $data['apDate1']=$_POST["inicioVacaciones"];
                     $data['apDate2']=$_POST["finVacaciones"];
                     $data['apDate3']=$_POST["fechaPago"];
@@ -790,6 +790,7 @@ class Aps extends Controller
 
             $apDate1 = new DateTime($leave["apDate1"]);
             $apDate2 = new DateTime($leave["apDate2"]);
+            $paymentDate = new DateTime($leave["apDate3"]);
 
             $totalDays = $this->getTotalDays($apDate1,$apDate2);
 
@@ -811,6 +812,16 @@ class Aps extends Controller
             $pdf_data["info"][] = [
                 't' => strval($totalDays),
                 'd' => ['x' => 360, 'y' => 550, 'size' => 10]
+            ];
+
+            $pdf_data["info"][] = [
+                't' => "Fecha de pago: __________",
+                'd' => ['x' => 420, 'y' => 550, 'size' => 9]
+            ];
+
+            $pdf_data["info"][] = [
+                't' => $paymentDate->format('d/m/Y'),
+                'd' => ['x' => 484, 'y' => 550, 'size' => 10]
             ];
         } else {
             $apDate1 = new DateTime($leave["apDate1"]);
