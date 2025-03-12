@@ -59,6 +59,7 @@ class Aps extends Controller
                     $data['reason1']=$_POST["motivo_permiso"];
                     $data['reason2']=$_POST['tiempopermiso'];
                     $data['apDate1']=$_POST["dia1"];
+                    $data['reason3']=$_POST["documentosJustificativos"];
                     if($data['reason2']=="Horas"){
                         $data['startTime']=$_POST['hora_inicio'];
                         $data['endTime']=$_POST['hora_final'];
@@ -71,6 +72,7 @@ class Aps extends Controller
                     $data['reason1']=$_POST["motivo_permiso"];
                     $data['reason2']=$_POST['tiempopermiso'];
                     $data['apDate1']=$_POST["dia1"];
+                    $data['reason3']=$_POST["documentosJustificativos"];
                     if($data['reason2']=="Horas"){
                         $data['startTime']=$_POST['hora_inicio'];
                         $data['endTime']=$_POST['hora_final'];
@@ -108,6 +110,11 @@ class Aps extends Controller
                     if(isset($_POST['septimo'])){
                         $data['reason2']=($_POST['septimo']=="Yes")?"Septimo":"";
                     }
+
+                    if(isset($_POST['fechaAmonestacion'])){
+                        $data['apDate3']=$_POST['fechaAmonestacion'];
+                    }
+
                     if(isset($_POST['inicioSuspension'])){
                         $data['apDate1']=$_POST['inicioSuspension'];
                     } 
@@ -263,6 +270,10 @@ class Aps extends Controller
                     $data['apDate1']=$_POST['diaEfectivo'];
                     $data['currentPosition']=$_POST['currentPosition'];
                     $data['currentSalary']=$_POST['currentSalary'];
+
+                    $data['currentAccount']=$_POST['currentDepartment'];
+                    $data['newAccount']=$_POST['currentDepartment'];
+                    
                     if(!empty($_POST['newPosition2'])){
                         
                         $data['newPosition']=$_POST['newPosition2'];
@@ -729,7 +740,7 @@ class Aps extends Controller
                 'd' => ['x' => 175, 'y' => 590, 'size' => 10]
             ],
             [
-                't' => html_entity_decode($leave["reason1"]),
+                't' => html_entity_decode($leaveTypeName),
                 'd' => ['x' => 129, 'y' => 457, 'size' => 10]
             ]            
         ];
@@ -751,10 +762,13 @@ class Aps extends Controller
             'd' => ['x' => 355, 'y' => 647, 'size' => 10]
         ];
 
-        if(strlen($leave["comment"]) > 0) {
-            if(strlen($leave["comment"]) > 70) {
-                $firstComment = substr($leave["comment"], 0, 70);
-                $secondComment = substr($leave["comment"], 70);
+        $motivoComment = $leave['reason1'].' - '.$leave["comment"]; 
+
+
+        if(strlen($motivoComment) > 0) {
+            if(strlen($motivoComment) > 68) {
+                $firstComment = substr($motivoComment, 0, 68);
+                $secondComment = substr($motivoComment, 68);
 
                 $pdf_data["info"][] = [
                     't' => html_entity_decode($firstComment),
@@ -765,12 +779,20 @@ class Aps extends Controller
                     't' => html_entity_decode($secondComment),
                     'd' => ['x' => 88, 'y' => 325, 'size' => 10, 'lineHeight' => 14, 'maxWidth' => 430]
                 ];
+
             } else {
                 $pdf_data["info"][] = [
-                    't' => html_entity_decode($leave["comment"]),
+                    't' => html_entity_decode($motivoComment),
                     'd' => ['x' => 215, 'y' => 350, 'size' => 10, 'lineHeight' => 14, 'maxWidth' => 315]
                 ];
             }
+        }
+
+        if (!empty($leave["reason3"])) {
+            $pdf_data["info"][] = [
+                't' => $leave["reason3"],
+                'd' => ['x' => 255, 'y' => 240, 'size' => 10, 'lineHeight' => 14, 'maxWidth' => 300]
+            ];
         }
 
         if($leave["apTypeId"] == 2) {
@@ -790,7 +812,21 @@ class Aps extends Controller
 
             $apDate1 = new DateTime($leave["apDate1"]);
             $apDate2 = new DateTime($leave["apDate2"]);
-            $paymentDate = new DateTime($leave["apDate3"]);
+
+            if ($leave["apTypeId"]==3) { // Solicitud de Vacaciones
+
+                $paymentDate = new DateTime($leave["apDate3"]);
+
+                $pdf_data["info"][] = [
+                    't' => "Fecha de pago: __________",
+                    'd' => ['x' => 420, 'y' => 550, 'size' => 9]
+                ];
+    
+                $pdf_data["info"][] = [
+                    't' => $paymentDate->format('d/m/Y'),
+                    'd' => ['x' => 484, 'y' => 550, 'size' => 10]
+                ];
+            }
 
             $totalDays = $this->getTotalDays($apDate1,$apDate2);
 
@@ -814,15 +850,7 @@ class Aps extends Controller
                 'd' => ['x' => 360, 'y' => 550, 'size' => 10]
             ];
 
-            $pdf_data["info"][] = [
-                't' => "Fecha de pago: __________",
-                'd' => ['x' => 420, 'y' => 550, 'size' => 9]
-            ];
-
-            $pdf_data["info"][] = [
-                't' => $paymentDate->format('d/m/Y'),
-                'd' => ['x' => 484, 'y' => 550, 'size' => 10]
-            ];
+            
         } else {
             $apDate1 = new DateTime($leave["apDate1"]);
             $explodedStartTime = explode(":", $leave["startTime"]);
@@ -889,7 +917,7 @@ class Aps extends Controller
  
         ];
 
-        if($leave["apTypeId"] == 11) {
+        if($leave["apTypeId"] == 11) { // Retiros de Personal
 
             if($employee["hiredDateOld"] != NULL && $employee["hiredDateOld"] != "") {
                 $hiredDate = new DateTime($employee["hiredDateOld"]);
@@ -914,7 +942,7 @@ class Aps extends Controller
                 'd' => ['x' => 170, 'y' => 260, 'size' => 9]
             ];
             
-        } else if($leave["apTypeId"] == 4) {
+        } else if($leave["apTypeId"] == 4) { // Traslado o Cambio de Puesto
 
             $currentPosition = $this->positionModel->getPositionById($leave["currentPosition"]);
             $newPosition = $this->positionModel->getPositionById($leave["newPosition"]);
@@ -955,6 +983,19 @@ class Aps extends Controller
                 $newPositionName = "";
             }
 
+            $currentA = '';
+            $currentN = '';
+            if (!empty($leave["currentAccount"])){
+                $currentAccount = $this->departmentModel->getDepartmentById($leave["currentAccount"]);
+                $currentA = $currentAccount["name"];
+            }
+            if (!empty($leave["newAccount"])){
+                $newAccount = $this->departmentModel->getDepartmentById($leave["newAccount"]);
+                $currentN = $newAccount["name"];
+            }
+
+
+
             $raise = ($leave["newSalary"] - $leave["currentSalary"]);
 
             $pdf_data["info"][] = [
@@ -982,6 +1023,14 @@ class Aps extends Controller
                 't' => html_entity_decode($leave["comment"]),
                 'd' => ['x' => 130, 'y' => 383, 'size' => 9, 'lineHeight' => 13, 'maxWidth' => 420]
             ];
+            $pdf_data["info"][] = [
+                't' => ucwords(strtolower(html_entity_decode($currentA))),
+                'd' => ['x' => 200, 'y' => 422, 'size' => 9]
+            ];
+            $pdf_data["info"][] = [
+                't' => ucwords(strtolower(html_entity_decode($currentN))),
+                'd' => ['x' => 200, 'y' => 403, 'size' => 9]
+            ];
 
         }
 
@@ -995,7 +1044,24 @@ class Aps extends Controller
 
         $employee = $this->employeeModel->getEmployeeReadByBadge($leave["badge"]);
 
-        $apDate1 = new DateTime($leave["apDate1"]);
+        $initialDateSuspencion = '';
+        if (!empty($leave["apDate1"])) {
+            $apDate1 = new DateTime($leave["apDate1"]);
+            $initialDateSuspencion = $apDate1->format('d/m/Y');
+        }
+        $finDateSuspension = '';
+        if (!empty($leave["apDate2"])) {
+            $apDate2 = new DateTime($leave["apDate2"]);
+            $finDateSuspension = $apDate2->format('d/m/Y');
+        }
+
+        $fechaAmonestacion = '';
+        if (!empty($leave["apDate3"])) {
+            $apDate3 = new DateTime($leave["apDate3"]);
+            $fechaAmonestacion = $apDate3->format('d/m/Y');
+        }else{ 
+            $fechaAmonestacion = $initialDateSuspencion;
+        }
 
         $pdf_data["info"] = [
             [
@@ -1007,15 +1073,11 @@ class Aps extends Controller
                 'd' => ['x' => 178, 'y' => 640, 'size' => 11]
             ],
             [
-                't' => $apDate1->format('d/m/Y'),
+                't' => $fechaAmonestacion,
                 'd' => ['x' => 98, 'y' => 623, 'size' => 11]
             ],
             [
                 't' => $leaveTypeName,
-                'd' => ['x' => 190, 'y' => 605, 'size' => 11]
-            ],
-            [
-                't' => $leave["reason1"],
                 'd' => ['x' => 105, 'y' => 589, 'size' => 11]
             ],
             [
@@ -1024,8 +1086,33 @@ class Aps extends Controller
             ],
         ];
 
+        
+        if ($leave['apTypeId'] == 6) { // Sanciones Disciplinarias
+
+            $pdf_data["info"][] = [ // Verbal-Escrita-Suspension
+                't' => $leave["reason1"],
+                'd' => ['x' => 190, 'y' => 605, 'size' => 11]
+            ];
+
+            if ($leave["reason1"] == 'Suspension' ) {
+
+                $pdf_data["info"][] = [
+                    't' => "Fecha de Suspensión: ",
+                    'd' => ['x' => 400  , 'y' => 620, 'size' => 11]
+                ];
+                $pdf_data["info"][] = [
+                    't' => 'Inicio: ' . $initialDateSuspencion,
+                    'd' => ['x' => 400  , 'y' => 605, 'size' => 11]
+                ];
+                $pdf_data["info"][] = [
+                    't' => 'Fin: ' . $finDateSuspension,
+                    'd' => ['x' => 400  , 'y' => 590, 'size' => 11]
+                ];
+            }
+        }
+        
         $pdf_data["info"][] = [
-            't' => $apDate1->format('d/m/Y'),
+            't' => date('d/m/Y'),
             'd' => ['x' => 205, 'y' => 237, 'size' => 8.5]
         ];
 

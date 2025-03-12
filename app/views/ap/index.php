@@ -237,6 +237,11 @@
                               <label>Dia final</label>
                             </div>
                           </div>
+                            <div class="form-floating form-floating-custom mb-3">
+                              <input class="form-control" type="text" placeholder="Documentos Justificativos" name="documentosJustificativos" id="documentosJustificativos">
+                              <label>Documentos Justificativos que se entregan</label>
+                            </div>
+
                         </div>
                         <!-- SOLICITUD DE VACAIONES -->
                         <div id="vacaciones" class="toggleable">
@@ -342,6 +347,14 @@
                         </div>
                         <!-- Sanciones Disciplinarias -->
                         <div id="sanciones" class="toggleable">
+
+                        <div class="col-sm-12">
+                              <div class="form-floating form-floating-custom mb-3">
+                                <input class="form-control" type="date" placeholder="Dia" name="fechaAmonestacion" id="fechaAmonestacion">
+                                <label>Fecha de Amonestación</label>
+                              </div>
+                            </div>
+
                           <div class="d-flex">
                             <div class="form-check">
                               <input class="form-check-input tipoSus" type="radio" name="tipoSancion" id="sancionVerbal" value="" onChange="setSanciones('sancionVerbal')">
@@ -358,7 +371,7 @@
                             <div class="form-check">
                               <input class="form-check-input tipoSus" type="radio" name="tipoSancion" id="suspension" value="" onChange="setSanciones('suspension')">
                               <label class="form-check-label" for="suspension">
-                                Suspensón
+                                Suspensión
                               </label>
                             </div>
                           </div>
@@ -1689,6 +1702,9 @@
       finSuspension: {
         required: true
       },
+      fechaAmonestacion: {
+        required: true
+      },
       inicioAusencia: {
         required: true
       },
@@ -2272,6 +2288,7 @@
             setReasons('motivo_permiso', 1, myObj.reason1);
             //console.log(myObj.reason1);
             $("#dia1").val(myObj.apDate1);
+            $("#documentosJustificativos").val(myObj.reason3);
             var reason2 = myObj.reason2;
             if (reason2 == "Horas") {
               $("#tiempopermiso").val("Horas");
@@ -2328,6 +2345,7 @@
             break;
           case 6:
             hideAllAndShow("sanciones");
+            $("#fechaAmonestacion").val(myObj.apDate3);
             switch (myObj.reason1) {
               case "Verbal":
                 $("#sancionVerbal").prop('checked', true);
@@ -2335,7 +2353,7 @@
                 break;
               case "Escrita":
                 $("#sancionEscrita").prop('checked', true);
-                $("#diasSuspension").hide()
+                $("#diasSuspension").hide()       
                 break;
               case "Suspension":
                 $("#suspension").prop('checked', true);
@@ -2449,6 +2467,7 @@
             setReasons('motivo_permiso', 1, myObj.reason1);
             console.log(myObj.reason1);
             $("#dia1").val(myObj.apDate1);
+            $("#documentosJustificativos").val(myObj.reason3);
             var reason2 = myObj.reason2;
             if (reason2 == "Horas") {
               $("#tiempopermiso").val("Horas");
@@ -2468,6 +2487,7 @@
             setReasons('motivo_permiso', 1, myObj.reason1);
             //console.log(myObj.reason1);
             $("#dia1").val(myObj.apDate1);
+            $("#documentosJustificativos").val(myObj.reason3);
             var reason2 = myObj.reason2;
             if (reason2 == "Horas") {
               $("#tiempopermiso").val("Horas");
@@ -2524,6 +2544,7 @@
             break;
           case 6:
             hideAllAndShow("sanciones");
+            $("#fechaAmonestacion").val(myObj.apDate3);
             switch (myObj.reason1) {
               case "Verbal":
                 $("#sancionVerbal").prop('checked', true);
