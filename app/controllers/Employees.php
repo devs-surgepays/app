@@ -3,22 +3,21 @@ error_reporting(E_ALL);
 ini_set('display_errors', '0');
 class Employees extends Controller
 {
-    private $departmentModel;
-    private $positionModel;
-    private $employeeModel;
-    private $bankModel;
-    private $afpModel;
-    private $employeeDocumentModel;
-    private $activityLogModel;
-    private $employeeScheduleModel;
-    private $emergencyContactsModel;
-    private $relationshipModel;
-    private $usersModel;
-    private $areaModel;
-    private $billModel;
-    private $financialDependentModel;
-    private $apModel;
-    private $medicalHistoryModel;
+    private $departmentModel = '';
+    private $positionModel = '';
+    private $employeeModel = '';
+    private $bankModel = '';
+    private $afpModel = '';
+    private $employeeDocumentModel = '';
+    private $activityLogModel = '';
+    private $employeeScheduleModel = '';
+    private $emergencyContactsModel = '';
+    private $relationshipModel = '';
+    private $usersModel = '';
+    private $areaModel = '';
+    private $billModel = '';
+    private $financialDependentModel = '';
+    private $apModel = '';
 
     public function __construct()
     {
