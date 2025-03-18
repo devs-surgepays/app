@@ -3,21 +3,22 @@ error_reporting(E_ALL);
 ini_set('display_errors', '0');
 class Employees extends Controller
 {
-    private $departmentModel = '';
-    private $positionModel = '';
-    private $employeeModel = '';
-    private $bankModel = '';
-    private $afpModel = '';
-    private $employeeDocumentModel = '';
-    private $activityLogModel = '';
-    private $employeeScheduleModel = '';
-    private $emergencyContactsModel = '';
-    private $relationshipModel = '';
-    private $usersModel = '';
-    private $areaModel = '';
-    private $billModel = '';
-    private $financialDependentModel = '';
-    private $apModel = '';
+    private $departmentModel;
+    private $positionModel;
+    private $employeeModel;
+    private $bankModel;
+    private $afpModel;
+    private $employeeDocumentModel;
+    private $activityLogModel;
+    private $employeeScheduleModel;
+    private $emergencyContactsModel;
+    private $relationshipModel;
+    private $usersModel;
+    private $areaModel;
+    private $billModel;
+    private $financialDependentModel;
+    private $apModel;
+    private $medicalHistoryModel;
 
     public function __construct()
     {
@@ -40,6 +41,7 @@ class Employees extends Controller
         $this->billModel = $this->model('Bill');
         $this->financialDependentModel = $this->model('FinancialDependent');
         $this->apModel = $this->model('Ap');
+        $this->medicalHistoryModel = $this->model('MedicalHistory');
     }
 
     public function index()
@@ -214,6 +216,7 @@ class Employees extends Controller
                     $data['relationship'] = $this->relationshipModel->getRelationshipsEnglish();
                     $data['superiors'] = $this->usersModel->getSuperiors();
                     $data['financialDependents'] = $this->financialDependentModel->getFinancialDependents($idEmployee);
+                    $data['medicalHistory'] = $this->medicalHistoryModel->getMedicalConditionsByEmployeeId($idEmployee);
 
                     $this->view('employees/edit', $data);
                 } else {
@@ -525,6 +528,63 @@ class Employees extends Controller
     {
         $namesEmployee = $this->employeeModel->getEmployeeByBadge($badge);
         echo json_encode($namesEmployee);
+    }
+
+    public function saveMedicalHistory()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+            $return = ['status' => false, 'message' => '', 'messageDetails' => ''];
+
+
+            if (getPLCreateEditDeleteInfoEmployee()) {
+
+                try {
+
+                    $medicalHistoryId = base64_decode($_POST['medicalHistoryId']);
+                    $idEmpMedicalHistory = base64_decode($_POST['idEmpMedicalHistory']);
+                    $aChangeFields = json_decode($_POST['changedFields'], true);
+
+                    if (!empty($aChangeFields)) {
+
+                        $data = [
+                            'medicalConditions' => $_POST['medicalConditions'],
+                            'medication' => $_POST['medication'],
+                            'allergies' => $_POST['allergies'],
+                            'additionalInformation' => $_POST['additionalInformation'],
+                            'employeeId' => $idEmpMedicalHistory
+                        ];
+
+                        if (!empty($medicalHistoryId)) {
+                            $action = 'Edited';
+                            $actionSave = 'Edit';
+                            $data['medicalHistoryId'] = $medicalHistoryId;
+                            $idEmpMedicalH = $medicalHistoryId;
+                            $this->medicalHistoryModel->updateMedicalConditions($data);
+                        } else {
+                            $action = 'Created';
+                            $actionSave = 'Create';
+                            $idEmpMedicalH = $this->medicalHistoryModel->addMedicalConditions($data);
+                        }
+
+                        $dataLog = ['userId' => $_SESSION['userId'], 'registerId' => $idEmpMedicalH, 'action' => $actionSave, 'page' => 'Medical History', 'fields' => json_encode($aChangeFields)];
+                        $this->activityLogModel->saveActivityLog($dataLog);
+
+                        $return['message'] = 'The medical history has been '.$action.' successfully!!';
+                        $return['status'] = true;
+                    } else {
+                        $return['message'] = 'No changes found!';
+                    }
+                } catch (Exception $e) {
+                    $return['message'] = 'An unexpected error ocurred. Please try again';
+                    $return['messageDetails'] = $e;
+                }
+            } else {
+                $return['message'] = 'Error: You do not have permission to perform this action.';
+            }
+
+            echo json_encode($return);
+        }
     }
 
     public function getCitiesByStateId($stateId = null)
