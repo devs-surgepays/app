@@ -18,6 +18,7 @@ class Employees extends Controller
     private $billModel = '';
     private $financialDependentModel = '';
     private $apModel = '';
+    private $medicalHistoryModel = '';
 
     public function __construct()
     {
