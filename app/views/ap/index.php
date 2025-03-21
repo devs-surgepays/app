@@ -329,9 +329,9 @@
                                 </label>
                               </div>
                               <div class="form-check">
-                                <input class="form-check-input" type="radio" name="tipoIncapacidad" id="asesuisa" value="" onChange="getIncapacidad('asesuisa')">
-                                <label class="form-check-label" for="asesuisa">
-                                  ASESUISA
+                                <input class="form-check-input" type="radio" name="tipoIncapacidad" id="seguroprivado" value="" onChange="getIncapacidad('Seguro médico privado')">
+                                <label class="form-check-label" for="seguroprivado">
+                                  Seguro médico privado
                                 </label>
                               </div>
                               <div class="form-check">
@@ -1002,19 +1002,19 @@
       case "isss":
         console.log("ISSS")
         $("#isss").val("ISSS");
-        $("#asesuisa").val("");
+        $("#seguroprivado").val("");
         $("#particular").val("");
         break;
-      case "asesuisa":
-        console.log("ASESUISA");
+      case "Seguro médico privado":
+        console.log("Seguro médico privado");
         $("#isss").val("");
-        $("#asesuisa").val("ASESUISA");
+        $("#seguroprivado").val("Seguro médico privado");
         $("#particular").val("");
         break;
       case "particular":
         console.log("Particulares");
         $("#isss").val("");
-        $("#asesuisa").val("");
+        $("#seguroprivado").val("");
         $("#particular").val("Particular");
         break;
     }
@@ -1997,7 +1997,7 @@
             cell3.innerHTML = v.createdAt;
             cell4.innerHTML = v.username;
             cell5.innerHTML = v.name;
-            printButton = "disabled";
+            printButton = "enabled";
             switch (v.aprovedByM) {
               case 1:
                 cell6.innerHTML = '<span class="badge badge-success">Approved</span>';
@@ -2323,8 +2323,8 @@
               case "ISSS":
                 console.log("ISSS")
                 break;
-              case "ASESUISA":
-                console.log("ASESUISA");
+              case "Seguro médico privado":
+                console.log("Seguro médico privado");
                 break;
               case "Particular":
                 console.log("Particulares");
@@ -2332,8 +2332,8 @@
             }
             if (myObj.reason1 == "ISSS") {
               $("#isss").prop('checked', true);
-            } else if (myObj.reason1 == "ASESUISA") {
-              $("#asesuisa").prop('checked', true);
+            } else if (myObj.reason1 == "Seguro médico privado") {
+              $("#seguroprivado").prop('checked', true);
             } else {
               $("#particular").prop('checked', true);
             }
@@ -2522,8 +2522,8 @@
               case "ISSS":
                 console.log("ISSS")
                 break;
-              case "ASESUISA":
-                console.log("ASESUISA");
+              case "Seguro médico privado":
+                console.log("Seguro médico privado");
                 break;
               case "Particular":
                 console.log("Particulares");
@@ -2531,8 +2531,8 @@
             }
             if (myObj.reason1 == "ISSS") {
               $("#isss").prop('checked', true);
-            } else if (myObj.reason1 == "ASESUISA") {
-              $("#asesuisa").prop('checked', true);
+            } else if (myObj.reason1 == "Seguro médico privado") {
+              $("#seguroprivado").prop('checked', true);
             } else {
               $("#particular").prop('checked', true);
             }

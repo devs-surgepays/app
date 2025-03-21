@@ -882,6 +882,72 @@ class Aps extends Controller
             ];
         }
 
+        //approved by
+
+        if(($leave["HR"] != NULL && $leave["HR"] != "") || ($leave["M"] != NULL && $leave["M"] != "") || ($leave["SS"] != NULL && $leave["SS"] != "") || ($leave["WF"] != NULL && $leave["WF"] != "")) {
+            
+            $pdf_data["info"][] = [
+                't' => "Aprobado por:",
+                'd' => ['x' => 90, 'y' => 65, 'size' => 10]
+            ];
+
+            if($leave["HR"] != NULL && $leave["HR"] != "") {
+
+                $pdf_data["info"][] = [
+                    't' => ucwords(strtolower(html_entity_decode($leave["HR"]))),
+                    'd' => ['x' => 90, 'y' => 52, 'size' => 9]
+                ];
+
+            }
+    
+            if($leave["M"] != NULL && $leave["M"] != "") {
+
+                $pdf_data["info"][] = [
+                    't' => ucwords(strtolower(html_entity_decode($leave["M"]))),
+                    'd' => ['x' => 90, 'y' => 40, 'size' => 9]
+                ];
+            }
+    
+            if($leave["SS"] != NULL && $leave["SS"] != "") {
+                $pdf_data["info"][] = [
+                    't' => ucwords(strtolower(html_entity_decode($leave["SS"]))),
+                    'd' => ['x' => 90, 'y' => 28, 'size' => 9]
+                ];
+            }
+    
+            if($leave["WF"] != NULL && $leave["WF"] != "") {
+                $pdf_data["info"][] = [
+                    't' => ucwords(strtolower(html_entity_decode($leave["WF"]))),
+                    'd' => ['x' => 90, 'y' => 17, 'size' => 9]
+                ];
+            }
+        }
+
+        $pdf_data["info"][] = [
+            't' => "Testigos:",
+            'd' => ['x' => 336, 'y' => 55, 'size' => 10]
+        ];
+
+        $pdf_data["info"][] = [
+            't' => "Nombre _________________",
+            'd' => ['x' => 336, 'y' => 35, 'size' => 9]
+        ];
+
+        $pdf_data["info"][] = [
+            't' => "DUI ___________",
+            'd' => ['x' => 460, 'y' => 35, 'size' => 9]
+        ];
+
+        $pdf_data["info"][] = [
+            't' => "Nombre _________________",
+            'd' => ['x' => 336, 'y' => 15, 'size' => 9]
+        ];
+
+        $pdf_data["info"][] = [
+            't' => "DUI ___________",
+            'd' => ['x' => 460, 'y' => 15, 'size' => 9]
+        ];
+
         echo json_encode($pdf_data);
 
     }
@@ -895,7 +961,8 @@ class Aps extends Controller
 
         $apDate = new DateTime($leave["apDate1"]);
         
-        $pdf_data["url"] = URLROOT."/public/documents/APs/movimientos.pdf";
+        // $pdf_data["url"] = URLROOT."/public/documents/APs/movimientos.pdf";
+        $pdf_data["url"] = URLROOT."/public/documents/APs/movimientos2.pdf";
 
         $pdf_data["info"] = [
             [
@@ -929,8 +996,15 @@ class Aps extends Controller
                 't' => $hiredDate->format('d/m/Y'),
                 'd' => ['x' => 170, 'y' => 320, 'size' => 9]
             ];
+            if($leave["withdrawalType"] == "Involuntary") {
+                $withdrawalType = "Involuntario";
+            } else if($leave["withdrawalType"] == "Voluntary") {
+                $withdrawalType = "Voluntario";
+            } else {
+                $withdrawalType = "";
+            }
             $pdf_data["info"][] = [
-                't' => $leave["reason1"],
+                't' => $withdrawalType,
                 'd' => ['x' => 170, 'y' => 300, 'size' => 9]
             ];
             $pdf_data["info"][] = [
@@ -940,6 +1014,10 @@ class Aps extends Controller
             $pdf_data["info"][] = [
                 't' => '$ '.strval($employee["salary"]),
                 'd' => ['x' => 170, 'y' => 260, 'size' => 9]
+            ];
+            $pdf_data["info"][] = [
+                't' => strval($leave["comment"]),
+                'd' => ['x' => 170, 'y' => 241, 'size' => 9]
             ];
             
         } else if($leave["apTypeId"] == 4) { // Traslado o Cambio de Puesto
@@ -1034,6 +1112,70 @@ class Aps extends Controller
 
         }
 
+        //approved by
+
+        if(($leave["HR"] != NULL && $leave["HR"] != "") || ($leave["M"] != NULL && $leave["M"] != "") || ($leave["SS"] != NULL && $leave["SS"] != "") || ($leave["WF"] != NULL && $leave["WF"] != "")) {
+            
+            $pdf_data["info"][] = [
+                't' => "Aprobado por:",
+                'd' => ['x' => 90, 'y' => 65, 'size' => 10]
+            ];
+
+            if($leave["HR"] != NULL && $leave["HR"] != "") {
+                $pdf_data["info"][] = [
+                    't' => ucwords(strtolower(html_entity_decode($leave["HR"]))),
+                    'd' => ['x' => 90, 'y' => 52, 'size' => 9]
+                ];
+            }
+    
+            if($leave["M"] != NULL && $leave["M"] != "") {
+
+                $pdf_data["info"][] = [
+                    't' => ucwords(strtolower(html_entity_decode($leave["M"]))),
+                    'd' => ['x' => 90, 'y' => 40, 'size' => 9]
+                ];
+            }
+    
+            if($leave["SS"] != NULL && $leave["SS"] != "") {
+                $pdf_data["info"][] = [
+                    't' => ucwords(strtolower(html_entity_decode($leave["SS"]))),
+                    'd' => ['x' => 90, 'y' => 29, 'size' => 9]
+                ];
+            }
+    
+            if($leave["WF"] != NULL && $leave["WF"] != "") {
+                $pdf_data["info"][] = [
+                    't' => ucwords(strtolower(html_entity_decode($leave["WF"]))),
+                    'd' => ['x' => 90, 'y' => 18, 'size' => 9]
+                ];
+            }
+        }
+
+        $pdf_data["info"][] = [
+            't' => "Testigos:",
+            'd' => ['x' => 336, 'y' => 65, 'size' => 10]
+        ];
+
+        $pdf_data["info"][] = [
+            't' => "Nombre _________________",
+            'd' => ['x' => 336, 'y' => 45, 'size' => 9]
+        ];
+
+        $pdf_data["info"][] = [
+            't' => "DUI ___________",
+            'd' => ['x' => 460, 'y' => 45, 'size' => 9]
+        ];
+
+        $pdf_data["info"][] = [
+            't' => "Nombre _________________",
+            'd' => ['x' => 336, 'y' => 30, 'size' => 9]
+        ];
+
+        $pdf_data["info"][] = [
+            't' => "DUI ___________",
+            'd' => ['x' => 460, 'y' => 30, 'size' => 9]
+        ];
+
         echo json_encode($pdf_data);
 
     }
@@ -1114,6 +1256,70 @@ class Aps extends Controller
         $pdf_data["info"][] = [
             't' => date('d/m/Y'),
             'd' => ['x' => 205, 'y' => 237, 'size' => 8.5]
+        ];
+
+        //approved by
+
+        if(($leave["HR"] != NULL && $leave["HR"] != "") || ($leave["M"] != NULL && $leave["M"] != "") || ($leave["SS"] != NULL && $leave["SS"] != "") || ($leave["WF"] != NULL && $leave["WF"] != "")) {
+            
+            $pdf_data["info"][] = [
+                't' => "Aprobado por:",
+                'd' => ['x' => 90, 'y' => 65, 'size' => 10]
+            ];
+
+            if($leave["HR"] != NULL && $leave["HR"] != "") {
+                $pdf_data["info"][] = [
+                    't' => ucwords(strtolower(html_entity_decode($leave["HR"]))),
+                    'd' => ['x' => 90, 'y' => 52, 'size' => 9]
+                ];
+            }
+    
+            if($leave["M"] != NULL && $leave["M"] != "") {
+
+                $pdf_data["info"][] = [
+                    't' => ucwords(strtolower(html_entity_decode($leave["M"]))),
+                    'd' => ['x' => 90, 'y' => 40, 'size' => 9]
+                ];
+            }
+    
+            if($leave["SS"] != NULL && $leave["SS"] != "") {
+                $pdf_data["info"][] = [
+                    't' => ucwords(strtolower(html_entity_decode($leave["SS"]))),
+                    'd' => ['x' => 90, 'y' => 29, 'size' => 9]
+                ];
+            }
+    
+            if($leave["WF"] != NULL && $leave["WF"] != "") {
+                $pdf_data["info"][] = [
+                    't' => ucwords(strtolower(html_entity_decode($leave["WF"]))),
+                    'd' => ['x' => 90, 'y' => 18, 'size' => 9]
+                ];
+            }
+        }
+
+        $pdf_data["info"][] = [
+            't' => "Testigos:",
+            'd' => ['x' => 336, 'y' => 65, 'size' => 10]
+        ];
+
+        $pdf_data["info"][] = [
+            't' => "Nombre _________________",
+            'd' => ['x' => 336, 'y' => 45, 'size' => 9]
+        ];
+
+        $pdf_data["info"][] = [
+            't' => "DUI ___________",
+            'd' => ['x' => 460, 'y' => 45, 'size' => 9]
+        ];
+
+        $pdf_data["info"][] = [
+            't' => "Nombre _________________",
+            'd' => ['x' => 336, 'y' => 30, 'size' => 9]
+        ];
+
+        $pdf_data["info"][] = [
+            't' => "DUI ___________",
+            'd' => ['x' => 460, 'y' => 30, 'size' => 9]
         ];
 
         echo json_encode($pdf_data);
