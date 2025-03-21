@@ -772,7 +772,7 @@ class Aps extends Controller
 
                 $pdf_data["info"][] = [
                     't' => html_entity_decode($firstComment),
-                    'd' => ['x' => 215, 'y' => 350, 'size' => 10, 'lineHeight' => 14, 'maxWidth' => 315]
+                    'd' => ['x' => 215, 'y' => 350, 'size' => 10, 'lineHeight' => 14, 'maxWidth' => 450]
                 ];
         
                 $pdf_data["info"][] = [

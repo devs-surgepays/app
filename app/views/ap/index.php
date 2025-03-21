@@ -1997,7 +1997,7 @@
             cell3.innerHTML = v.createdAt;
             cell4.innerHTML = v.username;
             cell5.innerHTML = v.name;
-            printButton = "enabled";
+            printButton = "disabled";
             switch (v.aprovedByM) {
               case 1:
                 cell6.innerHTML = '<span class="badge badge-success">Approved</span>';
