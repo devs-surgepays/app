@@ -20,6 +20,8 @@ $financialDependents = (isset($data['financialDependents']) && $data['financialD
 $employeeDocumentsInfo = (isset($data['employeeDocumentsInfo']) && $data['employeeDocumentsInfo'] != NULL) ? $data['employeeDocumentsInfo'] : [];
 $levelsEmployee = (isset($data['levelsEmployee']) && $data['levelsEmployee'] != NULL) ? $data['levelsEmployee'] : [];
 $employeeArchivesInfo = (isset($data['employeeArchivesInfo']) && $data['employeeArchivesInfo'] != NULL) ? $data['employeeArchivesInfo'] : [];
+$medicalHistory = (isset($data['medicalHistory']) && $data['medicalHistory'] != NULL) ? $data['medicalHistory'] : [];
+
 ?>
 <style>
     .card-header h5::after {
@@ -164,7 +166,7 @@ $employeeArchivesInfo = (isset($data['employeeArchivesInfo']) && $data['employee
                         <a class="nav-link" id="tab-schedule" data-bs-toggle="pill" href="#schedule" role="tab" aria-controls="schedule" aria-selected="false" tabindex="-1">Schedule</a>
                     </li>
                     <li class="nav-item submenu" role="presentation">
-                        <a class="nav-link " id="tab-emergency-contacts" data-bs-toggle="pill" href="#emergency-contacts" role="tab" aria-controls="emergency-contacts" aria-selected="true">Emergency Contacts</a>
+                        <a class="nav-link " id="tab-emergency-medical" data-bs-toggle="pill" href="#emergency-medical" role="tab" aria-controls="emergency-medical" aria-selected="true">Emergency Contacts</a>
                     </li>
                     <li class="nav-item submenu" role="presentation">
                         <a class="nav-link " id="tab-financial-dependents" data-bs-toggle="pill" href="#financial-dependents" role="tab" aria-controls="financial-dependents" aria-selected="true">Financial Dependents</a>
@@ -699,8 +701,8 @@ $employeeArchivesInfo = (isset($data['employeeArchivesInfo']) && $data['employee
                                                             <label for="Name">Salary</label>
                                                             <div class="input-group">
                                                                 <?php
-                                                                    $di =  (empty($data['employeeInfo']['salary']) || $data['employeeInfo']['salary'] <= 0) ? '' : 'disabled';
-                                                                    $typeField = ($di == 'disabled') ? 'password' : 'text';
+                                                                $di =  (empty($data['employeeInfo']['salary']) || $data['employeeInfo']['salary'] <= 0) ? '' : 'disabled';
+                                                                $typeField = ($di == 'disabled') ? 'password' : 'text';
                                                                 ?>
                                                                 <input <?php echo $di; ?> id="salary" name="salary" type="<?php echo $typeField ?>" value="<?php echo $data['employeeInfo']['salary']; ?>" class="form-control">
                                                                 <?php if ($di == 'disabled') { ?>
@@ -1089,10 +1091,12 @@ $employeeArchivesInfo = (isset($data['employeeArchivesInfo']) && $data['employee
                         </form>
                     </div>
 
-                    <!-- Emergency Contacts -->
-                    <div class="tab-pane fade " id="emergency-contacts" role="tabpanel" aria-labelledby="tab-emergency-contacts">
+                    <!-- emergency-medical -->
+                    <div class="tab-pane fade " id="emergency-medical" role="tabpanel" aria-labelledby="tab-emergency-medical">
                         <div class="row">
-                            <div class="col-12">
+
+                            <!-- Emergency -->
+                            <div class="col-md-8 col-xl-8 col-sm-12">
                                 <div class="card">
                                     <div class="card-header">
                                         <h5>Emergency Contacts</h5>
@@ -1106,7 +1110,7 @@ $employeeArchivesInfo = (isset($data['employeeArchivesInfo']) && $data['employee
                                             </div>
                                             <div class="col-12 pt-5">
                                                 <div class="table-responsive">
-                                                    <table id="tb-EmergencyContact" class="table table-hover mt-5">
+                                                    <table id="tb-EmergencyContact" class="table table-hover">
                                                         <thead>
                                                             <tr>
                                                                 <th scope="col">#</th>
@@ -1152,6 +1156,67 @@ $employeeArchivesInfo = (isset($data['employeeArchivesInfo']) && $data['employee
                                     </div>
                                 </div>
                             </div>
+
+
+                            <!-- Medical -->
+                            <div class="col-md-4 col-xl-4 col-sm-12">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5>Medical History</h5>
+                                    </div>
+                                    <div class="card-body" style="min-height: 880px;">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <form action="#" id="formMedicalCondition" method="post">
+
+                                                    <div class="row pt-3">
+                                                        <div class="col-12">
+                                                            <div class="form-floating form-floating-custom mb-3">
+                                                                <textarea class="form-control" id="medicalCondition" name="medicalConditions" placeholder="medicalConditions"><?php echo $data['medicalHistory']['medicalConditions']; ?></textarea>
+                                                                <label for="address">Medical Condition</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row pt-3">
+                                                        <div class="col-12">
+                                                            <div class="form-floating form-floating-custom mb-3">
+                                                                <textarea class="form-control" id="medication" name="medication" placeholder="medication"><?php echo $data['medicalHistory']['medication']; ?></textarea>
+                                                                <label for="address">Medication</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row pt-3">
+                                                        <div class="col-12">
+                                                            <div class="form-floating form-floating-custom mb-3">
+                                                                <textarea class="form-control" id="allergies" name="allergies" placeholder="allergies"><?php echo $data['medicalHistory']['allergies']; ?></textarea>
+                                                                <label for="address">Allergies</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row pt-3">
+                                                        <div class="col-12">
+                                                            <div class="form-floating form-floating-custom mb-3">
+                                                                <textarea class="form-control" id="additionalInformation" name="additionalInformation" placeholder="additionalInformation"><?php echo $data['medicalHistory']['additionalInformation']; ?></textarea>
+                                                                <label for="address">Additional Information</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row pt-3">
+                                                        <div class="col-12 d-flex justify-content-end">
+                                                            <input type="hidden" id="idEmpMedicalHistory" name="idEmpMedicalHistory" value="<?php echo base64_encode($data['employeeInfo']['employeeId']) ?>">
+                                                            <input type="hidden" id="medicalHistoryId" name="medicalHistoryId" value="<?php echo base64_encode($data['medicalHistory']['medicalHistoryId']) ?>">
+                                                            <button type="submit" class="btn btn-primary">Save Medical History</button>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
                         <!-- </form> -->
                     </div>
@@ -1638,12 +1703,12 @@ $employeeArchivesInfo = (isset($data['employeeArchivesInfo']) && $data['employee
                                             <option value="">Select</option>
                                             <?php
                                             for ($i = 0; $i < count($levelsEmployee); $i++) {
-                                                echo '<option value="' . $levelsEmployee[$i]['apDetailsId'] . '">Id:' . $levelsEmployee[$i]['apDetailsId'] . ' | '. $levelsEmployee[$i]['name'] . ' ' . $levelsEmployee[$i]['createdAt'] . '</option>';
+                                                echo '<option value="' . $levelsEmployee[$i]['apDetailsId'] . '">Id:' . $levelsEmployee[$i]['apDetailsId'] . ' | ' . $levelsEmployee[$i]['name'] . ' ' . $levelsEmployee[$i]['createdAt'] . '</option>';
                                             }
                                             ?>
                                         </select>
                                     </div>
-                                </div> 
+                                </div>
 
                                 <div class="col-6 commentsArchives">
                                     <div class="form-group">
@@ -1740,11 +1805,15 @@ $employeeArchivesInfo = (isset($data['employeeArchivesInfo']) && $data['employee
             document.getElementById("addEmployeeSchedule").querySelectorAll("input, select, button[type='submit'], textarea").forEach(function(element) {
                 element.disabled = true;
             });
+            document.getElementById("formMedicalCondition").querySelectorAll("input, select, button[type='submit'], textarea").forEach(function(element) {
+                element.disabled = true;
+            });
         }
 
         var initialEmployeeEdit = {};
         var initialEmergeEdit = {};
         var initialDependentEdit = {};
+        var initialMedicalHistory = {};
 
         // table Emerge. Contact
         // $("#tb-EmergencyContact").DataTable();
@@ -1758,7 +1827,7 @@ $employeeArchivesInfo = (isset($data['employeeArchivesInfo']) && $data['employee
             }, '', newURL);
         });
         // Valid tab names
-        var validTabs = ['general-information', 'schedule', 'emergency-contacts', 'financial-dependents', 'employee-documents','employee-archive'];
+        var validTabs = ['general-information', 'schedule', 'emergency-medical', 'financial-dependents', 'employee-documents', 'employee-archive'];
 
         // Check if there's a tab parameter in the URL when the page loads
         var urlParams = new URLSearchParams(window.location.search);
@@ -1781,6 +1850,10 @@ $employeeArchivesInfo = (isset($data['employeeArchivesInfo']) && $data['employee
         // Capture the initial state for Employee edit
         initialEmployeeEdit = captureDataFields('editEmployee', initialEmployeeEdit);
         // console.log(initialEmployeeEdit);
+
+        // Capture the initial formMedicalCondition
+        initialMedicalHistory = captureDataFields('formMedicalCondition', initialMedicalHistory);
+        // console.log(initialMedicalHistory);
 
         $('.phoneMark').mask('0000-0000');
         $('#contactPhoneEmerContact').mask('0000-0000');
@@ -1923,11 +1996,9 @@ $employeeArchivesInfo = (isset($data['employeeArchivesInfo']) && $data['employee
             var cityId = this.value;
             getDistrict(cityId);
         })
-
         $('#photo').on('change', function() {
             previewFile(this, '#photo-preview');
         });
-
         $('#docType').on('change', function() {
             if (this.value == 9) {
                 $(".docNameOther").show(1000)
@@ -2021,7 +2092,58 @@ $employeeArchivesInfo = (isset($data['employeeArchivesInfo']) && $data['employee
 
 
         });
-        //  /Form ADD Employee
+        // Form Medical History
+        $('#formMedicalCondition').on('submit', function(e) {
+            e.preventDefault();
+            var formData = new FormData(this);
+            // function is called to get the JSON object of the changed fields
+            var changedFields = getChangedFields('formMedicalCondition', initialMedicalHistory);
+            var jsonChangedFields = JSON.stringify(changedFields);
+            formData.append('changedFields', jsonChangedFields);
+
+            $.ajax({
+                url: '<?php echo URLROOT; ?>/employees/saveMedicalHistory',
+                method: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                beforeSend: function() {
+
+                },
+                success: function(data) {
+                    console.log("SUCCESS");
+                    console.log(data);
+
+                    var obj = JSON.parse(data);
+                    if (obj.status) {
+
+                        swal(obj.message, {
+                            icon: "success",
+                            buttons: {
+                                confirm: {
+                                    className: "btn btn-success",
+                                },
+                            },
+                        }).then((willReload) => {
+                            if (willReload) {
+                                location.reload();
+                            }
+                        });
+
+                    } else {
+
+                        swal(obj.message, obj.messageDetails, {
+                            icon: "error",
+                            buttons: {
+                                confirm: {
+                                    className: "btn btn-danger",
+                                },
+                            },
+                        });
+                    }
+                }
+            })
+        });
 
         // Form Edit Employee
         $('#editEmployee').validate({
@@ -2275,7 +2397,7 @@ $employeeArchivesInfo = (isset($data['employeeArchivesInfo']) && $data['employee
                     $(".msg-dropzone-archive").html("This field is required");
                     return;
                 }
-                
+
                 // Create a FormData object
                 var formData = new FormData();
                 formData.append('docType', docType);
