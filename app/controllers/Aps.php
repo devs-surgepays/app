@@ -766,13 +766,12 @@ class Aps extends Controller
             'd' => ['x' => 355, 'y' => 647, 'size' => 10]
         ];
 
-        $motivoComment = $leave['reason1'].' - '.$leave["comment"];
-
         $explodedComment = explode(" ",$leave["comment"]);
 
         $x = 215;
         $x2 = 88;
         $x3 = 88;
+        $x4 = 88;
         if($leave["comment"] != "") {
             $c = $leave['reason1'].' -';
         } else {
@@ -781,27 +780,37 @@ class Aps extends Controller
         
         $c2 = "";
         $c3 = "";
+        $c4 = "";
         $xValue = "";
 
         if(intval(strlen($leave["reason1"])) <= 16) {
-            $xValue = 31;
+            $xValue = 30;
         } else {
             $xValue = 42;
         }
 
         foreach($explodedComment as $key => $t) {
+            // first comment line
             if($x < 500) {
                 $c = $c." ".$t;
                 $x += $xValue;
             } else {
+                // second comment line
                 if($x2 < 500) {
                     $c2 = $c2.$t." ";
-                    $x2 += 27;
+                    $x2 += 25;
                 } else {
-                    $c3 = $c3.$t." ";
-                    $x3 += 31;
-                }
-                
+                    // third comment line
+                    if($x3 < 500) {
+                        $c3 = $c3.$t." ";
+                        $x3 += 31;
+                    } else {
+                        // fourth comment line
+                        $c4 = $c4.$t." ";
+                        $x4 += 31;
+                    }
+                    
+                }     
 
             }
         }
@@ -821,10 +830,19 @@ class Aps extends Controller
         if($c3 != ""){
             $pdf_data["info"][] = [
                 't' => html_entity_decode($c3),
-                'd' => ['x' => 88, 'y' => 300, 'size' => 10, 'lineHeight' => 14]
+                'd' => ['x' => 88, 'y' => 308, 'size' => 10, 'lineHeight' => 14]
             ];
         }
 
+        if($c4 != ""){
+            $pdf_data["info"][] = [
+                't' => html_entity_decode($c4),
+                'd' => ['x' => 88, 'y' => 293, 'size' => 10, 'lineHeight' => 14]
+            ];
+        }
+
+        // Old way to print APs comment
+        // $motivoComment = $leave['reason1'].' - '.$leave["comment"];
 
         // if(strlen($motivoComment) > 0) {
         //     if(strlen($motivoComment) > 70) {
