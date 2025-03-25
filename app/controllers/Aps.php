@@ -781,11 +781,18 @@ class Aps extends Controller
         
         $c2 = "";
         $c3 = "";
+        $xValue = "";
+
+        if(intval(strlen($leave["reason1"])) <= 16) {
+            $xValue = 31;
+        } else {
+            $xValue = 42;
+        }
 
         foreach($explodedComment as $key => $t) {
             if($x < 500) {
                 $c = $c." ".$t;
-                $x += 30;
+                $x += $xValue;
             } else {
                 if($x2 < 500) {
                     $c2 = $c2.$t." ";
