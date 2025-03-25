@@ -728,6 +728,10 @@ class Aps extends Controller
 
         $pdf_data["info"] = [
             [
+                't' => strval($leave["apDetailsId"]),
+                'd' => ['x' => 550, 'y' => 750, 'size' => 10]// 'color' => [0, 0.53, 0.71]
+            ],
+            [
                 't' => ucwords(strtolower(html_entity_decode($employee["fullname"]))),
                 'd' => ['x' => 190, 'y' => 630, 'size' => 10]// 'color' => [0, 0.53, 0.71]
             ],
@@ -764,29 +768,74 @@ class Aps extends Controller
 
         $motivoComment = $leave['reason1'].' - '.$leave["comment"]; 
 
+        $explodedComment = explode(" ",$leave["comment"]);
 
-        if(strlen($motivoComment) > 0) {
-            if(strlen($motivoComment) > 68) {
-                $firstComment = substr($motivoComment, 0, 68);
-                $secondComment = substr($motivoComment, 68);
+        $x = 215;
+        $x2 = 88;
+        $x3 = 88;
+        $c = $leave['reason1'].' -';
+        $c2 = "";
+        $c3 = "";
 
-                $pdf_data["info"][] = [
-                    't' => html_entity_decode($firstComment),
-                    'd' => ['x' => 215, 'y' => 350, 'size' => 10, 'lineHeight' => 14, 'maxWidth' => 450]
-                ];
-        
-                $pdf_data["info"][] = [
-                    't' => html_entity_decode($secondComment),
-                    'd' => ['x' => 88, 'y' => 325, 'size' => 10, 'lineHeight' => 14, 'maxWidth' => 430]
-                ];
-
+        foreach($explodedComment as $key => $t) {
+            if($x < 500) {
+                $c = $c." ".$t;
+                $x += 30;
             } else {
-                $pdf_data["info"][] = [
-                    't' => html_entity_decode($motivoComment),
-                    'd' => ['x' => 215, 'y' => 350, 'size' => 10, 'lineHeight' => 14, 'maxWidth' => 315]
-                ];
+                if($x2 < 500) {
+                    $c2 = $c2.$t." ";
+                    $x2 += 27;
+                } else {
+                    $c3 = $c3.$t." ";
+                    $x3 += 31;
+                }
+                
+
             }
         }
+
+        $pdf_data["info"][] = [
+            't' => html_entity_decode($c),
+            'd' => ['x' => 215, 'y' => 350, 'size' => 10, 'lineHeight' => 14]
+        ];
+
+        if($c2 != "") {
+            $pdf_data["info"][] = [
+                't' => html_entity_decode($c2),
+                'd' => ['x' => 88, 'y' => 325, 'size' => 10, 'lineHeight' => 14]
+            ];
+        }
+
+        if($c3 != ""){
+            $pdf_data["info"][] = [
+                't' => html_entity_decode($c3),
+                'd' => ['x' => 88, 'y' => 300, 'size' => 10, 'lineHeight' => 14]
+            ];
+        }
+
+
+        // if(strlen($motivoComment) > 0) {
+        //     if(strlen($motivoComment) > 70) {
+        //         $firstComment = substr($motivoComment, 0, 70);
+        //         $secondComment = substr($motivoComment, 70);
+
+        //         $pdf_data["info"][] = [
+        //             't' => html_entity_decode($firstComment),
+        //             'd' => ['x' => 215, 'y' => 350, 'size' => 10, 'lineHeight' => 14, 'maxWidth' => 400]
+        //         ];
+        
+        //         $pdf_data["info"][] = [
+        //             't' => html_entity_decode($secondComment),
+        //             'd' => ['x' => 88, 'y' => 325, 'size' => 10, 'lineHeight' => 14, 'maxWidth' => 430]
+        //         ];
+
+        //     } else {
+        //         $pdf_data["info"][] = [
+        //             't' => html_entity_decode($motivoComment),
+        //             'd' => ['x' => 215, 'y' => 350, 'size' => 10, 'lineHeight' => 14, 'maxWidth' => 315]
+        //         ];
+        //     }
+        // }
 
         if (!empty($leave["reason3"])) {
             $pdf_data["info"][] = [
@@ -965,6 +1014,10 @@ class Aps extends Controller
         $pdf_data["url"] = URLROOT."/public/documents/APs/movimientos2.pdf";
 
         $pdf_data["info"] = [
+            [
+                't' => strval($leave["apDetailsId"]),
+                'd' => ['x' => 550, 'y' => 750, 'size' => 10]// 'color' => [0, 0.53, 0.71]
+            ],
             [
                 't' => ucwords(strtolower(html_entity_decode($employee["fullname"]))),
                 'd' => ['x' => 112, 'y' => 606, 'size' => 9, 'lineHeight' => 9, 'maxWidth' => 135]
@@ -1206,6 +1259,10 @@ class Aps extends Controller
         }
 
         $pdf_data["info"] = [
+            [
+                't' => strval($leave["apDetailsId"]),
+                'd' => ['x' => 550, 'y' => 750, 'size' => 10]// 'color' => [0, 0.53, 0.71]
+            ],
             [
                 't' => ucwords(strtolower(html_entity_decode($employee["fullname"]))),
                 'd' => ['x' => 110, 'y' => 656, 'size' => 11]
