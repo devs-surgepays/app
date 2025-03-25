@@ -766,14 +766,19 @@ class Aps extends Controller
             'd' => ['x' => 355, 'y' => 647, 'size' => 10]
         ];
 
-        $motivoComment = $leave['reason1'].' - '.$leave["comment"]; 
+        $motivoComment = $leave['reason1'].' - '.$leave["comment"];
 
         $explodedComment = explode(" ",$leave["comment"]);
 
         $x = 215;
         $x2 = 88;
         $x3 = 88;
-        $c = $leave['reason1'].' -';
+        if($leave["comment"] != "") {
+            $c = $leave['reason1'].' -';
+        } else {
+            $c = $leave['reason1'];
+        }
+        
         $c2 = "";
         $c3 = "";
 
