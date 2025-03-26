@@ -766,8 +766,10 @@ class Aps extends Controller
             'd' => ['x' => 355, 'y' => 647, 'size' => 10]
         ];
 
+        $existComment = false;
         if($leave["comment"] != "") {
             $leave["comment"] = $leave['reason1'].' - '. $leave["comment"];
+            $existComment = true;
         } else {
             $leave["comment"] = $leave['reason1'];
         }
@@ -796,54 +798,59 @@ class Aps extends Controller
             }
         }
 
-        foreach (array_slice($explodedComment, $k1, null, true) as $key2 => $t) {
-            if ($count2 + strlen($t) + 1 <= 95) {
-                $count2 += strlen($t) + 1;
-                $text2 .= $t . " ";
-            } else {
-                $k2 = $key2;  
-                break;
-            }
-        }
-
-        foreach (array_slice($explodedComment, $k2, null, true) as $key3 => $t) {
-            if ($count3 + strlen($t) + 1 <= 95) {
-                $count3 += strlen($t) + 1;
-                $text3 .= $t . " ";
-            } else {
-                $k3 = $key3;  
-                break;
-            }
-        }
-
-        foreach (array_slice($explodedComment, $k3, null, true) as $key4 => $t) {
-            if ($count4 + strlen($t) + 1 <= 95) {
-                $count4 += strlen($t) + 1;
-                $text4 .= $t . " ";
-            } else {
-                break;  
-            }
-        }
-        
         $pdf_data["info"][] = [
             't' => html_entity_decode($text1),
             'd' => ['x' => 215, 'y' => 350, 'size' => 10, 'lineHeight' => 14]
         ];
 
-        $pdf_data["info"][] = [
-            't' => html_entity_decode($text2),
-            'd' => ['x' => 88, 'y' => 325, 'size' => 10, 'lineHeight' => 14]
-        ];
+        if($existComment) {
+            foreach (array_slice($explodedComment, $k1, null, true) as $key2 => $t) {
+                if ($count2 + strlen($t) + 1 <= 95) {
+                    $count2 += strlen($t) + 1;
+                    $text2 .= $t . " ";
+                } else {
+                    $k2 = $key2;  
+                    break;
+                }
+            }
+    
+            foreach (array_slice($explodedComment, $k2, null, true) as $key3 => $t) {
+                if ($count3 + strlen($t) + 1 <= 95) {
+                    $count3 += strlen($t) + 1;
+                    $text3 .= $t . " ";
+                } else {
+                    $k3 = $key3;  
+                    break;
+                }
+            }
+    
+            foreach (array_slice($explodedComment, $k3, null, true) as $key4 => $t) {
+                if ($count4 + strlen($t) + 1 <= 95) {
+                    $count4 += strlen($t) + 1;
+                    $text4 .= $t . " ";
+                } else {
+                    break;  
+                }
+            }
 
-        $pdf_data["info"][] = [
-            't' => html_entity_decode($text3),
-            'd' => ['x' => 88, 'y' => 308, 'size' => 10, 'lineHeight' => 14]
-        ];
+            $pdf_data["info"][] = [
+                't' => html_entity_decode($text2),
+                'd' => ['x' => 88, 'y' => 325, 'size' => 10, 'lineHeight' => 14]
+            ];
+    
+            $pdf_data["info"][] = [
+                't' => html_entity_decode($text3),
+                'd' => ['x' => 88, 'y' => 308, 'size' => 10, 'lineHeight' => 14]
+            ];
+    
+            $pdf_data["info"][] = [
+                't' => html_entity_decode($text4),
+                'd' => ['x' => 88, 'y' => 293, 'size' => 10, 'lineHeight' => 14]
+            ];
 
-        $pdf_data["info"][] = [
-            't' => html_entity_decode($text4),
-            'd' => ['x' => 88, 'y' => 293, 'size' => 10, 'lineHeight' => 14]
-        ];
+        }
+
+        
 
         if (!empty($leave["reason3"])) {
             $pdf_data["info"][] = [
