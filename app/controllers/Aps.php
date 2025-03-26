@@ -766,91 +766,106 @@ class Aps extends Controller
             'd' => ['x' => 355, 'y' => 647, 'size' => 10]
         ];
 
-        $existComment = false;
-        if($leave["comment"] != "") {
-            $leave["comment"] = $leave['reason1'].' - '. $leave["comment"];
-            $existComment = true;
-        } else {
-            $leave["comment"] = $leave['reason1'];
-        }
         $explodedComment = explode(" ",$leave["comment"]);
 
-        $count1 = 0;
-        $text1 = "";
-        $count2 = 0;
-        $text2 = "";
-        $count3 = 0;
-        $text3 = "";
-        $count4 = 0;
-        $text4 = "";
+        $x = 215;
+        $x2 = 88;
+        $x3 = 88;
+        $x4 = 88;
+        if($leave["comment"] != "") {
+            $c = $leave['reason1'].' -';
+        } else {
+            $c = $leave['reason1'];
+        }
+        
+        $c2 = "";
+        $c3 = "";
+        $c4 = "";
+        $xValue = "";
 
-        $k1 = 0;
-        $k2 = 0;
-        $k3 = 0;
+        if(intval(strlen($leave["reason1"])) <= 16) {
+            $xValue = 30;
+        } else {
+            $xValue = 42;
+        }
 
-        foreach ($explodedComment as $key1 => $t) {
-            if ($count1 + strlen($t) + 1 <= 67) {
-                $count1 += strlen($t) + 1;
-                $text1 .= $t . " ";
+        foreach($explodedComment as $key => $t) {
+            // first comment line
+            if($x < 500) {
+                $c = $c." ".$t;
+                $x += $xValue;
             } else {
-                $k1 = $key1;  
-                break;
+                // second comment line
+                if($x2 < 500) {
+                    $c2 = $c2.$t." ";
+                    $x2 += 25;
+                } else {
+                    // third comment line
+                    if($x3 < 500) {
+                        $c3 = $c3.$t." ";
+                        $x3 += 31;
+                    } else {
+                        // fourth comment line
+                        $c4 = $c4.$t." ";
+                        $x4 += 31;
+                    }
+                    
+                }     
+
             }
         }
 
         $pdf_data["info"][] = [
-            't' => html_entity_decode($text1),
+            't' => html_entity_decode($c),
             'd' => ['x' => 215, 'y' => 350, 'size' => 10, 'lineHeight' => 14]
         ];
 
-        if($existComment) {
-            foreach (array_slice($explodedComment, $k1, null, true) as $key2 => $t) {
-                if ($count2 + strlen($t) + 1 <= 95) {
-                    $count2 += strlen($t) + 1;
-                    $text2 .= $t . " ";
-                } else {
-                    $k2 = $key2;  
-                    break;
-                }
-            }
-    
-            foreach (array_slice($explodedComment, $k2, null, true) as $key3 => $t) {
-                if ($count3 + strlen($t) + 1 <= 95) {
-                    $count3 += strlen($t) + 1;
-                    $text3 .= $t . " ";
-                } else {
-                    $k3 = $key3;  
-                    break;
-                }
-            }
-    
-            foreach (array_slice($explodedComment, $k3, null, true) as $key4 => $t) {
-                if ($count4 + strlen($t) + 1 <= 95) {
-                    $count4 += strlen($t) + 1;
-                    $text4 .= $t . " ";
-                } else {
-                    break;  
-                }
-            }
-
+        if($c2 != "") {
             $pdf_data["info"][] = [
-                't' => html_entity_decode($text2),
+                't' => html_entity_decode($c2),
                 'd' => ['x' => 88, 'y' => 325, 'size' => 10, 'lineHeight' => 14]
             ];
-    
-            $pdf_data["info"][] = [
-                't' => html_entity_decode($text3),
-                'd' => ['x' => 88, 'y' => 308, 'size' => 10, 'lineHeight' => 14]
-            ];
-    
-            $pdf_data["info"][] = [
-                't' => html_entity_decode($text4),
-                'd' => ['x' => 88, 'y' => 293, 'size' => 10, 'lineHeight' => 14]
-            ];
-
         }
 
+        if($c3 != ""){
+            $pdf_data["info"][] = [
+                't' => html_entity_decode($c3),
+                'd' => ['x' => 88, 'y' => 308, 'size' => 10, 'lineHeight' => 14]
+            ];
+        }
+
+        if($c4 != ""){
+            $pdf_data["info"][] = [
+                't' => html_entity_decode($c4),
+                'd' => ['x' => 88, 'y' => 293, 'size' => 10, 'lineHeight' => 14]
+            ];
+        }
+
+        // Old way to print APs comment
+        // $motivoComment = $leave['reason1'].' - '.$leave["comment"];
+
+        // if(strlen($motivoComment) > 0) {
+        //     if(strlen($motivoComment) > 70) {
+        //         $firstComment = substr($motivoComment, 0, 70);
+        //         $secondComment = substr($motivoComment, 70);
+
+        //         $pdf_data["info"][] = [
+        //             't' => html_entity_decode($firstComment),
+        //             'd' => ['x' => 215, 'y' => 350, 'size' => 10, 'lineHeight' => 14, 'maxWidth' => 400]
+        //         ];
         
+        //         $pdf_data["info"][] = [
+        //             't' => html_entity_decode($secondComment),
+        //             'd' => ['x' => 88, 'y' => 325, 'size' => 10, 'lineHeight' => 14, 'maxWidth' => 430]
+        //         ];
+
+        //     } else {
+        //         $pdf_data["info"][] = [
+        //             't' => html_entity_decode($motivoComment),
+        //             'd' => ['x' => 215, 'y' => 350, 'size' => 10, 'lineHeight' => 14, 'maxWidth' => 315]
+        //         ];
+        //     }
+        // }
 
         if (!empty($leave["reason3"])) {
             $pdf_data["info"][] = [
