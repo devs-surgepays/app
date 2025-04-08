@@ -24,7 +24,7 @@ function getPLEmployeeTable($withWhere)
     //if (($permissionLevelId & 4))  $where .= ' or em.superiorId = ' . $_SESSION['userId'] . ' or em.employeeId = ' . $_SESSION['employeeId']; // Supervisor
     if (($permissionLevelId & 8))  $where .= ' or em.areaId = ' . $_SESSION['areaId']; // Account Manager
     if (($permissionLevelId & 16))  $where = ''; // HR
-    if (($permissionLevelId & 32))  $where = ' or em.areaId in (9,10) '; // Operation Manager  9-SURGEPAYS /10-SURGEPHONE Operation Manager
+    if (($permissionLevelId & 32))  $where = ' or em.areaId in (5,10,12,13,15) '; // Operation Manager  - 5 OPERACIONES GLOBALES - 10 MERCHANTS - 12 CUMPLIMIENTO DEL PRODUCTO - 13 CALIDAD - 15 SURGEPHONE
     if (($permissionLevelId & 64))  $where = ''; // Super Admin
     if (($permissionLevelId & 128))  $where = ''; // Development
     if (($permissionLevelId & 256))  $where = ''; // External person
