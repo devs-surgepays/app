@@ -148,7 +148,7 @@ FROM hr_surgepays.ap_details ap WHERE apDetailsId=:leaveId");
     }
 
     public function getData($offset,$per_page,$search,$orderby){
-        $showEmWhere = getPLEmployeeTable(false);
+        $showEmWhere = getPLEmployeeTable(false,true);
         $getApSAA = (getPLSAA()==false)?" AND a.apTypeId not in (11,12)":"";
 		$date_now = date('Y-m-d').'%';
 		//echo "select firstname,lastname,email_address,email_status,CAST(email_open_datetime AS DATE) as date_opened,delivered,received,unsubscribe from mailCampaigns.contacts  ORDER BY $orderby limit $offset,$per_page;";

@@ -15,14 +15,15 @@
  * Sin query  $where = ''; muestra todos los empleados sin restricciones (sin where)
  * @return string
  */
-function getPLEmployeeTable($withWhere)
+function getPLEmployeeTable($withWhere, $tableAps = false)
 {
     $where = 'or em.superiorId = ' . $_SESSION['userId'] . ' or em.employeeId = ' . $_SESSION['employeeId'];
 
     $permissionLevelId = $_SESSION['permissionLevelId'];
     // if (($permissionLevelId & 2))  $where .= ' or em.employeeId = ' . $_SESSION['employeeId']; // Regular Agent
     //if (($permissionLevelId & 4))  $where .= ' or em.superiorId = ' . $_SESSION['userId'] . ' or em.employeeId = ' . $_SESSION['employeeId']; // Supervisor
-    if (($permissionLevelId & 8))  $where .= ' or em.areaId = ' . $_SESSION['areaId']; // Account Manager
+    if (($permissionLevelId) & 8 and $tableAps)  $where =    ' ( (em.employeeId != '.$_SESSION['employeeId'].' and ( aprovedByM>=0 )) or (em.employeeId = '.$_SESSION['employeeId'].' and ( aprovedByM = 1  )) ) and em.areaId = '.$_SESSION['areaId'];  //' or em.areaId = ' . $_SESSION['areaId']; // Account Manager
+    if (($permissionLevelId) & 8 and !$tableAps )  $where .= ' or em.areaId = ' . $_SESSION['areaId']; // Account Manager
     if (($permissionLevelId & 16))  $where = ''; // HR
     if (($permissionLevelId & 32))  $where = ' or em.areaId in (5,10,12,13,15) '; // Operation Manager  - 5 OPERACIONES GLOBALES - 10 MERCHANTS - 12 CUMPLIMIENTO DEL PRODUCTO - 13 CALIDAD - 15 SURGEPHONE
     if (($permissionLevelId & 64))  $where = ''; // Super Admin
