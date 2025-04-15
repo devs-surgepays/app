@@ -80,7 +80,7 @@ class EmployeeSchedule
                         INNER JOIN positions po ON em.positionId = po.positionId
                         INNER JOIN areas ar ON ar.areaId = em.areaId
                         WHERE 
-                            es.status = 1 
+                            em.status = 1 
                             AND em.billTo = 1
                             AND es.$dayToday != '-OFF-' 
                             AND es.createdAt = (
