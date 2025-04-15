@@ -30,7 +30,7 @@ function getPLEmployeeTable($withWhere, $tableAps = false)
     if (($permissionLevelId & 128))  $where = ''; // Development
     if (($permissionLevelId & 256))  $where = ''; // External person
     if (($permissionLevelId & 512))  $where = ''; // WF
-
+    
     if (!empty($where)) {
         //Delete the first "OR"
         $where = trim($where);
@@ -149,15 +149,17 @@ function getPLReports()
     $permissionLevelId = $_SESSION['permissionLevelId'];
     $permission = false;
 
-    if (($permissionLevelId & 2))  $permission = false; // Regular Agent
-    if (($permissionLevelId & 4))  $permission = true; // Supervisor
-    if (($permissionLevelId & 8))  $permission = true; // Manager Account
-    if (($permissionLevelId & 16))  $permission = true; // HR
-    if (($permissionLevelId & 32))  $permission = true; // Operation Manager
-    if (($permissionLevelId & 64))  $permission = true; // Super Admin
-    if (($permissionLevelId & 128))  $permission = true; // Development
-    if (($permissionLevelId & 256))  $permission = true; // External person
-    if (($permissionLevelId & 512))  $permission = true; // WF
+    // if (($permissionLevelId & 2))  $permission = false; // Regular Agent
+    // if (($permissionLevelId & 4))  $permission = false; // Supervisor
+    // if (($permissionLevelId & 8))  $permission = false; // Manager Account
+    // if (($permissionLevelId & 16))  $permission = true; // HR
+    // if (($permissionLevelId & 32))  $permission = false; // Operation Manager
+    // if (($permissionLevelId & 64))  $permission = true; // Super Admin
+    // if (($permissionLevelId & 128))  $permission = true; // Development
+    // if (($permissionLevelId & 256))  $permission = true; // External person
+    // if (($permissionLevelId & 512))  $permission = true; // WF
+    #512+256+128+64+16=976
+    if (($permissionLevelId & 976))  $permission = true;
 
     return $permission;
 }
