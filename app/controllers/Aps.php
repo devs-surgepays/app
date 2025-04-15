@@ -1,6 +1,5 @@
 <?php
-//    error_reporting(E_ALL);
-//    ini_set("display_errors", 1);
+
 class Aps extends Controller
 {
     public $apModel;
@@ -59,7 +58,7 @@ class Aps extends Controller
                     $data['reason1']=$_POST["motivo_permiso"];
                     $data['reason2']=$_POST['tiempopermiso'];
                     $data['apDate1']=$_POST["dia1"];
-                    $data['reason3']=$_POST["documentosJustificativos"];
+                    $data['reason3']=(isset($_POST["documentosJustificativos"]))?$_POST["documentosJustificativos"]:"";
                     if($data['reason2']=="Horas"){
                         $data['startTime']=$_POST['hora_inicio'];
                         $data['endTime']=$_POST['hora_final'];
@@ -72,7 +71,7 @@ class Aps extends Controller
                     $data['reason1']=$_POST["motivo_permiso"];
                     $data['reason2']=$_POST['tiempopermiso'];
                     $data['apDate1']=$_POST["dia1"];
-                    $data['reason3']=$_POST["documentosJustificativos"];
+                    $data['reason3']=(isset($_POST["documentosJustificativos"]))?$_POST["documentosJustificativos"]:"";
                     if($data['reason2']=="Horas"){
                         $data['startTime']=$_POST['hora_inicio'];
                         $data['endTime']=$_POST['hora_final'];

@@ -177,7 +177,7 @@ FROM
     hr_surgepays.ap_types t ON t.apTypeId = a.apTypeId WHERE $search $showEmWhere $getApSAA ORDER BY $orderby  limit $offset,$per_page;");
 					
 				}else{
-                    $showEmWhere = getPLEmployeeTable(true);
+                    $showEmWhere = getPLEmployeeTable(true,true);
 					$this->db->query("SELECT 
     a.apDetailsId,
     CONCAT(em.firstName, ' ', em.firstLastName) AS fullName,
