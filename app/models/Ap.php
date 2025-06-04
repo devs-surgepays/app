@@ -242,7 +242,7 @@ FROM
                         inner join hr_surgepays.employees em on em.badge = apd.badge
                         inner join hr_surgepays.users u on u.userId = apd.createdBy
                         inner join hr_surgepays.ap_types apt on apt.apTypeId = apd.apTypeId
-                        WHERE apd.apDate1 >= :b_date and apd.apDate1 <= :f_date";
+                        WHERE apd.apDate1 >= :b_date or apd.apDate2 <= :f_date";
 
         if($filters["apTypeId"] > -1 && $filters["aprovedByHR"] > -1) {
 
