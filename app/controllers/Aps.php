@@ -50,15 +50,15 @@ class Aps extends Controller
                 "badge" => $_POST['addbadge'],
                 //"employeeId" => $_POST['addEmployeeId'],
                 "createdBy" => $_SESSION['userId'],
-                "comment"=>$comments
+                "comment"=>html_entity_decode($comments)
             ];
 
             switch($data['apTypeId']){
                 case 1:
-                    $data['reason1']=$_POST["motivo_permiso"];
-                    $data['reason2']=$_POST['tiempopermiso'];
+                    $data['reason1']=html_entity_decode($_POST["motivo_permiso"]);
+                    $data['reason2']=html_entity_decode($_POST['tiempopermiso']);
                     $data['apDate1']=$_POST["dia1"];
-                    $data['reason3']=(isset($_POST["documentosJustificativos"]))?$_POST["documentosJustificativos"]:"";
+                    $data['reason3']=(isset($_POST["documentosJustificativos"]))? html_entity_decode($_POST["documentosJustificativos"]):"";
                     if($data['reason2']=="Horas"){
                         $data['startTime']=$_POST['hora_inicio'];
                         $data['endTime']=$_POST['hora_final'];
@@ -68,10 +68,10 @@ class Aps extends Controller
                     }
                     break;
                 case 2:
-                    $data['reason1']=$_POST["motivo_permiso"];
-                    $data['reason2']=$_POST['tiempopermiso'];
+                    $data['reason1']=html_entity_decode($_POST["motivo_permiso"]);
+                    $data['reason2']=html_entity_decode($_POST['tiempopermiso']);
                     $data['apDate1']=$_POST["dia1"];
-                    $data['reason3']=(isset($_POST["documentosJustificativos"]))?$_POST["documentosJustificativos"]:"";
+                    $data['reason3']=(isset($_POST["documentosJustificativos"]))? html_entity_decode($_POST["documentosJustificativos"]):"";
                     if($data['reason2']=="Horas"){
                         $data['startTime']=$_POST['hora_inicio'];
                         $data['endTime']=$_POST['hora_final'];
@@ -98,14 +98,14 @@ class Aps extends Controller
                 case 5:
                     $data['apDate1']=$_POST['inicioIncapacidad'];
                     $data['apDate2']=$_POST['finIncapacidad'];
-                    $data['reason1']=$_POST['tipoIncapacidad'];
+                    $data['reason1']=html_entity_decode($_POST['tipoIncapacidad']);
                     if(isset($_POST['prorroga'])){
                         $data['reason2']=($_POST['prorroga']=="Yes")?"Prorroga":"";
                     }
                     break;
                 case 6:
                     $data['apDate1'] = date("Y-m-d");
-                    $data['reason1']=$_POST['tipoSancion'];
+                    $data['reason1']=html_entity_decode($_POST['tipoSancion']);
                     if(isset($_POST['septimo'])){
                         $data['reason2']=($_POST['septimo']=="Yes")?"Septimo":"";
                     }
@@ -126,7 +126,7 @@ class Aps extends Controller
 
                     $data['apDate1']=$_POST['inicioHorario'];
                     $data['apDate2']=$_POST['finHorario'];
-                    $data['reason1']=$_POST['motivo_horario'];
+                    $data['reason1']=html_entity_decode($_POST['motivo_horario']);
                     if(isset($_POST['mondayOff'])){
                         $schedule['monday']="-OFF-";
                         $schedule['mondayLunch']="-OFF-";
@@ -238,7 +238,7 @@ class Aps extends Controller
                     $data['apDate1']=$_POST['fechaSolicitud'];
                     $data['apDate2']=$_POST['diaAsignado'];
                     $data['apDate3']=$_POST['diaSolicitado'];
-                    $data['reason1']=$_POST['motivo_cambio'];
+                    $data['reason1']=html_entity_decode($_POST['motivo_cambio']);
                     break;
                 case 9:
                     $data['apDate1']=$_POST['inicioAusencia'];
@@ -253,12 +253,12 @@ class Aps extends Controller
                     $data['withdrawalType']=$_POST['tipoRetiro'];
                     $data['attritionsId1']=$_POST['attritions'];
                     $attrition = $this->apModel->getAttritionsResons($data['attritionsId1']);
-                    $data['reason1']=$attrition['name'];
+                    $data['reason1']=html_entity_decode($attrition['name']);
                     
                     if(isset($_POST['reasonsDetails'])){
                         $data['attritionsId2']=$_POST['reasonsDetails'];
                         $reasonsDetails = $this->apModel->getAttritionsResonsDetails($data['attritionsId2']);
-                        $data['reason2']=$reasonsDetails['name'];
+                        $data['reason2']=html_entity_decode($reasonsDetails['name']);
                         
                     }
                     $data['apDate1']=$_POST['fechaRetiro'];
