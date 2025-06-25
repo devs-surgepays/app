@@ -256,7 +256,11 @@ FROM
         if($filters["apTypeId"] > -1 && $filters["aprovedByHR"] > -1) {
 
             //where apd.apDate1 >= date('2024-12-01') and apd.apDate1 < date('2024-12-31')
-            $query.=" AND apd.apTypeId = :apTypeId AND (apd.aprovedByHR = :aprovedByHR OR apd.aprovedByWf = :aprovedByHR) order by apd.apDate1 asc";
+            if($filters["aprovedByHR"] == 00) {
+                $query.=" AND apd.apTypeId = :apTypeId AND (apd.aprovedByHR = :aprovedByHR AND apd.aprovedByWf = :aprovedByHR) order by apd.apDate1 asc";
+            } else {
+                $query.=" AND apd.apTypeId = :apTypeId AND (apd.aprovedByHR = :aprovedByHR OR apd.aprovedByWf = :aprovedByHR) order by apd.apDate1 asc";
+            }
             $this->db->query($query);
             $this->db->bind(":apTypeId", $filters["apTypeId"]);
             $this->db->bind(":aprovedByHR", $filters["aprovedByHR"]);
@@ -275,7 +279,11 @@ FROM
 
             } else if($filters["aprovedByHR"] > -1) {
 
-                $query.=" AND (apd.aprovedByHR = :aprovedByHR OR apd.aprovedByWf = :aprovedByHR) order by apd.apDate1 asc";
+                if($filters["aprovedByHR"] == 00) {
+                    $query.=" AND (apd.aprovedByHR = :aprovedByHR AND apd.aprovedByWf = :aprovedByHR) order by apd.apDate1 asc";    
+                } else {
+                    $query.=" AND (apd.aprovedByHR = :aprovedByHR OR apd.aprovedByWf = :aprovedByHR) order by apd.apDate1 asc";
+                }
                 $this->db->query($query);
                 $this->db->bind(":aprovedByHR", $filters["aprovedByHR"]);
                 $this->db->bind(":b_date", $filters["b_date"]);
