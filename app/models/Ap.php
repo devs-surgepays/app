@@ -234,6 +234,14 @@ FROM
                             WHEN apd.aprovedByHR = 3 THEN 'Cancelled'
                             ELSE ''
                         END AS 'aprovedByHR',
+                        CASE
+                            WHEN apd.aprovedByWf = -1 THEN 'All'
+                            WHEN apd.aprovedByWf = 00 THEN 'Pending'
+                            WHEN apd.aprovedByWf = 1 THEN 'Approved'
+                            WHEN apd.aprovedByWf = 2 THEN 'Rejected'
+                            WHEN apd.aprovedByWf = 3 THEN 'Cancelled'
+                            ELSE ''
+                        END AS 'aprovedByWf',
                         
                         (select if (us.employeeId>0, CONCAT(COALESCE(eu.firstName, ''), ' ', COALESCE(eu.firstLastName, '')), CONCAT(COALESCE(us.firstName, ''), ' ', COALESCE(us.firstLastName, '')) ) as 'fullname' 
                         from users as us left JOIN employees eu ON us.employeeId = eu.employeeId where us.userId = em.superiorId) as 'Superior Name'
@@ -248,7 +256,7 @@ FROM
         if($filters["apTypeId"] > -1 && $filters["aprovedByHR"] > -1) {
 
             //where apd.apDate1 >= date('2024-12-01') and apd.apDate1 < date('2024-12-31')
-            $query.=" AND apd.apTypeId = :apTypeId AND apd.aprovedByHR = :aprovedByHR order by apd.apDate1 asc";
+            $query.=" AND apd.apTypeId = :apTypeId AND (apd.aprovedByHR = :aprovedByHR OR apd.aprovedByWf = :aprovedByHR) order by apd.apDate1 asc";
             $this->db->query($query);
             $this->db->bind(":apTypeId", $filters["apTypeId"]);
             $this->db->bind(":aprovedByHR", $filters["aprovedByHR"]);
@@ -267,7 +275,7 @@ FROM
 
             } else if($filters["aprovedByHR"] > -1) {
 
-                $query.=" AND apd.aprovedByHR = :aprovedByHR order by apd.apDate1 asc";
+                $query.=" AND (apd.aprovedByHR = :aprovedByHR OR apd.aprovedByWf = :aprovedByHR) order by apd.apDate1 asc";
                 $this->db->query($query);
                 $this->db->bind(":aprovedByHR", $filters["aprovedByHR"]);
                 $this->db->bind(":b_date", $filters["b_date"]);
