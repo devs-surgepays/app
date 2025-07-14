@@ -178,8 +178,10 @@
                               <option value="">Select...</option>
                               <?php
                               foreach ($data['apTypes'] as $items) {
-                                if($items['apTypeId']== 11 || $items['apTypeId']==12)
+                                if($items['apTypeId']== 11)
                                 {
+                                  echo (getPLAT()==true)?"<option value='" . $items['apTypeId'] . "'>" . $items['name'] . "</option>":"";
+                                }else if($items['apTypeId']==12){
                                   echo (getPLSAA()==true)?"<option value='" . $items['apTypeId'] . "'>" . $items['name'] . "</option>":"";
                                 }else{
                                   echo "<option value='" . $items['apTypeId'] . "'>" . $items['name'] . "</option>";
@@ -753,8 +755,10 @@
                         <option value="">Select...</option>
                         <?php
                         foreach ($data['apTypes'] as $items) {
-                          if($items['apTypeId']== 11 || $items['apTypeId']==12)
+                          if($items['apTypeId']== 11)
                           {
+                            echo (getPLAT()==true)?"<option value='" . $items['apTypeId'] . "'>" . $items['name'] . "</option>":"";
+                          }else if($items['apTypeId']==12){
                             echo (getPLSAA()==true)?"<option value='" . $items['apTypeId'] . "'>" . $items['name'] . "</option>":"";
                           }else{
                             echo "<option value='" . $items['apTypeId'] . "'>" . $items['name'] . "</option>";

@@ -129,19 +129,22 @@ FROM hr_surgepays.ap_details ap WHERE apDetailsId=:leaveId");
 
     public function countRegisters($search){
         $showEmWhere = getPLEmployeeTable(false);
+        $salaryapp=(getPLSAA()==false)?" AND a.apTypeId =12":"";
+        $attritionsapp=(getPLAT()==false)?" AND a.apTypeId =11":"";
+        $getApSAA = $salaryapp.$attritionsapp;
         if ($search!="") {
             $this->db->query("SELECT count(*) as total 
                                 FROM hr_surgepays.ap_details a 
                                 JOIN hr_surgepays.employees em ON em.badge=a.badge 
                                 JOIN hr_surgepays.users u ON u.userId=a.createdBy 
-                                JOIN hr_surgepays.ap_types t ON t.apTypeId = a.apTypeId WHERE $search $showEmWhere order by a.apDetailsId asc");
+                                JOIN hr_surgepays.ap_types t ON t.apTypeId = a.apTypeId WHERE $search $showEmWhere  $getApSAA  order by a.apDetailsId asc");
         }else{
             $showEmWhere = getPLEmployeeTable(true);
             $this->db->query("SELECT count(*) as total
                                 FROM hr_surgepays.ap_details a
                                 JOIN hr_surgepays.employees em ON em.badge=a.badge
                                 JOIN hr_surgepays.users u ON u.userId=a.createdBy
-                                JOIN hr_surgepays.ap_types t ON t.apTypeId = a.apTypeId $showEmWhere order by a.apDetailsId  asc");
+                                JOIN hr_surgepays.ap_types t ON t.apTypeId = a.apTypeId $showEmWhere  $getApSAA  order by a.apDetailsId  asc");
         }
 
 
@@ -154,7 +157,9 @@ FROM hr_surgepays.ap_details ap WHERE apDetailsId=:leaveId");
 
     public function getData($offset,$per_page,$search,$orderby){
         $showEmWhere = getPLEmployeeTable(false,true);
-        $getApSAA = (getPLSAA()==false)?" AND a.apTypeId not in (11,12)":"";
+        $salaryapp=(getPLSAA()==false)?" AND a.apTypeId !=12":"";
+        $attritionsapp=(getPLAT()==false)?" AND a.apTypeId !=11":"";
+        $getApSAA = $salaryapp.$attritionsapp;
 		$date_now = date('Y-m-d').'%';
 		//echo "select firstname,lastname,email_address,email_status,CAST(email_open_datetime AS DATE) as date_opened,delivered,received,unsubscribe from mailCampaigns.contacts  ORDER BY $orderby limit $offset,$per_page;";
 		//echo "SELECT a.apDetailsId,concat(em.firstName,' ',em.firstLastName) as fullName,a.badge,date(a.createdAt) as createdAt,u.username,t.name,a.status FROM hr_surgepays.ap_details a JOIN hr_surgepays.employees em ON em.badge=a.badge JOIN hr_surgepays.users u ON u.userId=a.createdBy JOIN hr_surgepays.ap_types t ON t.apTypeId = a.apTypeId WHERE ".$search." ".$showEmWhere."   ORDER BY ".$orderby;
