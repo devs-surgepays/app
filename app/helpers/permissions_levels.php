@@ -30,7 +30,7 @@ function getPLEmployeeTable($withWhere, $tableAps = false)
     if (($permissionLevelId & 128))  $where = ''; // Development
     if (($permissionLevelId & 256))  $where = ''; // External person
     if (($permissionLevelId & 512))  $where = ''; // WF
-    
+    if (($permissionLevelId & 1024))  $where = '';
     if (!empty($where)) {
         //Delete the first "OR"
         $where = trim($where);
@@ -50,15 +50,17 @@ function getPLFullEmployeeInfo()
 
     $permission = false;
 
-    if (($permissionLevelId & 2))  $permission = false; // Regular Agent
-    if (($permissionLevelId & 4))  $permission = false; // Supervisor
-    if (($permissionLevelId & 8))  $permission = false; // Manager Account
-    if (($permissionLevelId & 16))  $permission = true; // HR
-    if (($permissionLevelId & 32))  $permission = true; // Operation Manager
-    if (($permissionLevelId & 64))  $permission = true; // Super Admin
-    if (($permissionLevelId & 128))  $permission = true; // Development
-    if (($permissionLevelId & 256))  $permission = false; // External person
-    if (($permissionLevelId & 512))  $permission = false; // WF
+    // if (($permissionLevelId & 2))  $permission = false; // Regular Agent
+    // if (($permissionLevelId & 4))  $permission = false; // Supervisor
+    // if (($permissionLevelId & 8))  $permission = false; // Manager Account
+    // if (($permissionLevelId & 16))  $permission = true; // HR
+    // if (($permissionLevelId & 32))  $permission = true; // Operation Manager
+    // if (($permissionLevelId & 64))  $permission = true; // Super Admin
+    // if (($permissionLevelId & 128))  $permission = true; // Development
+    // if (($permissionLevelId & 256))  $permission = false; // External person
+    // if (($permissionLevelId & 512))  $permission = false; // WF
+    // if (($permissionLevelId & 1024))  $permission = true; // HR jr
+    if (($permissionLevelId & 1264))  $permission = true;
 
     return $permission;
 }
@@ -70,15 +72,17 @@ function getPLCreateEditDeleteInfoEmployee()
 
     $permission = false;
 
-    if (($permissionLevelId & 2))  $permission = false; // Regular Agent
-    if (($permissionLevelId & 4))  $permission = false; // Supervisor
-    if (($permissionLevelId & 8))  $permission = false; // Manager Account
-    if (($permissionLevelId & 16))  $permission = true; // HR
-    if (($permissionLevelId & 32))  $permission = false; // Operation Manager
-    if (($permissionLevelId & 64))  $permission = true; // Super Admin
-    if (($permissionLevelId & 128))  $permission = true; // Development
-    if (($permissionLevelId & 256))  $permission = false; // External person
-    if (($permissionLevelId & 512))  $permission = false; // WF
+    // if (($permissionLevelId & 2))  $permission = false; // Regular Agent
+    // if (($permissionLevelId & 4))  $permission = false; // Supervisor
+    // if (($permissionLevelId & 8))  $permission = false; // Manager Account
+    // if (($permissionLevelId & 16))  $permission = true; // HR
+    // if (($permissionLevelId & 32))  $permission = false; // Operation Manager
+    // if (($permissionLevelId & 64))  $permission = true; // Super Admin
+    // if (($permissionLevelId & 128))  $permission = true; // Development
+    // if (($permissionLevelId & 256))  $permission = false; // External person
+    // if (($permissionLevelId & 512))  $permission = false; // WF
+
+    if (($permissionLevelId & 1232))  $permission = true;
 
     return $permission;
 }
@@ -90,15 +94,17 @@ function getPLShowInactiveEmployee()
     $permissionLevelId = $_SESSION['permissionLevelId'];
     $permission = false;
 
-    if (($permissionLevelId & 2))  $permission = false; // Regular Agent
-    if (($permissionLevelId & 4))  $permission = false; // Supervisor
-    if (($permissionLevelId & 8))  $permission = false; // Manager Account
-    if (($permissionLevelId & 16))  $permission = true; // HR
-    if (($permissionLevelId & 32))  $permission = true; // Operation Manager
-    if (($permissionLevelId & 64))  $permission = true; // Super Admin
-    if (($permissionLevelId & 128))  $permission = true; // Development
-    if (($permissionLevelId & 256))  $permission = false; // External person
-    if (($permissionLevelId & 512))  $permission = true; // WF
+    // if (($permissionLevelId & 2))  $permission = false; // Regular Agent
+    // if (($permissionLevelId & 4))  $permission = false; // Supervisor
+    // if (($permissionLevelId & 8))  $permission = false; // Manager Account
+    // if (($permissionLevelId & 16))  $permission = true; // HR
+    // if (($permissionLevelId & 32))  $permission = true; // Operation Manager
+    // if (($permissionLevelId & 64))  $permission = true; // Super Admin
+    // if (($permissionLevelId & 128))  $permission = true; // Development
+    // if (($permissionLevelId & 256))  $permission = false; // External person
+    // if (($permissionLevelId & 512))  $permission = true; // WF
+
+    if (($permissionLevelId & 1776))  $permission = true;
 
     return $permission;
 }
@@ -110,15 +116,16 @@ function getPLSalary()
     $permissionLevelId = $_SESSION['permissionLevelId'];
     $permission = false;
 
-    if (($permissionLevelId & 2))  $permission = false; // Regular Agent
-    if (($permissionLevelId & 4))  $permission = false; // Supervisor
-    if (($permissionLevelId & 8))  $permission = false; // Manager Account
-    if (($permissionLevelId & 16))  $permission = true; // HR
-    if (($permissionLevelId & 32))  $permission = true; // Operation Manager
-    if (($permissionLevelId & 64))  $permission = true; // Super Admin
-    if (($permissionLevelId & 128))  $permission = true; // Development
-    if (($permissionLevelId & 256))  $permission = false; // External person
-    if (($permissionLevelId & 512))  $permission = false; // WF
+    // if (($permissionLevelId & 2))  $permission = false; // Regular Agent
+    // if (($permissionLevelId & 4))  $permission = false; // Supervisor
+    // if (($permissionLevelId & 8))  $permission = false; // Manager Account
+    // if (($permissionLevelId & 16))  $permission = true; // HR
+    // if (($permissionLevelId & 32))  $permission = true; // Operation Manager
+    // if (($permissionLevelId & 64))  $permission = true; // Super Admin
+    // if (($permissionLevelId & 128))  $permission = true; // Development
+    // if (($permissionLevelId & 256))  $permission = false; // External person
+    // if (($permissionLevelId & 512))  $permission = false; // WF
+    if (($permissionLevelId & 240))  $permission = true;
 
     return $permission;
 }
@@ -129,15 +136,17 @@ function getPLSAA()
     $permissionLevelId = $_SESSION['permissionLevelId'];
     $permission = false;
 
-    if (($permissionLevelId & 512))  $permission = false; // WF
-    if (($permissionLevelId & 2))  $permission = false; // Regular Agent
-    if (($permissionLevelId & 4))  $permission = false; // Supervisor
-    if (($permissionLevelId & 8))  $permission = false; // Manager Account
-    if (($permissionLevelId & 16))  $permission = true; // HR
-    if (($permissionLevelId & 32))  $permission = false; // Operation Manager
-    if (($permissionLevelId & 64))  $permission = true; // Super Admin
-    if (($permissionLevelId & 128))  $permission = true; // Development
-    if (($permissionLevelId & 256))  $permission = false; // External person
+    // if (($permissionLevelId & 512))  $permission = false; // WF
+    // if (($permissionLevelId & 2))  $permission = false; // Regular Agent
+    // if (($permissionLevelId & 4))  $permission = false; // Supervisor
+    // if (($permissionLevelId & 8))  $permission = false; // Manager Account
+    // if (($permissionLevelId & 16))  $permission = true; // HR
+    // if (($permissionLevelId & 32))  $permission = false; // Operation Manager
+    // if (($permissionLevelId & 64))  $permission = true; // Super Admin
+    // if (($permissionLevelId & 128))  $permission = true; // Development
+    // if (($permissionLevelId & 256))  $permission = false; // External person
+
+    if (($permissionLevelId & 208))  $permission = true;
     
 
     return $permission;
@@ -159,7 +168,7 @@ function getPLReports()
     // if (($permissionLevelId & 256))  $permission = true; // External person
     // if (($permissionLevelId & 512))  $permission = true; // WF
     #512+256+128+64+16=976
-    if (($permissionLevelId & 976))  $permission = true;
+    if (($permissionLevelId & 2000))  $permission = true;
 
     return $permission;
 }
@@ -224,7 +233,7 @@ function getPLAps()
 {
     $permissionLevelId = $_SESSION['permissionLevelId'];
     $permission = false;
-    if (($permissionLevelId & 764))  $permission = true;
+    if (($permissionLevelId & 1788))  $permission = true;
 
     return $permission;
 }

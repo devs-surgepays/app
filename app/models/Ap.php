@@ -8,7 +8,12 @@ class Ap {
     }
 
     public function getAllApTypes(){
-        $this->db->query("SELECT * FROM hr_surgepays.ap_types;");
+        if(getPLSalary()){
+            $query = "SELECT * FROM hr_surgepays.ap_types;";
+        }else{
+            $query = "SELECT * FROM hr_surgepays.ap_types WHERE apTypeId not in (12);";
+        }
+        $this->db->query($query);
         $row = $this->db->resultSetAssoc();
         return $row;
     }
