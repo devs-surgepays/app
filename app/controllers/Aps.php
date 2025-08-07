@@ -22,8 +22,13 @@ class Aps extends Controller
 
     public function index(){
        
-        $data['apTypes'] = $this->apModel->getAllApTypes();
-        $this->view('ap/index', $data);
+        if (getPLAps()) {
+            $data['apTypes'] = $this->apModel->getAllApTypes();
+            $this->view('ap/index', $data);
+        }else {
+            redirect(''); // dashboard inicial
+        }
+        
     }
 
     public function getLeave($leaveId){

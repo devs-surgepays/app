@@ -13,7 +13,7 @@
     </nav> -->
 
     <ul class="navbar-nav topbar-nav ms-md-auto align-items-center">
-      <li class="nav-item topbar-icon dropdown hidden-caret d-flex d-lg-none">
+      <!-- <li class="nav-item topbar-icon dropdown hidden-caret d-flex d-lg-none">
         <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false"
           aria-haspopup="true">
           <i class="fa fa-search"></i>
@@ -25,7 +25,7 @@
             </div>
           </form>
         </ul>
-      </li>
+      </li> -->
       <!-- messages notifications -->
       <!-- <li class="nav-item topbar-icon dropdown hidden-caret">
         <a class="nav-link dropdown-toggle" href="#" id="messageDropdown" role="button" data-bs-toggle="dropdown"
@@ -159,86 +159,89 @@
           </li> -->
         </ul>
       </li>
+      
+      <?php if (cardDashboardInfo()) { ?>
+        <!-- Menu Quick -->
+        <li class="nav-item topbar-icon dropdown hidden-caret">
+          <a class="nav-link" data-bs-toggle="dropdown" href="#" aria-expanded="false">
+            <i class="fas fa-layer-group"></i>
+          </a>
+          <div class="dropdown-menu quick-actions animated fadeIn">
+            <div class="quick-actions-header">
+              <span class="title mb-1">Quick Actions</span>
+              <span class="subtitle op-7">Shortcuts</span>
+            </div>
+            <div class="quick-actions-scroll scrollbar-outer">
+              <div class="quick-actions-items">
+                <div class="row m-0">
+                  <a class="col-6 col-md-4 p-0" href="<?php echo URLROOT . '/employees' ?>">
+                    <div class="quick-actions-item">
+                      <div class="avatar-item bg-danger rounded-circle">
+                        <i class="fa fa-solid fa-layer-group"></i>
+                      </div>
+                      <span class="text">Employees</span>
+                    </div>
+                  </a>
+                  <a class="col-6 col-md-4 p-0" href="<?php echo URLROOT; ?>/users">
+                    <div class="quick-actions-item">
+                      <div class="avatar-item bg-warning rounded-circle">
+                        <i class="fas fa-users"></i>
+                      </div>
+                      <span class="text">Users</span>
+                    </div>
+                  </a>
+                  <?php if (getPLAps()) { ?>
+                    <a class="col-6 col-md-4 p-0" href="<?php echo URLROOT; ?>/aps">
+                      <div class="quick-actions-item">
+                        <div class="avatar-item bg-info rounded-circle">
+                          <i class="fa fa-solid fa-list-alt"></i>
+                        </div>
+                        <span class="text">Ap's</span>
+                      </div>
+                    </a>
+                  <?php } else { ?>
 
-      <!-- Menu Quick -->
-      <li class="nav-item topbar-icon dropdown hidden-caret">
-        <a class="nav-link" data-bs-toggle="dropdown" href="#" aria-expanded="false">
-          <i class="fas fa-layer-group"></i>
-        </a>
-        <div class="dropdown-menu quick-actions animated fadeIn">
-          <div class="quick-actions-header">
-            <span class="title mb-1">Quick Actions</span>
-            <span class="subtitle op-7">Shortcuts</span>
-          </div>
-          <div class="quick-actions-scroll scrollbar-outer">
-            <div class="quick-actions-items">
-              <div class="row m-0">
-                <a class="col-6 col-md-4 p-0" href="<?php echo URLROOT . '/employees' ?>">
-                  <div class="quick-actions-item">
-                    <div class="avatar-item bg-danger rounded-circle">
-                      <i class="fa fa-solid fa-layer-group"></i>
-                    </div>
-                    <span class="text">Employees</span>
-                  </div>
-                </a>
-                <a class="col-6 col-md-4 p-0" href="<?php echo URLROOT; ?>/users">
-                  <div class="quick-actions-item">
-                    <div class="avatar-item bg-warning rounded-circle">
-                      <i class="fas fa-users"></i>
-                    </div>
-                    <span class="text">Users</span>
-                  </div>
-                </a>
-                <?php if (getPLAps()) { ?>
-                  <a class="col-6 col-md-4 p-0" href="<?php echo URLROOT; ?>/aps">
-                    <div class="quick-actions-item">
-                      <div class="avatar-item bg-info rounded-circle">
-                        <i class="fa fa-solid fa-list-alt"></i>
+                    <a class="col-6 col-md-4 p-0" href="<?php echo URLROOT; ?>/reports">
+                      <div class="quick-actions-item">
+                        <div class="avatar-item bg-info rounded-circle">
+                          <i class="fa fa-solid fa fa-file"></i>
+                        </div>
+                        <span class="text">Reports</span>
                       </div>
-                      <span class="text">Ap's</span>
+                    </a>
+                  <?php } ?>
+                  <!-- <a class="col-6 col-md-4 p-0" href="#">
+                    <div class="quick-actions-item">
+                      <div class="avatar-item bg-success rounded-circle">
+                        <i class="fas fa-envelope"></i>
+                      </div>
+                      <span class="text">Emails</span>
                     </div>
                   </a>
-                <?php }else{ ?>
-                  
-                  <a class="col-6 col-md-4 p-0" href="<?php echo URLROOT; ?>/reports">
+                  <a class="col-6 col-md-4 p-0" href="#">
                     <div class="quick-actions-item">
-                      <div class="avatar-item bg-info rounded-circle">
-                        <i class="fa fa-solid fa fa-file"></i>
+                      <div class="avatar-item bg-primary rounded-circle">
+                        <i class="fas fa-file-invoice-dollar"></i>
                       </div>
-                      <span class="text">Reports</span>
+                      <span class="text">Invoice</span>
                     </div>
                   </a>
-                <?php } ?>
-                <!-- <a class="col-6 col-md-4 p-0" href="#">
-                  <div class="quick-actions-item">
-                    <div class="avatar-item bg-success rounded-circle">
-                      <i class="fas fa-envelope"></i>
+                  <a class="col-6 col-md-4 p-0" href="#">
+                    <div class="quick-actions-item">
+                      <div class="avatar-item bg-secondary rounded-circle">
+                        <i class="fas fa-credit-card"></i>
+                      </div>
+                      <span class="text">Payments</span>
                     </div>
-                    <span class="text">Emails</span>
-                  </div>
-                </a>
-                <a class="col-6 col-md-4 p-0" href="#">
-                  <div class="quick-actions-item">
-                    <div class="avatar-item bg-primary rounded-circle">
-                      <i class="fas fa-file-invoice-dollar"></i>
-                    </div>
-                    <span class="text">Invoice</span>
-                  </div>
-                </a>
-                <a class="col-6 col-md-4 p-0" href="#">
-                  <div class="quick-actions-item">
-                    <div class="avatar-item bg-secondary rounded-circle">
-                      <i class="fas fa-credit-card"></i>
-                    </div>
-                    <span class="text">Payments</span>
-                  </div>
-                </a> -->
+                  </a> -->
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </li>
+        </li>
+      <?php } ?>
 
+      <!-- Dropdown logout -->
       <li class="nav-item topbar-user dropdown hidden-caret">
         <a class="dropdown-toggle profile-pic" data-bs-toggle="dropdown" href="#" aria-expanded="false">
           <div class="avatar-sm">

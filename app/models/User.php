@@ -153,4 +153,11 @@ class User
         if ($result['count']>0) return true;
         else return false;
     }
+
+    public function getBadgeByUserId($userId)  {
+        $this->db->query("SELECT userId, (select badge from employees where employeeId = users.employeeId) as badge FROM hr_surgepays.users where users.userId=:userId;");
+        $this->db->bind(':userId', $userId);
+        $result = $this->db->resultSetFetch();
+        return $result['badge'];
+    }
 }

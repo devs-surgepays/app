@@ -61,88 +61,90 @@ $num = 1;
                 <a href="#" class="btn btn-primary btn-round"> <i class="fa fa-add"></i> Add Employee</a>
             </div> -->
         </div>
-        <div class="row">
-            <div class="col-sm-6 col-md-3">
-                <div class="card card-stats card-round">
-                    <div class="card-body">
-                        <div class="row align-items-center">
-                            <div class="col-icon">
-                                <div
-                                    class="icon-big text-center icon-primary bubble-shadow-small">
-                                    <i class="fas fa-users"></i>
+        <?php if (cardDashboardInfo()) { ?>
+            <div class="row">
+                <div class="col-sm-6 col-md-3">
+                    <div class="card card-stats card-round">
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                                <div class="col-icon">
+                                    <div
+                                        class="icon-big text-center icon-primary bubble-shadow-small">
+                                        <i class="fas fa-users"></i>
+                                    </div>
+                                </div>
+                                <div class="col col-stats ms-3 ms-sm-0">
+                                    <div class="numbers">
+                                        <p class="card-category">Active Employee</p>
+                                        <h4 class="card-title"><?php echo $data['employeeTotal']; ?></h4>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col col-stats ms-3 ms-sm-0">
-                                <div class="numbers">
-                                    <p class="card-category">Active Employee</p>
-                                    <h4 class="card-title"><?php echo $data['employeeTotal']; ?></h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-3">
+                    <div class="card card-stats card-round">
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                                <div class="col-icon">
+                                    <div
+                                        class="icon-big text-center icon-info bubble-shadow-small">
+                                        <i class="fas fa-building"></i>
+                                    </div>
+                                </div>
+                                <div class="col col-stats ms-3 ms-sm-0">
+                                    <div class="numbers">
+                                        <p class="card-category">Employees Working Today</p>
+                                        <h4 class="card-title"><?php echo $totalemployeeWorkingToday ?></h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-3">
+                    <div class="card card-stats card-round">
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                                <div class="col-icon">
+                                    <div
+                                        class="icon-big text-center icon-success bubble-shadow-small">
+                                        <i class="fas fa-file"></i>
+                                    </div>
+                                </div>
+                                <div class="col col-stats ms-3 ms-sm-0">
+                                    <div class="numbers">
+                                        <p class="card-category">AP's Created Today</p>
+                                        <h4 class="card-title">0</h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-3">
+                    <div class="card card-stats card-round">
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                                <div class="col-icon">
+                                    <div
+                                        class="icon-big text-center icon-secondary bubble-shadow-small">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                </div>
+                                <div class="col col-stats ms-3 ms-sm-0">
+                                    <div class="numbers">
+                                        <p class="card-category">Users</p>
+                                        <h4 class="card-title"><?php echo $totalUsers; ?></h4>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-sm-6 col-md-3">
-                <div class="card card-stats card-round">
-                    <div class="card-body">
-                        <div class="row align-items-center">
-                            <div class="col-icon">
-                                <div
-                                    class="icon-big text-center icon-info bubble-shadow-small">
-                                    <i class="fas fa-building"></i>
-                                </div>
-                            </div>
-                            <div class="col col-stats ms-3 ms-sm-0">
-                                <div class="numbers">
-                                    <p class="card-category">Employees Working Today</p>
-                                    <h4 class="card-title"><?php echo $totalemployeeWorkingToday ?></h4>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-6 col-md-3">
-                <div class="card card-stats card-round">
-                    <div class="card-body">
-                        <div class="row align-items-center">
-                            <div class="col-icon">
-                                <div
-                                    class="icon-big text-center icon-success bubble-shadow-small">
-                                    <i class="fas fa-file"></i>
-                                </div>
-                            </div>
-                            <div class="col col-stats ms-3 ms-sm-0">
-                                <div class="numbers">
-                                    <p class="card-category">AP's Created Today</p>
-                                    <h4 class="card-title">0</h4>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-6 col-md-3">
-                <div class="card card-stats card-round">
-                    <div class="card-body">
-                        <div class="row align-items-center">
-                            <div class="col-icon">
-                                <div
-                                    class="icon-big text-center icon-secondary bubble-shadow-small">
-                                    <i class="fas fa-user"></i>
-                                </div>
-                            </div>
-                            <div class="col col-stats ms-3 ms-sm-0">
-                                <div class="numbers">
-                                    <p class="card-category">Users</p>
-                                    <h4 class="card-title"><?php echo $totalUsers; ?></h4>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <?php } ?>
 
         <div class="row">
             <div class="col-md-8">

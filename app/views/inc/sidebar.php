@@ -83,6 +83,14 @@
                         </a>
                     </li>
                 <?php } ?>
+                <?php if (personalAps()) { ?>
+                    <li class="nav-item">
+                        <a href="<?php echo URLROOT; ?>/personalAps">
+                            <i class="fa fa-file" aria-hidden="true"></i>
+                            <p>Personal APs</p>
+                        </a>
+                    </li>
+                <?php } ?>
 
                 <!-- <li class="nav-item">
                     <a data-bs-toggle="collapse" href="#sidebarLayouts">

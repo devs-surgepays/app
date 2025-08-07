@@ -310,4 +310,41 @@ FROM
         $result = $this->db->resultSetAssoc();
 		return $result;
     }
+    // Personal APs Functions
+    public function countPersonalAPs($searchQuery) {
+        $query = ' where (aprovedByHR = 1 or aprovedByWf = 1 or aprovedByM = 1) ';
+        if (!empty($searchQuery)) $query .= ' and ' . $searchQuery;
+        
+        $this->db->query('SELECT COUNT(*) AS numrows  FROM hr_surgepays.ap_details as ap 
+        inner join ap_types as apt on ap.apTypeId = apt.apTypeId ' . $query);
+        $result = $this->db->resultSetFetch();
+        return $result;
+    }
+
+    public function readPersonalAPs($offset, $per_page, $searchQuery, $orderby){
+        $query = ' where (aprovedByHR = 1 or aprovedByWf = 1 or aprovedByM = 1) ';
+        if (!empty($searchQuery)) $query .= ' and ' . $searchQuery;
+
+        $this->db->query("SELECT apDetailsId,createdAt,ap.apTypeId,apt.name  FROM hr_surgepays.ap_details as ap 
+        inner join ap_types as apt 
+        on ap.apTypeId = apt.apTypeId " . $query . " ORDER BY $orderby limit $offset,$per_page;");
+        $result = $this->db->resultSetAssoc();
+        return $result;
+    }
+
+    public function getAPByBadgeId($apDetailsId, $badge) {
+        $this->db->query('SELECT ap.*,apt.name,
+        (select name from departments where departmentId=ap.newAccount ) as "newAccountName",
+        (select positionName from positions where positions.positionId = ap.newPosition ) as "newPositionName"
+        FROM hr_surgepays.ap_details as ap 
+        inner join ap_types as apt 
+        on ap.apTypeId = apt.apTypeId
+        where badge = :badge and apDetailsId=:apDetailsId;');
+        $this->db->bind(':badge', $badge);
+        $this->db->bind(':apDetailsId', $apDetailsId);
+        $result = $this->db->resultSetFetch();
+
+        return $result;
+    }
+    // Personal APs
 }

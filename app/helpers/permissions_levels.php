@@ -259,3 +259,37 @@ function getPLAps()
 
     return $permission;
 }
+
+/**
+ * Method cardDashboardInfo
+ * Show card in dashboard
+ * 
+ * all the usuarios except agent
+ *
+ * @return bool
+ */
+function cardDashboardInfo()
+{
+    $permissionLevelId = $_SESSION['permissionLevelId'];
+    $permission = false;
+    if (($permissionLevelId & 2044))  $permission = true;
+
+    return $permission;
+}
+
+/**
+ * Method personalAps
+ * Show personal Aps dashboard
+ * 
+ * just agent
+ *
+ * @return bool
+ */
+function personalAps()
+{
+    $permissionLevelId = $_SESSION['permissionLevelId'];
+    $permission = false;
+    if (($permissionLevelId & 2))  $permission = true;
+
+    return $permission;
+}
