@@ -12,6 +12,10 @@
   .form-control:disabled {
     padding-left: 7px !important;
   }
+  .form-check-input.custom-green:checked {
+    background-color: #28a745; /* Bootstrap 'success' green */
+    border-color: #28a745;
+  }
 </style>
 <div class="container">
   <div class="page-inner">
@@ -732,6 +736,7 @@
               <table id="add-row" class="display table table-striped table-hover">
                 <thead>
                   <tr>
+                    <th class="workedWF">W</th>
                     <th>AP #</th>
                     <th>Employee Name</th>
                     <th>Badge</th>
@@ -745,6 +750,13 @@
                     <th style="width: 10%">Action</th>
                   </tr>
                   <tr>
+                    <td class="workedWF">
+                      <!-- <select id="searchWorked" type="text" class="form-control grid-filter">
+                        <option value="">Select...</option>
+                        <option value="00">NoChecked</option>
+                        <option value="1">Checked</option>
+                      </select> -->
+                    </td>
                     <td></td>
                     <td><input id="searchFullname" type="text" class="form-control grid-filter"></td>
                     <td><input id="searchBadge" type="text" class="form-control grid-filter"></td>
@@ -1987,42 +1999,29 @@
             cell8 = row.insertCell(8);
             cell9 = row.insertCell(9);
             cell10 = row.insertCell(10);
+            cell11 = row.insertCell(11);
             /*cell11 = row.insertCell(11);
             cell12 = row.insertCell(12);
             cell13 = row.insertCell(13);
             cell14 = row.insertCell(14);
             cell15 = row.insertCell(15);
             cell15 = row.insertCell(15);*/
-
             //cell.innerHTML = cnum;
-            cell.innerHTML = v.apDetailsId
-            cell1.innerHTML = v.fullName;
-            cell2.innerHTML = v.badge;
-            cell3.innerHTML = v.createdAt;
-            cell4.innerHTML = v.username;
-            cell5.innerHTML = v.name;
+
+            var checkedWorked = (v.worked===1) ? 'checked' : '';
+            cell.classList.add("workedWF");
+            cell.innerHTML = `<div class="form-check"><input ${ checkedWorked } data-idworked= ${ v.apDetailsId } class="form-check-input custom-green checkWorked" type="checkbox" value="1"></div>`
+            cell1.innerHTML = v.apDetailsId
+            cell2.innerHTML = v.fullName;
+            cell3.innerHTML = v.badge;
+            cell4.innerHTML = v.createdAt;
+            cell5.innerHTML = v.username;
+            cell6.innerHTML = v.name;
             printButton = "disabled";
             switch (v.aprovedByM) {
               case 1:
-                cell6.innerHTML = '<span class="badge badge-success">Approved</span>';
-                  printButton = "enabled";
-                break;
-              case 2:
-                cell6.innerHTML = '<span class="badge badge-danger">Rejected</span>';
-                break;
-              case 3:
-                cell6.innerHTML = '<span class="badge badge-secondary">Cancelled</span>';
-                break;
-              default:
-                cell6.innerHTML = '<span class="badge badge-warning">Pending</span>';
-
-                break;
-            }
-            switch (v.aprovedByHR) {
-              case 1:
                 cell7.innerHTML = '<span class="badge badge-success">Approved</span>';
                   printButton = "enabled";
-
                 break;
               case 2:
                 cell7.innerHTML = '<span class="badge badge-danger">Rejected</span>';
@@ -2035,10 +2034,11 @@
 
                 break;
             }
-            switch (v.aprovedByWf) {
+            switch (v.aprovedByHR) {
               case 1:
                 cell8.innerHTML = '<span class="badge badge-success">Approved</span>';
                   printButton = "enabled";
+
                 break;
               case 2:
                 cell8.innerHTML = '<span class="badge badge-danger">Rejected</span>';
@@ -2051,7 +2051,7 @@
 
                 break;
             }
-            switch (v.aprovedBySup) {
+            switch (v.aprovedByWf) {
               case 1:
                 cell9.innerHTML = '<span class="badge badge-success">Approved</span>';
                   printButton = "enabled";
@@ -2064,6 +2064,22 @@
                 break;
               default:
                 cell9.innerHTML = '<span class="badge badge-warning">Pending</span>';
+
+                break;
+            }
+            switch (v.aprovedBySup) {
+              case 1:
+                cell10.innerHTML = '<span class="badge badge-success">Approved</span>';
+                  printButton = "enabled";
+                break;
+              case 2:
+                cell10.innerHTML = '<span class="badge badge-danger">Rejected</span>';
+                break;
+              case 3:
+                cell10.innerHTML = '<span class="badge badge-secondary">Cancelled</span>';
+                break;
+              default:
+                cell10.innerHTML = '<span class="badge badge-warning">Pending</span>';
 
                 break;
             }
@@ -2080,7 +2096,7 @@
             }
             <?php if($_SESSION['permissionLevelId']&760): ?>
 
-            cell10.innerHTML = `<div class="form-button-action">
+            cell11.innerHTML = `<div class="form-button-action">
                         <button type="button" title="" class="btn btn-link btn-success aproveModal" data-leaveId="${v.apDetailsId}" data-bs-toggle="modal" data-bs-target="#approveModal">
                         <i class="fas fa-check-double"></i>
                         </button>
@@ -2093,7 +2109,7 @@
                         
                       </div>`;
             <?php else: ?>
-              cell10.innerHTML = `<div class="form-button-action">
+              cell11.innerHTML = `<div class="form-button-action">
                         <button type="button" class="btn btn-link ${btnwarning} updateModal" data-bs-toggle="modal" data-bs-target="#addRowModal" data-leaveId="${v.apDetailsId}" ${enable}>
                           <i class="${iconButton}"></i>
                         </button>
@@ -2121,6 +2137,13 @@
             printButton = "";
             enable = "";
           })
+          // si el usuario es Emerson Mejía mostrar el campo w. sino ocultarlo
+          // si es diferente al usuario de Emerson Mejia ocultar los campos
+          <?php if($_SESSION['userId']!=5): ?>
+            $('.workedWF').hide();
+          <?php endif; ?>
+
+
 
           $("#toShow").html('<p>Showing ' + resultObj.offsetToShow + ' to ' + cnum + ' of ' + resultObj.numrows + '</p>');
 
@@ -2174,6 +2197,51 @@
     readData(1, myArray, example_length, camposAscDesc, '');
 
   });
+
+  $(document).on('change', '.checkWorked', function() {
+
+    const idAp = $(this).data('idworked'); // <-- obtienes el data-idworked
+    var checkedWorked = null;
+    if (this.checked) checkedWorked = 1;
+
+    var param = {'checkedWorked': checkedWorked, 'idAp': idAp};
+
+    $.ajax({
+      url: '<?php echo URLROOT; ?>/aps/checkWorked',
+      method: 'POST',
+      data: param,
+      success: function(data){
+
+        var obj = JSON.parse(data);
+        var content = {};
+        var type = '';
+        content.title = "";
+
+        if (obj.worked) {
+            content.message = `You have marked AP #${idAp}.`;
+            content.icon = "fa fa-check";
+            typecontent = "success";
+        }else {
+            content.message = `You have unmarked AP #${idAp}`;
+            content.icon = "fa fa-times";
+            typecontent = "warning";
+        }
+        
+        $.notify(content, {
+            type: typecontent,
+            placement: {
+                from: 'top',
+                align: 'right',
+            },
+            time: 1000,
+            delay: 2,
+        });
+
+      }
+    })
+
+  });
+
 
   $(document).on('click', '.aproveModal', function() {
     var leaveId = $(this).data("leaveid");

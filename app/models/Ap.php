@@ -176,7 +176,8 @@ FROM hr_surgepays.ap_details ap WHERE apDetailsId=:leaveId");
     a.aprovedByHR,
     a.aprovedByWf,
     a.aprovedBySup,
-    a.printed
+    a.printed,
+    a.worked
 FROM
     hr_surgepays.ap_details a
         JOIN
@@ -199,7 +200,8 @@ FROM
     a.aprovedByHR,
     a.aprovedByWf,
     a.aprovedBySup,
-    a.printed
+    a.printed,
+    a.worked
 FROM
     hr_surgepays.ap_details a
         JOIN

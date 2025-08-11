@@ -553,6 +553,30 @@ class Aps extends Controller
         
     }
 
+
+    public function checkWorked() {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST'){
+
+            $checkedWorked = $_POST['checkedWorked'];
+            $idAp = $_POST['idAp'];
+
+            $userId = ($checkedWorked==1) ? $_SESSION['userId'] : null;
+            $data = [
+                'worked' => $checkedWorked,
+                'apDetailsId' => $idAp,
+                'workedBy' => $userId,
+            ];
+            $updated = $this->apModel->updateLeave($data);
+
+            $response = [
+                'success' => $updated,
+                'worked' => $checkedWorked
+
+            ];
+            echo json_encode($response);
+        }
+    }
+
     public function paginate($reload, $page, $tpages, $adjacents,$ArrayCampos,$example_length,$camposAscDesc) {
 
 		//$ArrayCampos="";
