@@ -557,20 +557,17 @@ class Aps extends Controller
     public function checkWorked() {
         if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 
-            error_reporting(E_ALL);
-            ini_set('display_errors', '1');
-
             $checkedWorked = $_POST['checkedWorked'];
             $idAp = $_POST['idAp'];
 
-            $userId = ($checkedWorked==1) ? $_SESSION['userId'] : null;
+            $checkedWorked = ($checkedWorked == 1 ) ? 1 : 0;
+            $userId = ($checkedWorked==1) ? $_SESSION['userId'] : 0;
+            
             $data = [
                 'worked' => $checkedWorked,
                 'apDetailsId' => $idAp,
                 'workedBy' => $userId,
             ];
-
-            print('<pre>'.print_r($data,true).'</pre>');
             $updated = $this->apModel->updateLeave($data);
 
             $response = [

@@ -2213,31 +2213,31 @@
       method: 'POST',
       data: param,
       success: function(data) {
-        console.log(data)
-        // var obj = JSON.parse(data);
-        // var content = {};
-        // var type = '';
-        // content.title = "";
+       // console.log(data)
+        var obj = JSON.parse(data);
+        var content = {};
+        var type = '';
+        content.title = "";
 
-        // if (obj.worked) {
-        //     content.message = `You have marked AP #${idAp}.`;
-        //     content.icon = "fa fa-check";
-        //     typecontent = "success";
-        // }else {
-        //     content.message = `You have unmarked AP #${idAp}`;
-        //     content.icon = "fa fa-times";
-        //     typecontent = "warning";
-        // }
+        if (obj.worked) {
+            content.message = `You have marked AP #${idAp}.`;
+            content.icon = "fa fa-check";
+            typecontent = "success";
+        }else {
+            content.message = `You have unmarked AP #${idAp}`;
+            content.icon = "fa fa-times";
+            typecontent = "warning";
+        }
 
-        // $.notify(content, {
-        //     type: typecontent,
-        //     placement: {
-        //         from: 'top',
-        //         align: 'right',
-        //     },
-        //     time: 1000,
-        //     delay: 2,
-        // });
+        $.notify(content, {
+            type: typecontent,
+            placement: {
+                from: 'top',
+                align: 'right',
+            },
+            time: 1000,
+            delay: 2,
+        });
 
       }
     })
