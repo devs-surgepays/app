@@ -12,8 +12,10 @@
   .form-control:disabled {
     padding-left: 7px !important;
   }
+
   .form-check-input.custom-green:checked {
-    background-color: #28a745; /* Bootstrap 'success' green */
+    background-color: #28a745;
+    /* Bootstrap 'success' green */
     border-color: #28a745;
   }
 </style>
@@ -182,15 +184,13 @@
                               <option value="">Select...</option>
                               <?php
                               foreach ($data['apTypes'] as $items) {
-                                if($items['apTypeId']== 11)
-                                {
-                                  echo (getPLAT()==true)?"<option value='" . $items['apTypeId'] . "'>" . $items['name'] . "</option>":"";
-                                }else if($items['apTypeId']==12){
-                                  echo (getPLSAA()==true)?"<option value='" . $items['apTypeId'] . "'>" . $items['name'] . "</option>":"";
-                                }else{
+                                if ($items['apTypeId'] == 11) {
+                                  echo (getPLAT() == true) ? "<option value='" . $items['apTypeId'] . "'>" . $items['name'] . "</option>" : "";
+                                } else if ($items['apTypeId'] == 12) {
+                                  echo (getPLSAA() == true) ? "<option value='" . $items['apTypeId'] . "'>" . $items['name'] . "</option>" : "";
+                                } else {
                                   echo "<option value='" . $items['apTypeId'] . "'>" . $items['name'] . "</option>";
                                 }
-                                
                               }
                               ?>
                             </select>
@@ -243,10 +243,10 @@
                               <label>Dia final</label>
                             </div>
                           </div>
-                            <div class="form-floating form-floating-custom mb-3">
-                              <input class="form-control" type="text" placeholder="Documentos Justificativos" name="documentosJustificativos" id="documentosJustificativos">
-                              <label>Documentos Justificativos que se entregan</label>
-                            </div>
+                          <div class="form-floating form-floating-custom mb-3">
+                            <input class="form-control" type="text" placeholder="Documentos Justificativos" name="documentosJustificativos" id="documentosJustificativos">
+                            <label>Documentos Justificativos que se entregan</label>
+                          </div>
 
                         </div>
                         <!-- SOLICITUD DE VACAIONES -->
@@ -354,12 +354,12 @@
                         <!-- Sanciones Disciplinarias -->
                         <div id="sanciones" class="toggleable">
 
-                        <div class="col-sm-12">
-                              <div class="form-floating form-floating-custom mb-3">
-                                <input class="form-control" type="date" placeholder="Dia" name="fechaAmonestacion" id="fechaAmonestacion">
-                                <label>Fecha de Amonestación</label>
-                              </div>
+                          <div class="col-sm-12">
+                            <div class="form-floating form-floating-custom mb-3">
+                              <input class="form-control" type="date" placeholder="Dia" name="fechaAmonestacion" id="fechaAmonestacion">
+                              <label>Fecha de Amonestación</label>
                             </div>
+                          </div>
 
                           <div class="d-flex">
                             <div class="form-check">
@@ -693,13 +693,14 @@
                           </div>
                         </div>
                         <style>
-                          div#aprovedByArea>p{
-                            margin-bottom:0.2rem;
+                          div#aprovedByArea>p {
+                            margin-bottom: 0.2rem;
                           }
-                          #aproval{
-                            color: #1572e8 ;
-                            font-size: 85%!important;
-                            transform: translate3d(0,-10px,0);
+
+                          #aproval {
+                            color: #1572e8;
+                            font-size: 85% !important;
+                            transform: translate3d(0, -10px, 0);
                             top: 0;
                             opacity: 1;
                             padding: .375rem 0 .75rem;
@@ -709,9 +710,9 @@
 
                         <div class="col-sm-12 mt-3">
                           <div class="form-floating form-floating-custom mb-3">
-                          <span style="color: #1572e8 ;font-size: 85%!important;transform: translate3d(0,-10px,0);top: 0;opacity: 1;padding: .375rem 0 .75rem;">Aproval</span>
+                            <span style="color: #1572e8 ;font-size: 85%!important;transform: translate3d(0,-10px,0);top: 0;opacity: 1;padding: .375rem 0 .75rem;">Aproval</span>
                             <div id="aprovedByArea">
-                            <span class="badge badge-warning">Pending</span>
+                              <span class="badge badge-warning">Pending</span>
                             </div>
                           </div>
                         </div>
@@ -767,15 +768,13 @@
                         <option value="">Select...</option>
                         <?php
                         foreach ($data['apTypes'] as $items) {
-                          if($items['apTypeId']== 11)
-                          {
-                            echo (getPLAT()==true)?"<option value='" . $items['apTypeId'] . "'>" . $items['name'] . "</option>":"";
-                          }else if($items['apTypeId']==12){
-                            echo (getPLSAA()==true)?"<option value='" . $items['apTypeId'] . "'>" . $items['name'] . "</option>":"";
-                          }else{
+                          if ($items['apTypeId'] == 11) {
+                            echo (getPLAT() == true) ? "<option value='" . $items['apTypeId'] . "'>" . $items['name'] . "</option>" : "";
+                          } else if ($items['apTypeId'] == 12) {
+                            echo (getPLSAA() == true) ? "<option value='" . $items['apTypeId'] . "'>" . $items['name'] . "</option>" : "";
+                          } else {
                             echo "<option value='" . $items['apTypeId'] . "'>" . $items['name'] . "</option>";
                           }
-                          
                         }
                         ?>
                       </select>
@@ -2008,7 +2007,7 @@
             cell15 = row.insertCell(15);*/
             //cell.innerHTML = cnum;
 
-            var checkedWorked = (v.worked===1) ? 'checked' : '';
+            var checkedWorked = (v.worked === 1) ? 'checked' : '';
             cell.classList.add("workedWF");
             cell.innerHTML = `<div class="form-check"><input ${ checkedWorked } data-idworked= ${ v.apDetailsId } class="form-check-input custom-green checkWorked" type="checkbox" value="1"></div>`
             cell1.innerHTML = v.apDetailsId
@@ -2021,7 +2020,7 @@
             switch (v.aprovedByM) {
               case 1:
                 cell7.innerHTML = '<span class="badge badge-success">Approved</span>';
-                  printButton = "enabled";
+                printButton = "enabled";
                 break;
               case 2:
                 cell7.innerHTML = '<span class="badge badge-danger">Rejected</span>';
@@ -2037,7 +2036,7 @@
             switch (v.aprovedByHR) {
               case 1:
                 cell8.innerHTML = '<span class="badge badge-success">Approved</span>';
-                  printButton = "enabled";
+                printButton = "enabled";
 
                 break;
               case 2:
@@ -2054,7 +2053,7 @@
             switch (v.aprovedByWf) {
               case 1:
                 cell9.innerHTML = '<span class="badge badge-success">Approved</span>';
-                  printButton = "enabled";
+                printButton = "enabled";
                 break;
               case 2:
                 cell9.innerHTML = '<span class="badge badge-danger">Rejected</span>';
@@ -2070,7 +2069,7 @@
             switch (v.aprovedBySup) {
               case 1:
                 cell10.innerHTML = '<span class="badge badge-success">Approved</span>';
-                  printButton = "enabled";
+                printButton = "enabled";
                 break;
               case 2:
                 cell10.innerHTML = '<span class="badge badge-danger">Rejected</span>';
@@ -2094,9 +2093,9 @@
               iconButton = "fa fa-edit";
 
             }
-            <?php if($_SESSION['permissionLevelId']&760): ?>
+            <?php if ($_SESSION['permissionLevelId'] & 760): ?>
 
-            cell11.innerHTML = `<div class="form-button-action">
+              cell11.innerHTML = `<div class="form-button-action">
                         <button type="button" title="" class="btn btn-link btn-success aproveModal" data-leaveId="${v.apDetailsId}" data-bs-toggle="modal" data-bs-target="#approveModal">
                         <i class="fas fa-check-double"></i>
                         </button>
@@ -2118,7 +2117,7 @@
                         </button>
                         
                       </div>`;
-              <?php endif; ?>
+            <?php endif; ?>
             /*cell8.innerHTML = v.address2;
             cell7.innerHTML = v.city;
             cell8.innerHTML = v.state;
@@ -2139,7 +2138,7 @@
           })
           // si el usuario es Emerson Mejía mostrar el campo w. sino ocultarlo
           // si es diferente al usuario de Emerson Mejia ocultar los campos
-          <?php if($_SESSION['userId']!=5): ?>
+          <?php if ($_SESSION['userId'] != 5): ?>
             $('.workedWF').hide();
           <?php endif; ?>
 
@@ -2204,38 +2203,41 @@
     var checkedWorked = null;
     if (this.checked) checkedWorked = 1;
 
-    var param = {'checkedWorked': checkedWorked, 'idAp': idAp};
+    var param = {
+      'checkedWorked': checkedWorked,
+      'idAp': idAp
+    };
 
     $.ajax({
       url: '<?php echo URLROOT; ?>/aps/checkWorked',
       method: 'POST',
       data: param,
-      success: function(data){
+      success: function(data) {
+        console.log(data)
+        // var obj = JSON.parse(data);
+        // var content = {};
+        // var type = '';
+        // content.title = "";
 
-        var obj = JSON.parse(data);
-        var content = {};
-        var type = '';
-        content.title = "";
+        // if (obj.worked) {
+        //     content.message = `You have marked AP #${idAp}.`;
+        //     content.icon = "fa fa-check";
+        //     typecontent = "success";
+        // }else {
+        //     content.message = `You have unmarked AP #${idAp}`;
+        //     content.icon = "fa fa-times";
+        //     typecontent = "warning";
+        // }
 
-        if (obj.worked) {
-            content.message = `You have marked AP #${idAp}.`;
-            content.icon = "fa fa-check";
-            typecontent = "success";
-        }else {
-            content.message = `You have unmarked AP #${idAp}`;
-            content.icon = "fa fa-times";
-            typecontent = "warning";
-        }
-        
-        $.notify(content, {
-            type: typecontent,
-            placement: {
-                from: 'top',
-                align: 'right',
-            },
-            time: 1000,
-            delay: 2,
-        });
+        // $.notify(content, {
+        //     type: typecontent,
+        //     placement: {
+        //         from: 'top',
+        //         align: 'right',
+        //     },
+        //     time: 1000,
+        //     delay: 2,
+        // });
 
       }
     })
@@ -2425,7 +2427,7 @@
                 break;
               case "Escrita":
                 $("#sancionEscrita").prop('checked', true);
-                $("#diasSuspension").hide()       
+                $("#diasSuspension").hide()
                 break;
               case "Suspension":
                 $("#suspension").prop('checked', true);
@@ -2504,8 +2506,8 @@
     }
   })
 
-  
-  
+
+
 
   $(document).on('click', '.updateModal', function() {
     //$("#aprovedByArea").html("")
@@ -2681,51 +2683,51 @@
 
         }
 
-        const getAproval = (status,uname) =>{
+        const getAproval = (status, uname) => {
           let texto;
-          switch(status){
-            case 1: 
-              texto = '<span class="badge badge-success">Approved</span> '+uname;
+          switch (status) {
+            case 1:
+              texto = '<span class="badge badge-success">Approved</span> ' + uname;
               break;
-            case 2: 
-              texto = '<span class="badge badge-danger">Rejected</span> '+uname;
+            case 2:
+              texto = '<span class="badge badge-danger">Rejected</span> ' + uname;
               break;
             case 3:
-              texto = '<span class="badge badge-secondary">Cancelled</span> '+uname;
+              texto = '<span class="badge badge-secondary">Cancelled</span> ' + uname;
               break;
             default:
-              texto ='<span class="badge badge-warning">Pending</span>'
+              texto = '<span class="badge badge-warning">Pending</span>'
           }
 
           return texto;
         }
-        
-        var apbody='';
-        var aproval=""
-          if(myObj.M){
-              console.log(myObj.M)
-              aproval = getAproval(myObj.aprovedByM,myObj.M)
-              apbody += `<p>${aproval}</p>`
-            }
-          if(myObj.HR){
-            console.log(myObj.HR)
-              aproval = getAproval(myObj.aprovedByHR,myObj.HR)
-              apbody += `<p>${aproval}</p>`
-            }
-          if(myObj.WF){
-            console.log(myObj.WF)
-              aproval = getAproval(myObj.aprovedByWf,myObj.WF)
-              apbody += `<p>${aproval}</p>`
-            }
-          if(myObj.SS){
-            console.log(myObj.SS)
-              aproval = getAproval(myObj.aprovedBySup,myObj.SS)
-              apbody += `<p>${aproval}</p>`
-            }
-          
-            $("#aprovedByArea").html(apbody)
 
-        
+        var apbody = '';
+        var aproval = ""
+        if (myObj.M) {
+          console.log(myObj.M)
+          aproval = getAproval(myObj.aprovedByM, myObj.M)
+          apbody += `<p>${aproval}</p>`
+        }
+        if (myObj.HR) {
+          console.log(myObj.HR)
+          aproval = getAproval(myObj.aprovedByHR, myObj.HR)
+          apbody += `<p>${aproval}</p>`
+        }
+        if (myObj.WF) {
+          console.log(myObj.WF)
+          aproval = getAproval(myObj.aprovedByWf, myObj.WF)
+          apbody += `<p>${aproval}</p>`
+        }
+        if (myObj.SS) {
+          console.log(myObj.SS)
+          aproval = getAproval(myObj.aprovedBySup, myObj.SS)
+          apbody += `<p>${aproval}</p>`
+        }
+
+        $("#aprovedByArea").html(apbody)
+
+
         if (myObj.aprovedByM >= 1 || myObj.aprovedByHR >= 1) {
 
           $('#addAPButton').hide();
@@ -2771,31 +2773,31 @@
     }
   });
 
-  function getEmpName(userId,rol,apbody){
-    
+  function getEmpName(userId, rol, apbody) {
+
     $.ajax({
-        url: '<?php echo URLROOT; ?>/aps/getEmpName/'+userId,
-        type: 'GET',
-        success: function(response) {
-          myObj = JSON.parse(response)
-          console.log(myObj)
-          
-          if (myObj.msg == "success") {
-            if(rol=="M"){
-              apbody += `<p><b>Manager:</b>${myObj.fullname}<p>`
-            }else if(rol=="HR"){
-              apbody += `<p><b>HR:</b>${myObj.fullname}<p>`
-            }else if(rol=="WF"){
-              apbody += `<p><b>WF:</b>${myObj.fullname}<p>`
-            }else if(rol=="SS"){
-              apbody +=`<p><b>SS:</b>${myObj.fullname}<p>`
-            }
-            var apheading="<h6>Approved By:</h6>";
-            $("#aprovedByArea").html(apheading+apbody)
+      url: '<?php echo URLROOT; ?>/aps/getEmpName/' + userId,
+      type: 'GET',
+      success: function(response) {
+        myObj = JSON.parse(response)
+        console.log(myObj)
+
+        if (myObj.msg == "success") {
+          if (rol == "M") {
+            apbody += `<p><b>Manager:</b>${myObj.fullname}<p>`
+          } else if (rol == "HR") {
+            apbody += `<p><b>HR:</b>${myObj.fullname}<p>`
+          } else if (rol == "WF") {
+            apbody += `<p><b>WF:</b>${myObj.fullname}<p>`
+          } else if (rol == "SS") {
+            apbody += `<p><b>SS:</b>${myObj.fullname}<p>`
           }
-          
+          var apheading = "<h6>Approved By:</h6>";
+          $("#aprovedByArea").html(apheading + apbody)
         }
-      })
+
+      }
+    })
   }
 
   function setScheduleInputs(day, inVal, outVal, lunchVal, checked) {
@@ -2829,23 +2831,28 @@
 
     const pdf_data = await response.json();
 
-    const url = pdf_data.url;  
+    const url = pdf_data.url;
     const existingPdfBytes = await fetch(url).then(res => res.arrayBuffer());
 
     const pdfDoc = await PDFLib.PDFDocument.load(existingPdfBytes);
 
     const page = pdfDoc.getPages()[0];
 
-    const { width, height } = page.getSize();
+    const {
+      width,
+      height
+    } = page.getSize();
 
     pdf_data.info.forEach((p) => {
-      if(p.t == null) p.t = "";
+      if (p.t == null) p.t = "";
       page.drawText(p.t, p.d);
     });
 
     const pdfBytes = await pdfDoc.save();
 
-    const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+    const blob = new Blob([pdfBytes], {
+      type: 'application/pdf'
+    });
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
 
@@ -2853,10 +2860,9 @@
     const month = String(today.getMonth() + 1).padStart(2, '0');
     const day = String(today.getDate()).padStart(2, '0');
     const year = today.getFullYear();
-    
-    link.download = 'AP_'+day+month+year;
+
+    link.download = 'AP_' + day + month + year;
 
     link.click();
   }
-
 </script>
