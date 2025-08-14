@@ -24,6 +24,14 @@ class PersonalAps extends Controller
     public function index()
     {
         $data['apTypes'] = $this->apModel->getAllApTypes();
+        $employeeData = $this->employeeModel->getEmpInfoByIdEmployee($_SESSION['employeeId']);
+        $a = [];
+        $a['badge'] = $employeeData['badge'];
+        $a['fullName'] = $employeeData['fullname'];
+        $a['nameDepartament'] = $employeeData['nameDepartament'];
+        $a['positionName'] = $employeeData['positionName'];
+        $a['employeeId'] = $_SESSION['employeeId'];
+        $data['infoAgent'] = $a;
         $this->view('personalAps/index', $data);
     }
 

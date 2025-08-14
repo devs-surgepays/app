@@ -17,8 +17,11 @@
             <?php echo breadcrumbs('Personal APs') ?>
         </div>
 
-        <div class="row pb-3">
+        <div class="row">
+            <div class="d-flex justify-content-end"><button id="createModal" class="btn btn-primary btn-round ms-auto" data-bs-toggle="modal" data-bs-target="#addRowModal">Create Request</button></div>
+        </div>
 
+        <div class="row pb-3">
             <div class="d-flex justify-content-between">
                 <div>
                     <label for="">Show
@@ -45,7 +48,7 @@
                                         <td>Id</td>
                                         <td>Created At</td>
                                         <td>AP Type</td>
-                                        <td>Approved</td>
+                                        <td>Status</td>
                                         <td>Action</td>
                                     </tr>
                                     <tr id="search">
@@ -84,8 +87,7 @@
 </div> <!-- end/container2 -->
 
 
-<!-- model -->
-
+<!-- model view-->
 <div class="modal fade" id="edit-user" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="edit-userLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -111,16 +113,8 @@
                         </div>
                     </div>
                     <hr style="color: #b9b9b9;">
-                    <!-- <div class="row">
-                        <div class="col-6">
-                            <div class="form-group">
-                                <label for="smallInput">AP Type</label>
-                                <input type="text" id="apTypeAP" name="apTypeAP" class="form-control form-control-sm" disabled id="smallInput" placeholder="">
-                            </div>
-                        </div>
-                    </div> -->
 
-                    <div id="permisoConSinGoce" class="toggleable">
+                    <div id="permisoConSinGoceView" class="toggleable">
 
                         <div class="row">
                             <div class="col-6">
@@ -250,7 +244,7 @@
                         </div>
                     </div>
 
-                    <div id="incapacidad" class="toggleable">
+                    <div id="incapacidadView" class="toggleable">
                         <div class="row">
                             <div class="col-6">
                                 <div class="form-group">
@@ -290,6 +284,16 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="fechaVerbal">
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label for="smallInput">Fecha de Amonestación</label>
+                                        <input type="text" id="fechaAmonestacion" name="fechaAmonestacion" class="form-control form-control-sm" disabled id="smallInput" placeholder="">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="suspensionFecha">
                             <div class="row">
                                 <div class="col-6">
@@ -308,7 +312,7 @@
                         </div>
                     </div>
 
-                    <div id="cambioHorario" class="toggleable">
+                    <div id="cambioHorarioView" class="toggleable">
 
                         <div class="row">
                             <div class="col-6">
@@ -356,7 +360,7 @@
 
                     </div>
 
-                    <div id="cambioDiaLibre" class="toggleable">
+                    <div id="cambioDiaLibreView" class="toggleable">
                         <div class="row">
                             <div class="col-6">
                                 <div class="form-group">
@@ -409,7 +413,7 @@
                         </div>
                     </div>
 
-                    <div id="horasExtras" class="toggleable">
+                    <div id="horasExtrasView" class="toggleable">
 
                         <div class="row">
                             <div class="col-6">
@@ -472,7 +476,7 @@
 
                     </div>
 
-                    <div id="ajusteSalarial" class="toggleable">
+                    <div id="ajusteSalarialView" class="toggleable">
                         <div class="row">
                             <div class="col-6">
                                 <div class="form-group">
@@ -517,6 +521,578 @@
     </div>
 </div>
 
+<!-- Modal Request AP -->
+<div class="modal fade" id="addRowModal" data-bs-backdrop="static" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <h5 class="modal-title">
+                    <span class="fw-mediumbold" id="actionspan"> Create Request</span>
+                    <span class="fw-light"> AP </span>
+                </h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="createApForm" action="index.php" method="POST" enctype="application/x-www-form-urlencoded">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div id="badgeDiv" class="form-floating  form-floating-custom mb-3">
+                                <input id="addbadge" name="addbadge" type="text" readonly class="form-control" placeholder="Badge" value="<?php echo $data['infoAgent']['badge']; ?>" />
+                                <label for="addbadge">Badge</label>
+                                <div id="msgArea"></div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="form-floating form-floating-custom mb-3">
+
+                                <input id="addName" name="addName" type="text" class="form-control" placeholder="fill name" value="<?php echo $data['infoAgent']['fullName']; ?>" readonly />
+                                <label>Name</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6 pe-0">
+                            <div class="form-floating form-floating-custom mb-3">
+
+                                <input id="addPosition" name="addPosition" type="text" class="form-control" placeholder="fill position" value="<?php echo $data['infoAgent']['positionName']; ?>" readonly />
+                                <label>Position</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating form-floating-custom mb-3">
+
+                                <input id="addDepartment" name="addDepartment" type="text" class="form-control" placeholder="fill department" value="<?php echo $data['infoAgent']['nameDepartament']; ?>" readonly />
+                                <label>Department</label>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="form-floating form-floating-custom mb-3">
+
+                                <select class="form-control" id="addLeaveType" name="addLeaveType">
+                                    <option value="">Select...</option>
+                                    <?php
+                                    foreach ($data['apTypes'] as $items) {
+                                        if ($items['apTypeId'] == 7) {
+                                            echo "<option value='" . $items['apTypeId'] . "'>" . $items['name'] . "</option>";
+                                        } else {
+                                            //echo "<option value='" . $items['apTypeId'] . "'>" . $items['name'] . "</option>";
+                                        }
+                                    }
+                                    ?>
+                                </select>
+                                <label>AP type</label>
+                            </div>
+                        </div>
+                        <!-- change Area -->
+
+                        <div id="cambiohorario" class="toggleable">
+                            <div class="col-sm-12">
+                                <div class="form-floating form-floating-custom mb-3">
+                                    <input class="form-control" type="date" placeholder="Dia" name="inicioHorario" id="inicioHorario">
+                                    <label>Fecha Inicio</label>
+                                </div>
+                            </div>
+                            <!-- <div class="col-sm-12">
+                                <div class="form-floating form-floating-custom mb-3">
+                                    <input class="form-control" type="date" placeholder="Dia" name="finHorario" id="finHorario">
+                                    <label>Fecha Fin</label>
+                                </div>
+                            </div> -->
+
+                            <div class="col-sm-12">
+                                <div class="form-floating form-floating-custom mb-3">
+                                    <select class="form-select" name="motivo_horario" id="motivo_horario">
+                                        <option value="">Select</option>
+                                        <option value="Cambio Permanente">Cambio Permanente</option>
+                                    </select>
+                                    <label for="motivo_horario"> Motivo Cambio de Horario: </label>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-12">
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Dia</th>
+                                                <th>Entrada</th>
+                                                <th>Salida</th>
+                                                <th>Lunch</th>
+                                                <th>Dia Libre</th>
+                                            </tr>
+                                        </thead>
+                                        <tr>
+                                            <td>Lunes</td>
+                                            <td><input type="time" class="form-control" id="mondayIn" name="mondayIn"></td>
+                                            <td><input type="time" class="form-control" id="mondayOut" name="mondayOut"></td>
+                                            <td>
+                                                <select class="form-select" name="mondayLunch" id="mondayLunch">
+                                                    <option value="" selected>--:--</option>
+                                                    <option value="1H">1:00</option>
+                                                    <option value="30M">0:30</option>
+                                                    <option value="0">0:00</option>
+                                                </select>
+                                            </td>
+                                            <td><input class="form-check dayOff" value="ON" onChange="isOffchecked('mondayOff')" data-day="monday" type="checkbox" id="mondayOff" name="mondayOff"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Martes</td>
+                                            <td><input type="time" class="form-control" id="tuesdayIn" name="tuesdayIn"></td>
+                                            <td><input type="time" class="form-control" id="tuesdayOut" name="tuesdayOut"></td>
+                                            <td>
+                                                <select class="form-select" name="tuesdayLunch" id="tuesdayLunch">
+                                                    <option value="" selected>--:--</option>
+                                                    <option value="1H">1:00</option>
+                                                    <option value="30M">0:30</option>
+                                                    <option value="0">0:00</option>
+                                                </select>
+                                            </td>
+                                            <td><input class="form-check dayOff" value="ON" onChange="isOffchecked('tuesdayOff')" data-day="tuesday" type="checkbox" id="tuesdayOff" name="tuesdayOff"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Miercoles</td>
+                                            <td><input type="time" class="form-control" id="wednesdayIn" name="wednesdayIn"></td>
+                                            <td><input type="time" class="form-control" id="wednesdayOut" name="wednesdayOut"></td>
+                                            <td>
+                                                <select class="form-select" name="wednesdayLunch" id="wednesdayLunch">
+                                                    <option value="" selected>--:--</option>
+                                                    <option value="1H">1:00</option>
+                                                    <option value="30M">0:30</option>
+                                                    <option value="0">0:00</option>
+                                                </select>
+                                            </td>
+                                            <td><input class="form-check dayOff" value="ON" onChange="isOffchecked('wednesdayOff')" data-day="wednesday" type="checkbox" id="wednesdayOff" name="wednesdayOff"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Jueves</td>
+                                            <td><input type="time" class="form-control" id="thursdayIn" name="thursdayIn"></td>
+                                            <td><input type="time" class="form-control" id="thursdayOut" name="thursdayOut"></td>
+                                            <td>
+                                                <select class="form-select" name="thursdayLunch" id="thursdayLunch">
+                                                    <option value="" selected>--:--</option>
+                                                    <option value="1H">1:00</option>
+                                                    <option value="30M">0:30</option>
+                                                    <option value="0">0:00</option>
+                                                </select>
+                                            </td>
+                                            <td><input class="form-check dayOff" value="ON" onChange="isOffchecked('thursdayOff')" data-day="thursday" type="checkbox" id="thursdayOff" name="thursdayOff"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Viernes</td>
+                                            <td><input type="time" class="form-control" id="fridayIn" name="fridayIn"></td>
+                                            <td><input type="time" class="form-control" id="fridayOut" name="fridayOut"></td>
+                                            <td>
+                                                <select class="form-select" name="fridayLunch" id="fridayLunch">
+                                                    <option value="" selected>--:--</option>
+                                                    <option value="1H">1:00</option>
+                                                    <option value="30M">0:30</option>
+                                                    <option value="0">0:00</option>
+                                                </select>
+                                            </td>
+                                            <td><input class="form-check dayOff" value="ON" onChange="isOffchecked('fridayOff')" data-day="friday" type="checkbox" id="fridayOff" name="fridayOff"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Saturday</td>
+                                            <td><input type="time" class="form-control" id="saturdayIn" name="saturdayIn"></td>
+                                            <td><input type="time" class="form-control" id="saturdayOut" name="saturdayOut"></td>
+                                            <td>
+                                                <select class="form-select" name="saturdayLunch" id="saturdayLunch">
+                                                    <option value="" selected>--:--</option>
+                                                    <option value="1H">1:00</option>
+                                                    <option value="30M">0:30</option>
+                                                    <option value="0">0:00</option>
+                                                </select>
+                                            </td>
+                                            <td><input class="form-check dayOff" value="ON" onChange="isOffchecked('saturdayOff')" data-day="saturday" type="checkbox" id="saturdayOff" name="saturdayOff"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Domingo</td>
+                                            <td><input type="time" class="form-control" id="sundayIn" name="sundayIn"></td>
+                                            <td><input type="time" class="form-control" id="sundayOut" name="sundayOut"></td>
+                                            <td>
+                                                <select class="form-select" name="sundayLunch" id="sundayLunch">
+                                                    <option value="" selected>--:--</option>
+                                                    <option value="1H">1:00</option>
+                                                    <option value="30M">0:30</option>
+                                                    <option value="0">0:00</option>
+                                                </select>
+                                            </td>
+                                            <td><input class="form-check dayOff" value="ON" onChange="isOffchecked('sundayOff')" data-day="sunday" type="checkbox" id="sundayOff" name="sundayOff"></td>
+                                        </tr>
+                                        <tbody>
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--
+                        <div id="permisoConSinGoce" class="toggleable">
+                            <div class="col-sm-12">
+                                <div class="form-floating form-floating-custom mb-3">
+                                    <select class="form-control" name="motivo_permiso" id="motivo_permiso">
+                                    </select>
+                                    <label>Motivo</label>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="form-floating form-floating-custom mb-3">
+                                    <select name="tiempopermiso" id="tiempopermiso" class="form-control" onchange="setleaveTime()">
+                                        <option value="">Select..</option>
+                                        <option value="Horas">Horas</option>
+                                        <option value="Dias">Dias</option>
+                                    </select>
+                                    <label>Tipo</label>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="form-floating form-floating-custom mb-3">
+                                    <input class="form-control" type="date" id="dia1" name="dia1">
+                                    <label>Dia</label>
+                                </div>
+                            </div>
+                            <div id="horas" style="display: none;">
+                                <div class="col-sm-12">
+                                    <div class="form-floating form-floating-custom mb-3">
+                                        <input class="form-control" type="time" placeholder="Horas" name="hora_inicio" id="hora_inicio">
+                                        <label>Hora / inicio</label>
+                                    </div>
+                                </div>
+                                <div class="col-sm-12">
+                                    <div class="form-floating form-floating-custom mb-3">
+                                        <input class="form-control" type="time" placeholder="Horas" name="hora_final" id="hora_final">
+                                        <label>Hora / final</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="dias" style="display: none;">
+                                <div class="form-floating form-floating-custom mb-3">
+                                    <input class="form-control" type="date" placeholder="Dia" name="dia2" id="dia2">
+                                    <label>Dia final</label>
+                                </div>
+                            </div>
+                            <div class="form-floating form-floating-custom mb-3">
+                                <input class="form-control" type="text" placeholder="Documentos Justificativos" name="documentosJustificativos" id="documentosJustificativos">
+                                <label>Documentos Justificativos que se entregan</label>
+                            </div>
+
+                        </div>
+                        <div id="vacaciones" class="toggleable">
+                            <div class="col-sm-12">
+                                <div class="form-floating form-floating-custom mb-3">
+                                    <input class="form-control" type="date" placeholder="Dia" name="inicioVacaciones" id="inicioVacaciones" onChange="calculateDays()">
+                                    <label>Fecha Inicio</label>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="form-floating form-floating-custom mb-3">
+                                    <input class="form-control" type="date" placeholder="Dia" name="finVacaciones" id="finVacaciones" onChange="calculateDays()">
+                                    <label>Fecha Fin</label>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="form-floating form-floating-custom mb-3">
+
+                                    <input class="form-control" type="number" readonly="" placeholder="Dias" name="totalDias" id="totalDias" value="0">
+                                    <label>Cantidad de Días</label>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="form-floating form-floating-custom mb-3">
+                                    <input class="form-control" type="date" placeholder="Dia" name="fechaPago" id="fechaPago">
+                                    <label>Fecha de Pago</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="traslados" class="toggleable">
+                            <div class="col-sm-12">
+                                <div class="form-floating form-floating-custom mb-3">
+                                    <select class="form-control" name="newDepartment" id="newDepartment">
+                                    </select>
+                                    <label>Departamento</label>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="form-floating form-floating-custom mb-3">
+                                    <select class="form-control" name="newPosition" id="newPosition">
+                                    </select>
+                                    <label>Posicion</label>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="form-floating form-floating-custom mb-3">
+                                    <input type="date" class="form-control" name="inicioPrueba" id="inicioPrueba">
+
+                                    <label>Inicio periodo de Prueba</label>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="form-floating form-floating-custom mb-3">
+                                    <input type="date" class="form-control" name="finPrueba" id="finPrueba">
+
+                                    <label>Fin periodo de Prueba</label>
+                                </div>
+                            </div>
+                            <input type="hidden" name="currentPosition" id="currentPosition">
+                            <input type="hidden" name="currentDepartment" id="currentDepartment">
+                            <input type="hidden" name="currentSalary" id="currentSalary">
+                        </div>
+                        <div id="incapacidad" class="toggleable">
+                            <div class="col-sm-12">
+                                <div class="form-floating form-floating-custom mb-3">
+                                    <input class="form-control" type="date" placeholder="Dia" name="inicioIncapacidad" id="inicioIncapacidad">
+                                    <label>Fecha Inicio</label>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="form-floating form-floating-custom mb-3">
+                                    <input class="form-control" type="date" placeholder="Dia" name="finIncapacidad" id="finIncapacidad">
+                                    <label>Fecha Fin</label>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <label for="">Tipo Incapacidad</label>
+                                <div class="d-flex">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="tipoIncapacidad" id="isss" value="" onChange="getIncapacidad('isss')">
+                                        <label class="form-check-label" for="isss">
+                                            Seguro Social
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="tipoIncapacidad" id="seguroprivado" value="" onChange="getIncapacidad('Seguro médico privado')">
+                                        <label class="form-check-label" for="seguroprivado">
+                                            Seguro médico privado
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="tipoIncapacidad" id="particular" value="" onChange="getIncapacidad('particular')">
+                                        <label class="form-check-label" for="particular">
+                                            Particular
+                                        </label>
+                                    </div>
+
+                                </div>
+                                <div class="form-check"><input type="checkbox" id="prorroga" name="prorroga" value="No" onclick="ischecked('prorroga')" class="form-check-input"><label for="prorroga">Prorroga</label></div>
+                            </div>
+                        </div>
+                        <div id="sanciones" class="toggleable">
+                            <div class="col-sm-12">
+                                <div class="form-floating form-floating-custom mb-3">
+                                    <input class="form-control" type="date" placeholder="Dia" name="fechaAmonestacion" id="fechaAmonestacion">
+                                    <label>Fecha de Amonestación</label>
+                                </div>
+                            </div>
+                            <div class="d-flex">
+                                <div class="form-check">
+                                    <input class="form-check-input tipoSus" type="radio" name="tipoSancion" id="sancionVerbal" value="" onChange="setSanciones('sancionVerbal')">
+                                    <label class="form-check-label" for="sancionVerbal">
+                                        Verbal
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input tipoSus" type="radio" name="tipoSancion" id="sancionEscrita" value="" onChange="setSanciones('sancionEscrita')">
+                                    <label class="form-check-label" for="sancionEscrita">
+                                        Escrita
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input tipoSus" type="radio" name="tipoSancion" id="suspension" value="" onChange="setSanciones('suspension')">
+                                    <label class="form-check-label" for="suspension">
+                                        Suspensión
+                                    </label>
+                                </div>
+                            </div>
+                            <div id="diasSuspension" style="display:none">
+                                <div class="col-sm-12">
+                                    <div class="form-floating form-floating-custom mb-3">
+                                        <input class="form-control" type="date" placeholder="Dia" name="inicioSuspension" id="inicioSuspension">
+                                        <label>Inicio Suspension</label>
+                                    </div>
+                                    <div class="form-floating form-floating-custom mb-3">
+                                        <input class="form-control" type="date" placeholder="Dia" name="finSuspension" id="finSuspension">
+                                        <label>Fin Suspension</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="cambiodialibre" class="toggleable">
+                            <div class="col-sm-12">
+                                <div class="form-floating form-floating-custom mb-3">
+                                    <input class="form-control" type="date" placeholder="Dia" name="fechaSolicitud" id="fechaSolicitud">
+                                    <label>Fecha Solicitud</label>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="form-floating form-floating-custom mb-3">
+                                    <input class="form-control" type="date" placeholder="Dia" name="diaAsignado" id="diaAsignado">
+                                    <label>Dia Asignado</label>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="form-floating form-floating-custom mb-3">
+                                    <input class="form-control" type="date" placeholder="Dia" name="diaSolicitado" id="diaSolicitado">
+                                    <label>Dia Solicitado</label>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="form-floating form-floating-custom mb-3">
+                                    <select class="form-control" name="motivo_cambio" id="motivo_cambio">
+                                    </select>
+                                    <label>Motivo</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="ausencia" class="toggleable">
+                            <div class="col-sm-12">
+                                <div class="form-floating form-floating-custom mb-3">
+                                    <input class="form-control" type="date" placeholder="Dia" name="inicioAusencia" id="inicioAusencia">
+                                    <label>Inicio</label>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="form-floating form-floating-custom mb-3">
+                                    <input class="form-control" type="date" placeholder="Dia" name="finAusencia" id="finAusencia">
+                                    <label>Fin</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="horasExtra" class="toggleable">
+                            <div class="col-sm-12">
+                                <div class="form-floating form-floating-custom mb-3">
+                                    <input class="form-control" type="date" placeholder="Dia" name="fechaOt" id="fechaOt">
+                                    <label>Fecha</label>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="form-floating form-floating-custom mb-3">
+                                    <input class="form-control" type="time" name="inicioOt" id="inicioOt" onchange="getTotalOT()" s>
+                                    <label>Inicio</label>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="form-floating form-floating-custom mb-3">
+                                    <input class="form-control" type="time" name="finOt" id="finOt" onchange="getTotalOT()" s>
+                                    <label>Fin</label>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="form-floating form-floating-custom mb-3">
+                                    <input class="form-control" type="text" name="totalOt" id="totalOt" readonly>
+                                    <label>Total Horas</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="retiros" class="toggleable">
+                            <div class="col-sm-12">
+                                <div class="form-floating form-floating-custom mb-3">
+                                    <select class="form-select" name="tipoRetiro" id="tipoRetiro">
+                                        <option value="">Seleccione..</option>
+                                        <option value="Voluntary">Voluntario</option>
+                                        <option value="Involuntary">Involuntario</option>
+                                    </select>
+                                    <label for="tipoRetiro">Tipo de Retiro</label>
+                                </div>
+                            </div>
+
+                            <div id="attritionReasons" style="display: none">
+                                <div class="col-sm-12">
+                                    <div class="form-floating form-floating-custom mb-3">
+
+                                        <select class="form-select" name="attritions" id="attritions">
+                                        </select>
+                                        <label>Reasons</label>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <div id="reasonDetail_div" style="display:none">
+                                <div class="col-sm-12">
+                                    <div class="form-floating form-floating-custom mb-3">
+                                        <select class="form-select" name="reasonsDetails" id="reasonsDetails"></select>
+                                        <label>Reason Details</label>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="col-sm-12">
+                                <div class="form-floating form-floating-custom mb-3">
+                                    <input type="date" class="form-control" name="fechaRetiro" id="fechaRetiro">
+                                    <label for="fechaRetiro">Fecha de Retiro</label>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div id="ajusteSalarial" class="toggleable">
+                            <div class="col-sm-12">
+                                <div class="form-floating form-floating-custom mb-3">
+                                    <input type="number" class="form-control money2" name="monto" id="monto" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$">
+                                    <label for="monto">Monto</label>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="form-floating form-floating-custom mb-3">
+                                    <input type="date" class="form-control" name="diaEfectivo" id="diaEfectivo">
+                                    <label for="diaEfectivo">Efectivo desde</label>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="form-floating form-floating-custom mb-3">
+                                    <select class="form-control" name="newPosition2" id="newPosition2">
+                                    </select>
+                                    <label for="newPosition2">Nuevo Puesto</label>
+                                </div>
+                            </div>
+                        </div>-->
+                        <!-- end chnage Area-->
+                        <div class="col-sm-12">
+                            <div class="form-floating form-floating-custom mb-3">
+                                <textarea name="addComments" id="addComments" class="form-control" placeholder="Comments" row="5"></textarea>
+                                <label for="addComments">Comments</label>
+                            </div>
+                        </div>
+                        <style>
+                            div#aprovedByArea>p {
+                                margin-bottom: 0.2rem;
+                            }
+
+                            #aproval {
+                                color: #1572e8;
+                                font-size: 85% !important;
+                                transform: translate3d(0, -10px, 0);
+                                top: 0;
+                                opacity: 1;
+                                padding: .375rem 0 .75rem;
+
+                            }
+                        </style>
+
+                        <!-- <div class="col-sm-12 mt-3">
+                            <div class="form-floating form-floating-custom mb-3">
+                                <span style="color: #1572e8 ;font-size: 85%!important;transform: translate3d(0,-10px,0);top: 0;opacity: 1;padding: .375rem 0 .75rem;">Aproval</span>
+                                <div id="aprovedByArea">
+                                    <span class="badge badge-warning">Pending</span>
+                                </div>
+                            </div>
+                        </div> -->
+                    </div>
+                    <input type="hidden" id="addEmployeeId" value="<?php echo $data['infoAgent']['employeeId']; ?>" name="addEmployeeId">
+                    <input type="hidden" id="idApType" name="idApType">
+
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="submit" id="addAPButton" class="btn btn-primary">Add</button>
+                    <button type="button" class="btn btn-danger closeModal" data-bs-dismiss="modal" aria-label="Close">Close</button>
+                </div>
+                <input type="hidden" id="Action" name="Action">
+                <input type="hidden" id="apId" name="apId">
+                <input type="hidden" id="scheduleId" name="scheduleId">
+            </form>
+        </div>
+    </div>
+</div>
+
 
 <script>
     $(document).ready(function() {
@@ -524,6 +1100,540 @@
         readData(1, '', 10, '');
         // getInfoCard();
     });
+    const addForm = $("#createApForm");
+    const initialState = {};
+    addForm.validate({
+        rules: {
+            addbadge: {
+                required: true,
+                digits: true
+            },
+            addLeaveType: {
+                required: true
+            },
+            motivo_permiso: {
+                required: true
+            },
+            inicioVacaciones: {
+                required: true
+            },
+            tiempopermiso: {
+                required: true
+            },
+            dia1: {
+                required: true
+            },
+            dia2: {
+                required: true
+            },
+            hora_inicio: {
+                required: true
+            },
+            hora_final: {
+                required: true
+            },
+            newDepartment: {
+                required: true
+            },
+            newPosition: {
+                required: true
+            },
+            inicioPrueba: {
+                required: true
+            },
+            finPrueba: {
+                required: true
+            },
+            tipoIncapacidad: {
+                required: true
+            },
+            inicioIncapacidad: {
+                required: true
+            },
+            finIncapacidad: {
+                required: true
+            },
+            tipoSancion: {
+                required: true
+            },
+            inicioSuspension: {
+                required: true
+            },
+            finSuspension: {
+                required: true
+            },
+            fechaAmonestacion: {
+                required: true
+            },
+            inicioAusencia: {
+                required: true
+            },
+            finAusencia: {
+                required: true
+            },
+            fechaOt: {
+                required: true
+            },
+            inicioOt: {
+                required: true
+            },
+            finOt: {
+                required: true
+            },
+            tipoRetiro: {
+                required: true
+            },
+            attritions: {
+                required: true
+            },
+            reasonsDetails: {
+                required: true
+            },
+            fechaRetiro: {
+                required: true
+            },
+            monto: {
+                required: true
+            },
+            diaEfectivo: {
+                required: true
+            },
+            fechaSolicitud: {
+                required: true
+            },
+            diaAsignado: {
+                required: true
+            },
+            diaSolicitado: {
+                required: true
+            },
+            motivo_cambio: {
+                required: true
+            },
+            inicioHorario: {
+                required: true
+            },
+            motivo_horario: {
+                required: true
+            }
+        },
+        errorElement: 'span',
+        /*errorClass: 'invalid-feedback',*/
+        errorPlacement: function(error, element) {
+            error.insertAfter(element);
+        }
+    });
+
+
+    $(".dayOff").on("change", function() {
+        var day = $(this).data("day");
+        if ($(this).is(":checked")) {
+            console.log(day)
+            setScheduleInputs(day, "", "", "", true)
+        } else {
+            console.log("is not checked")
+            setScheduleInputs(day, "", "", "", false)
+        }
+    });
+
+    $("#addAPButton").click(function(e) {
+        e.preventDefault();
+
+        if (addForm.valid()) {
+            var changedFields = getChangedFields();
+            console.table(changedFields)
+
+            $.ajax({
+                url: "<?php echo URLROOT; ?>/aps/saveRequestAP",
+                type: "POST",
+                data: changedFields,
+                success: function(data) {
+                    console.log(data)
+                    var myObj = JSON.parse(data)
+                    if (myObj.status == "success") {
+                        swal(myObj.message, {
+                            icon: "success",
+                            buttons: {
+                                confirm: {
+                                    className: "btn btn-success",
+                                },
+                            },
+                        }).then((willReload) => {
+                            if (willReload) {
+                                $(".modal").modal("hide");
+                                $('#createApForm')[0].reset();
+                                hideAllAndShow("")
+                                getdataBody();
+                            }
+                        });
+                    } else {
+                        swal('Error', obj.message, {
+                            icon: "error",
+                            buttons: {
+                                confirm: {
+                                    className: "btn btn-danger",
+                                },
+                            },
+                        });
+                    }
+                }
+            })
+        }
+
+
+
+
+    });
+
+    $('#createApForm').find('input, select,textarea').each(function() {
+        initialState[$(this).attr('name')] = $(this).val();
+    });
+
+    // get information for uopdated AP modal
+    $(document).on('click', '.updateModal', function() {
+        //$("#aprovedByArea").html("")
+        var leaveId = $(this).data("leaveid");
+        $("#actionspan").text("Update");
+        $("#addAPButton").text("Edit").show();
+        $("#Action").val("Update");
+        $("#apId").val(leaveId);
+        console.log(leaveId)
+        hideAllAndShow("")
+
+        $.ajax({
+            url: "<?Php echo URLROOT; ?>/aps/getleave/" + leaveId,
+            type: "GET",
+            success: function(data) {
+                console.log(data)
+                var myObj = JSON.parse(data)
+                $("#addbadge").val(myObj.badge);
+                $('#addbadge').trigger('keyup');
+                $("#addLeaveType").val(myObj.apTypeId);
+                var apType = myObj.apTypeId;
+
+                const parser = new DOMParser();
+                const htmlString = myObj.comment;
+                const decodedText = parser.parseFromString(htmlString, 'text/html').body.textContent;
+                $("#addComments").val(decodedText)
+                console.log(decodedText);
+                console.log(apType)
+                switch (apType) {
+                    case 7:
+                        hideAllAndShow("cambiohorario")
+                        //setReasons('motivo_horario', 3, myObj.reason1);
+                        $("#motivo_horario").val(myObj.reason1);
+                        $("#inicioHorario").val(myObj.apDate1);
+                        $("#finHorario").val(myObj.apDate2);
+                        getLastSchedule(myObj.scheduleId, "Edit");
+                        break;
+                }
+
+                if (myObj.aprovedByM >= 1 || myObj.aprovedByHR >= 1) {
+
+                    $('#addAPButton').hide();
+                    setTimeout(function() {
+                        $('#addLeaveType').prop('disabled', true);
+                        document.getElementById("createApForm").querySelectorAll("input, select, textarea,time").forEach(function(element) {
+                            element.disabled = true;
+                        });
+                    }, 200);
+
+                } else {
+                    $('#addAPButton').show();
+                    $('#addLeaveType').prop('disabled', false);
+                    document.getElementById("createApForm").querySelectorAll("input, select, textarea").forEach(function(element) {
+                        element.disabled = false;
+                    });
+                }
+
+            }
+
+        })
+
+    })
+
+    //This button open createModal in order to create a new Leave
+    $("#createModal").click(function() {
+        $("#aprovedByArea").html("")
+        $("#Action").val("Insert");
+        $("#actionspan").text("Create Request");
+        $("#addAPButton").text("Create Request");
+        $('#addLeaveType').prop('disabled', true);
+        $('#addLeaveType option').eq(0).prop('selected', true);
+        hideAllAndShow("");
+
+        $("#addComments").val("");
+        $('#addAPButton').show();
+
+
+        setTimeout(function() {
+            // $('#addLeaveType').prop('disabled', false);
+            document.getElementById("createApForm").querySelectorAll("input, select, textarea,time").forEach(function(element) {
+                element.disabled = false;
+            });
+        }, 200);
+
+    })
+
+    $("#addLeaveType").on("change", function() {
+        var idLeaveType = $(this).val();
+        var employeeId = $("#addEmployeeId").val();
+        console.log(idLeaveType)
+
+        switch (idLeaveType) {
+            case '1':
+                hideAllAndShow("permisoConSinGoce")
+                setReasons('motivo_permiso', 1);
+                break;
+            case '2':
+                hideAllAndShow("permisoConSinGoce")
+                setReasons('motivo_permiso', 1);
+                break;
+            case '3':
+                hideAllAndShow("vacaciones")
+                break;
+            case '4':
+                hideAllAndShow("traslados")
+                setDespartment();
+                setPosition('newPosition');
+                break;
+            case '5':
+                hideAllAndShow("incapacidad")
+                break;
+            case '6':
+                hideAllAndShow("sanciones")
+                break;
+            case '7':
+                hideAllAndShow("cambiohorario")
+                // setReasons('motivo_horario', 3);
+                getLastSchedule(employeeId, "Last");
+                break;
+            case '8':
+                hideAllAndShow("cambiodialibre");
+                setReasons('motivo_cambio', 2);
+                break;
+            case '9':
+                hideAllAndShow("ausencia");
+                break;
+            case '10':
+                hideAllAndShow("horasExtra");
+                break;
+            case '11':
+                hideAllAndShow("retiros");
+                break;
+            case '12':
+                hideAllAndShow("ajusteSalarial");
+                setPosition('newPosition2');
+                break;
+            default:
+                hideAllAndShow("")
+                break;
+
+        }
+    });
+
+
+    function isOffchecked(idelement) {
+        var check;
+        console.log(idelement)
+        if ($('#' + idelement).is(':checked')) {
+            $('#' + idelement).val('OFF');
+        } else {
+            $('#' + idelement).val('ON');
+        }
+        return check;
+    }
+
+
+
+    function setScheduleInputs(day, inVal, outVal, lunchVal, checked) {
+        if (checked == true) {
+            $("#" + day + "In").val("").prop("disabled", true).rules('remove', 'required');
+            $("#" + day + "Out").val("").prop("disabled", true).rules('remove', 'required');
+            $("#" + day + "Lunch").val("").prop("disabled", true).rules('remove', 'required');
+        } else {
+            $("#" + day + "In").val(inVal).prop("disabled", false).rules('add', {
+                required: true
+            });
+            $("#" + day + "Out").val(outVal).prop("disabled", false).rules('add', {
+                required: true
+            });
+            $("#" + day + "Lunch").val(lunchVal).prop("disabled", false).rules('add', {
+                required: true
+            });
+        }
+    }
+
+    function getLastSchedule(id, type) {
+        //console.log(employeeId)
+        $.ajax({
+            url: "<?php echo URLROOT; ?>/aps/getEmployeeSchedule/" + id + "/" + type,
+            method: "GET",
+            success: function(data) {
+                //console.log(data)
+                myObj = JSON.parse(data)
+                console.table(myObj)
+                const daysObj = myObj.days.split('');
+                let start, end;
+                //console.log(daysObj)
+                $("#scheduleId").val("")
+                $("#scheduleId").val(myObj.scheduleId)
+                daysObj.forEach(function(day, index) {
+                    //console.log(day)
+                    switch (index) {
+                        case 0:
+                            if (myObj.monday == "-OFF-") {
+                                $("#mondayOff").prop("checked", true).trigger("change");
+                                //$("#mondayIn").val("").prop("disabled",true);
+                                //$("#mondayOut").val("").prop("disabled",true);
+                                //$("#mondayLunch").val("").prop("disabled",true);
+                                setScheduleInputs("monday", "", "", "", true)
+                            } else {
+                                [start, end] = myObj.monday.split(' - ');
+                                $("#mondayOff").prop("checked", false)
+                                // $("#mondayIn").val(start).prop("disabled",false);
+                                // $("#mondayOut").val(end).prop("disabled",false);
+                                // $("#mondayLunch").val(myObj.mondayLunch).prop("disabled",false);
+                                setScheduleInputs("monday", start, end, myObj.mondayLunch, false)
+                            }
+                            start = "";
+                            end = "";
+                            break;
+                        case 1:
+                            if (myObj.tuesday == "-OFF-") {
+                                $("#tuesdayOff").prop("checked", true).trigger("change");
+                                // $("#tuesdayIn").val("").prop("disabled",true);
+                                // $("#tuesdayOut").val("").prop("disabled",true);
+                                // $("#tuesdayLunch").val("").prop("disabled",true);
+                                setScheduleInputs("tuesday", "", "", "", true)
+                            } else {
+                                [start, end] = myObj.tuesday.split(' - ');
+                                //.log("tuesday:"+start+"-"+end)
+                                $("#tuesdayOff").prop("checked", false)
+                                // $("#tuesdayIn").val(start).prop("disabled",false);
+                                // $("#tuesdayOut").val(end).prop("disabled",false);
+                                // $("#tuesdayLunch").val(myObj.tuesdayLunch).prop("disabled",false);
+                                setScheduleInputs("tuesday", start, end, myObj.tuesdayLunch, false)
+                            }
+                            start = "";
+                            end = ""
+                            break;
+                        case 2:
+                            if (myObj.wednesday == "-OFF-") {
+                                $("#wednesdayOff").prop("checked", true).trigger("change");
+                                // $("#wednesdayIn").val("").prop("disabled",true);
+                                // $("#wednesdayOut").val("").prop("disabled",true);
+                                // $("#wednesdayLunch").val("").prop("disabled",true);
+                                setScheduleInputs("wednesday", "", "", "", true)
+
+                            } else {
+                                [start, end] = myObj.wednesday.split(' - ');
+                                $("#wednesdayOff").prop("checked", false)
+                                // $("#wednesdayIn").val(start).prop("disabled",false);
+                                // $("#wednesdayOut").val(end).prop("disabled",false);
+                                // $("#wednesdayLunch").val(myObj.wednesdayLunch).prop("disabled",false);
+                                setScheduleInputs("wednesday", start, end, myObj.wednesdayLunch, false)
+                            }
+                            start = "";
+                            end = ""
+                            break;
+                        case 3:
+                            if (myObj.thursday == "-OFF-") {
+                                $("#thursdayOff").prop("checked", true).trigger("change");
+                                // $("#thursdayIn").val("").prop("disabled",true);
+                                // $("#thursdayOut").val("").prop("disabled",true);
+                                // $("#thursdayLunch").val("").prop("disabled",true);
+                                setScheduleInputs("thursday", "", "", "", true)
+
+                            } else {
+                                [start, end] = myObj.thursday.split(' - ');
+                                $("#thursdayOff").prop("checked", false)
+                                // $("#thursdayIn").val(start).prop("disabled",false);
+                                // $("#thursdayOut").val(end).prop("disabled",false);
+                                // $("#thursdayLunch").val(myObj.thursdayLunch).prop("disabled",false);
+                                setScheduleInputs("thursday", start, end, myObj.thursdayLunch, false)
+                            }
+                            start = "";
+                            end = ""
+                            break;
+                        case 4:
+                            if (myObj.friday == "-OFF-") {
+                                $("#fridayOff").prop("checked", true).trigger("change");
+                                // $("#fridayIn").val("").prop("disabled",true);
+                                // $("#fridayOut").val("").prop("disabled",true);
+                                // $("#fridayLunch").val("").prop("disabled",true);
+                                setScheduleInputs("friday", "", "", "", true)
+
+                            } else {
+                                [start, end] = myObj.friday.split(' - ');
+                                $("#fridayOff").prop("checked", false)
+                                // $("#fridayIn").val(start).prop("disabled",false);
+                                // $("#fridayOut").val(end).prop("disabled",false);
+                                // $("#fridayLunch").val(myObj.fridayLunch).prop("disabled",false);
+                                setScheduleInputs("friday", start, end, myObj.fridayLunch, false)
+                            }
+                            start = "";
+                            end = ""
+                            break;
+                        case 5:
+                            if (myObj.saturday == "-OFF-") {
+                                $("#saturdayOff").prop("checked", true).trigger("change");
+                                // $("#saturdayIn").val("").prop("disabled",true);
+                                // $("#saturdayOut").val("").prop("disabled",true);
+                                // $("#saturdayLunch").val("").prop("disabled",true);
+                                setScheduleInputs("saturday", "", "", "", true)
+
+                            } else {
+                                [start, end] = myObj.saturday.split(' - ');
+                                $("#saturdayOff").prop("checked", false)
+                                // $("#saturdayIn").val(start).prop("disabled",false);
+                                // $("#saturdayOut").val(end).prop("disabled",false);
+                                // $("#saturdayLunch").val(myObj.saturdayLunch).prop("disabled",false);
+                                setScheduleInputs("saturday", start, end, myObj.saturdayLunch, false)
+                            }
+                            start = "";
+                            end = ""
+                            break;
+                        case 6:
+                            if (myObj.sunday == "-OFF-") {
+                                $("#sundayOff").prop("checked", true).trigger("change");
+                                // $("#sundayIn").val("").prop("disabled",true);
+                                // $("#sundayOut").val("").prop("disabled",true);
+                                // $("#sundayLunch").val("").prop("disabled",true);
+                                setScheduleInputs("sunday", "", "", "", true)
+
+                            } else {
+                                [start, end] = myObj.sunday.split(' - ');
+                                $("#sundayOff").prop("checked", false)
+                                // $("#sundayIn").val(start).prop("disabled",false);
+                                // $("#sundayOut").val(end).prop("disabled",false);
+                                // $("#sundayLunch").val(myObj.sundayLunch).prop("disabled",false);
+                                setScheduleInputs("sunday", start, end, myObj.sundayLunch, false)
+                            }
+                            start = "";
+                            end = ""
+                            break;
+                    }
+
+                })
+                // if (myObj.msg == "error") {
+                //   $("#badgeDiv").addClass("has-error");
+                //   $("#msgArea").html("<label><small>Record Not Found!</small></label>");
+                //   $('#addLeaveType').prop('disabled', true);
+                // } else {
+                //   $("#badgeDiv").removeClass("has-error");
+                //   $("#msgArea").html("")
+                //   $("#addName").val(myObj.fullname);
+                //   $("#addPosition").val(myObj.positionName);
+                //   $("#addDepartment").val(myObj.departmentName)
+                //   $("#addEmployeeId").val(myObj.employeeId)
+                //   $("#currentPosition").val(myObj.positionId)
+                //   $("#currentDepartment").val(myObj.departmentId);
+                //   $('#addLeaveType').prop('disabled', false);
+                // }
+            }
+        })
+    }
 
     function readData(page, search, length, ascDesc) {
         var param = {
@@ -572,15 +1682,64 @@
 
                         // <td><a href="<?php echo URLROOT; ?>/employees/${urlEmployee}/${item.badge}" class="btn btn-primary btn-border">#${item.badge}</a> </td></td>
 
+                        console.log("statusss" + item.status);
+                        console.log("active" + item.active);
+
+                        const statusMap = {
+
+                            0: {
+                                class: "warning",
+                                text: "Pending"
+                            },
+                            1: {
+                                class: "success",
+                                text: "Approved"
+                            },
+                            2: {
+                                class: "danger",
+                                text: "Reject"
+                            },
+                            3: {
+                                class: "secondary",
+                                text: "Cancel"
+                            },
+                        };
+
+                        if (item.active == 1) {
+
+                            var statusInfo = {
+                                class: "success",
+                                text: "Approved"
+                            };
+
+                        } else if (item.active == 2) {
+
+                            var statusInfo = statusMap[item.aprovedByWf] || {
+                                class: "warning",
+                                text: "Pending"
+                            };
+
+                        }
+
                         var row = `<tr>
                         <td>${rowNumber}</td>
                         <td>${ item.apDetailsId }</td>
                         <td>${ formattDate }</td>
                         <td>${ item.name }</td>
-                        <td><span class="badge badge-success">Approved</span></td>
-                        <td>
-                            <button type="button" onclick="GetInformationPersonal(${ item.apDetailsId })" data-bs-toggle="modal" data-bs-target="#edit-user" class="btn btn-sm btn-info"><i class="fa fa-eye"></i></button>
-                        </td>
+                        <td><span class="badge badge-${statusInfo.class}">${statusInfo.text}</span></td>
+                        <td>`;
+
+                        if (item.active === 1) {
+                            row += ` <button type="button" onclick="GetInformationPersonal(${ item.apDetailsId })" data-bs-toggle="modal" data-bs-target="#edit-user" class="btn btn-sm btn-info"><i class="fa fa-eye"></i></button>`;
+                        } else if (item.active === 2) {
+                            row += `<button type="button" class="btn btn-sm btn-primary updateModal" data-bs-toggle="modal" data-bs-target="#addRowModal" data-leaveId="${item.apDetailsId}">
+                          <i class="fa fa-edit"></i>
+                        </button>`;
+                        } else {
+                            //
+                        }
+
+                        row += `</td>
                         </tr>`;
                         tbody.append(row);
                         rowNumber++;
@@ -624,7 +1783,7 @@
                         case 1:
                         case 2:
 
-                            hideAllAndShow('permisoConSinGoce')
+                            hideAllAndShow('permisoConSinGoceView')
 
                             $("#motivoAP").val(datarecord.reason1);
                             $("#tipoAP").val(datarecord.reason2);
@@ -660,7 +1819,7 @@
                             break;
 
                         case 5:
-                            hideAllAndShow('incapacidad')
+                            hideAllAndShow('incapacidadView')
                             $("#FechaInicioInca").val(datarecord.apDate1);
                             $("#fechaFinalInca").val(datarecord.apDate2);
                             $("#tipoIncapacidad").val(datarecord.reason1);
@@ -670,6 +1829,7 @@
                         case 6:
                             hideAllAndShow('SancionesDisciplinarias')
                             $("#tipoAmonestacion").val(datarecord.reason1);
+                            $("#fechaAmonestacion").val(datarecord.apDate1);
                             $("#inicioSuspesion").val(datarecord.apDate1);
                             $("#finSuspesion").val(datarecord.apDate2);
                             $(".suspensionFecha").hide();
@@ -679,7 +1839,7 @@
 
                             break;
                         case 7:
-                            hideAllAndShow('cambioHorario')
+                            hideAllAndShow('cambioHorarioView')
                             var dataSchedule = obj.dataScheduleLast
                             console.log(dataSchedule)
 
@@ -690,6 +1850,7 @@
                             $("#daysOffHorario").html(dataSchedule.daysOff);
 
                             let tabla = document.getElementById("tblHorarioLast").getElementsByTagName("tbody")[0];
+                            tabla.innerHTML = ""; // Esto borra todas las filas actuales
                             var nuevaFila = tabla.insertRow();
                             nuevaFila.insertCell().textContent = 'Monday';
                             nuevaFila.insertCell().textContent = dataSchedule.monday;
@@ -721,7 +1882,7 @@
 
                             break;
                         case 8:
-                            hideAllAndShow('cambioDiaLibre')
+                            hideAllAndShow('cambioDiaLibreView')
                             $("#fechaSolicitud").val(datarecord.apDate1);
                             $("#diaAsignado").val(datarecord.apDate2);
                             $("#diaSolicitado").val(datarecord.apDate3);
@@ -736,7 +1897,7 @@
 
 
                         case 10:
-                            hideAllAndShow('horasExtras')
+                            hideAllAndShow('horasExtrasView')
                             $("#fechaDiaHorasExtras").val(datarecord.apDate1);
                             $("#inicioHoras").val(datarecord.startTime);
                             $("#finHoras").val(datarecord.endTime);
@@ -752,7 +1913,7 @@
                             break;
 
                         case 12:
-                            hideAllAndShow('ajusteSalarial')
+                            hideAllAndShow('ajusteSalarialView')
                             $("#monto").val(datarecord.newSalary);
                             $("#efectivoDesde").val(datarecord.apDate1);
                             $("#nuevoPuesto").val(datarecord.newPositionName);
@@ -842,7 +2003,6 @@
         readData(1, search, length, ascDesc);
     }
 
-
     // // Function General
     function fieldsValue() {
         const fielsearch = [];
@@ -874,26 +2034,45 @@
         getdataBody();
     }
 
-    // function getInfoCard() {
-    //     const data = new URLSearchParams();
-    //     data.append('status', $('select[id=billToBtn]').val());
+    function setReasons(element, type, option = null) {
+        $.ajax({
+            url: '<?php echo URLROOT; ?>/aps/getreasons/' + type,
+            type: 'GET',
+            success: function(data) {
+                //console.table(data)
+                var reasonObj = JSON.parse(data)
+                var $dropdown = $("#" + element);
+                $dropdown.empty();
 
-    //     fetch('<?php echo URLROOT; ?>/employees/getInfoCard', {
-    //             method: 'POST',
-    //             headers: {
-    //                 'Content-Type': 'application/x-www-form-urlencoded'
-    //             },
-    //             body: data
-    //         }) // api for the get request
-    //         .then(response => response.json())
-    //         .then(data => {
-    //             console.log(data)
-    //             $(".totalEmployeeActive").html(data.TotalEmployeeActive)
-    //             $(".totalEmployee").html(data.TotalEmployee)
-    //             $(".customerServicesActive").html(data.CustomerServicesActive)
-    //             $(".hiredToday").html(data.HiredToday)
-    //         });
-    // }
+                $dropdown.append($("<option />").val('').text('--Seleccione--'));
+                $.each(reasonObj, function(key, val) {
+
+                    //if(val.id_reason_attrition==attrition_reason){
+                    //							$dropdown.append($("<option value='"+val.id_reason_attrition+"' selected>"+val.name+"</option>"));
+                    //						}else{
+                    $dropdown.append($("<option />").val(val.description).text(val.description));
+                    //}
+                });
+                if (option) {
+                    $("#" + element).val(option)
+                }
+            }
+        })
+    }
+
+    // AP create
+    function getChangedFields() {
+        var changedFields = {};
+        $('#createApForm').find('input,select,textarea').each(function() {
+            var name = $(this).attr('name');
+            var currentValue = $(this).val();
+            console.log(currentValue)
+            if (currentValue !== initialState[name]) {
+                changedFields[name] = currentValue;
+            }
+        });
+        return changedFields;
+    }
 
     // // --------------------------------------------------------------------
 

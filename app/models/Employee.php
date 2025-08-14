@@ -167,6 +167,21 @@ class Employee
 
         return $result;
     }
+    public function getEmpInfoByIdEmployee($employeeId)
+    {
+        $this->db->query('SELECT em.badge,em.employeeId,
+                        CONCAT_WS(" ",em.firstName,em.secondName,em.thirdName,em.firstLastName,em.secondLastName,em.thirdLastName) AS fullname,
+                        de.name as nameDepartament,
+                        p.positionName
+                        FROM hr_surgepays.employees em
+                        LEFT JOIN departments de ON de.departmentId = em.departmentId
+                        LEFT JOIN positions p ON p.positionId = em.positionId
+                        LEFT JOIN areas ar ON ar.areaId = em.areaId where employeeId=:employeeId;');
+        $this->db->bind(':employeeId', $employeeId);
+        $result = $this->db->resultSetFetch();
+
+        return $result;
+    }
 
     public function getStates()
     {

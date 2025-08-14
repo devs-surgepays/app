@@ -127,24 +127,27 @@ FROM hr_surgepays.ap_details ap WHERE apDetailsId=:leaveId");
 		return $row;
     }
 
-    public function countRegisters($search){
+    public function countRegisters($search, $request=false){
         $showEmWhere = getPLEmployeeTable(false);
         $salaryapp=(getPLSAA()==false)?" AND a.apTypeId =12":"";
         $attritionsapp=(getPLAT()==false)?" AND a.apTypeId =11":"";
         $getApSAA = $salaryapp.$attritionsapp;
+
+        $activeAP = ($request) ? 2 : 1;
+
         if ($search!="") {
             $this->db->query("SELECT count(*) as total 
                                 FROM hr_surgepays.ap_details a 
                                 JOIN hr_surgepays.employees em ON em.badge=a.badge 
                                 JOIN hr_surgepays.users u ON u.userId=a.createdBy 
-                                JOIN hr_surgepays.ap_types t ON t.apTypeId = a.apTypeId WHERE $search $showEmWhere  $getApSAA  order by a.apDetailsId asc");
+                                JOIN hr_surgepays.ap_types t ON t.apTypeId = a.apTypeId WHERE active=$activeAP and $search $showEmWhere  $getApSAA  order by a.apDetailsId asc");
         }else{
             $showEmWhere = getPLEmployeeTable(true);
             $this->db->query("SELECT count(*) as total
                                 FROM hr_surgepays.ap_details a
                                 JOIN hr_surgepays.employees em ON em.badge=a.badge
                                 JOIN hr_surgepays.users u ON u.userId=a.createdBy
-                                JOIN hr_surgepays.ap_types t ON t.apTypeId = a.apTypeId $showEmWhere  $getApSAA  order by a.apDetailsId  asc");
+                                JOIN hr_surgepays.ap_types t ON t.apTypeId = a.apTypeId $showEmWhere and active=$activeAP $getApSAA  order by a.apDetailsId  asc");
         }
 
 
@@ -155,61 +158,68 @@ FROM hr_surgepays.ap_details ap WHERE apDetailsId=:leaveId");
         return $count['total'];
     }
 
-    public function getData($offset,$per_page,$search,$orderby){
+    public function getData($offset,$per_page,$search,$orderby, $request=false){
         $showEmWhere = getPLEmployeeTable(false,true);
         $salaryapp=(getPLSAA()==false)?" AND a.apTypeId !=12":"";
         $attritionsapp=(getPLAT()==false)?" AND a.apTypeId !=11":"";
         $getApSAA = $salaryapp.$attritionsapp;
 		$date_now = date('Y-m-d').'%';
+
+        $activeAP = ($request) ? 2 : 1;
+
+
 		//echo "select firstname,lastname,email_address,email_status,CAST(email_open_datetime AS DATE) as date_opened,delivered,received,unsubscribe from mailCampaigns.contacts  ORDER BY $orderby limit $offset,$per_page;";
 		//echo "SELECT a.apDetailsId,concat(em.firstName,' ',em.firstLastName) as fullName,a.badge,date(a.createdAt) as createdAt,u.username,t.name,a.status FROM hr_surgepays.ap_details a JOIN hr_surgepays.employees em ON em.badge=a.badge JOIN hr_surgepays.users u ON u.userId=a.createdBy JOIN hr_surgepays.ap_types t ON t.apTypeId = a.apTypeId WHERE ".$search." ".$showEmWhere."   ORDER BY ".$orderby;
 
 				if ($search!="") {
 					$this->db->query("SELECT 
-    a.apDetailsId,
-    CONCAT(em.firstName, ' ', em.firstLastName) AS fullName,
-    a.badge,
-    DATE(a.createdAt) AS createdAt,
-    u.username,
-    t.name,
-    a.aprovedByM,
-    a.aprovedByHR,
-    a.aprovedByWf,
-    a.aprovedBySup,
-    a.printed,
-    a.worked
-FROM
-    hr_surgepays.ap_details a
-        JOIN
-    hr_surgepays.employees em ON em.badge = a.badge
-        JOIN
-    hr_surgepays.users u ON u.userId = a.createdBy
-        JOIN
-    hr_surgepays.ap_types t ON t.apTypeId = a.apTypeId WHERE $search $showEmWhere $getApSAA ORDER BY $orderby  limit $offset,$per_page;");
+                        a.apDetailsId,
+                        CONCAT(em.firstName, ' ', em.firstLastName) AS fullName,
+                        a.badge,
+                        DATE(a.createdAt) AS createdAt,
+                        u.username,
+                        t.name,
+                        a.aprovedByM,
+                        a.aprovedByHR,
+                        a.aprovedByWf,
+                        a.aprovedBySup,
+                        a.printed,
+                        a.worked,
+                        a.active
+                    FROM
+                        hr_surgepays.ap_details a
+                            JOIN
+                        hr_surgepays.employees em ON em.badge = a.badge
+                            JOIN
+                        hr_surgepays.users u ON u.userId = a.createdBy
+                            JOIN
+                        hr_surgepays.ap_types t ON t.apTypeId = a.apTypeId WHERE active=$activeAP and $search $showEmWhere $getApSAA ORDER BY $orderby  limit $offset,$per_page;");
 					
 				}else{
+
                     $showEmWhere = getPLEmployeeTable(true,true);
 					$this->db->query("SELECT 
-    a.apDetailsId,
-    CONCAT(em.firstName, ' ', em.firstLastName) AS fullName,
-    a.badge,
-    DATE(a.createdAt) AS createdAt,
-    u.username,
-    t.name,
-    a.aprovedByM,
-    a.aprovedByHR,
-    a.aprovedByWf,
-    a.aprovedBySup,
-    a.printed,
-    a.worked
-FROM
-    hr_surgepays.ap_details a
-        JOIN
-    hr_surgepays.employees em ON em.badge = a.badge
-        JOIN
-    hr_surgepays.users u ON u.userId = a.createdBy
-        JOIN
-    hr_surgepays.ap_types t ON t.apTypeId = a.apTypeId $showEmWhere $getApSAA  ORDER BY $orderby limit $offset,$per_page;");
+                        a.apDetailsId,
+                        CONCAT(em.firstName, ' ', em.firstLastName) AS fullName,
+                        a.badge,
+                        DATE(a.createdAt) AS createdAt,
+                        u.username,
+                        t.name,
+                        a.aprovedByM,
+                        a.aprovedByHR,
+                        a.aprovedByWf,
+                        a.aprovedBySup,
+                        a.printed,
+                        a.worked,
+                        a.active
+                    FROM
+                        hr_surgepays.ap_details a
+                            JOIN
+                        hr_surgepays.employees em ON em.badge = a.badge
+                            JOIN
+                        hr_surgepays.users u ON u.userId = a.createdBy
+                            JOIN
+                        hr_surgepays.ap_types t ON t.apTypeId = a.apTypeId $showEmWhere and active=$activeAP $getApSAA  ORDER BY $orderby limit $offset,$per_page;");
 					
 				}				
 			
@@ -314,7 +324,7 @@ FROM
     }
     // Personal APs Functions
     public function countPersonalAPs($searchQuery) {
-        $query = ' where (aprovedByHR = 1 or aprovedByWf = 1 or aprovedByM = 1) ';
+        $query = ' where ((aprovedByHR = 1 or aprovedByWf = 1 or aprovedByM = 1) or ap.active=2) ';
         if (!empty($searchQuery)) $query .= ' and ' . $searchQuery;
         
         $this->db->query('SELECT COUNT(*) AS numrows  FROM hr_surgepays.ap_details as ap 
@@ -324,10 +334,10 @@ FROM
     }
 
     public function readPersonalAPs($offset, $per_page, $searchQuery, $orderby){
-        $query = ' where (aprovedByHR = 1 or aprovedByWf = 1 or aprovedByM = 1) ';
+        $query = ' where ((aprovedByHR = 1 or aprovedByWf = 1 or aprovedByM = 1) or ap.active=2) ';
         if (!empty($searchQuery)) $query .= ' and ' . $searchQuery;
 
-        $this->db->query("SELECT apDetailsId,createdAt,ap.apTypeId,apt.name  FROM hr_surgepays.ap_details as ap 
+        $this->db->query("SELECT apDetailsId,createdAt,ap.apTypeId,apt.name,ap.status,ap.active,aprovedByWf FROM hr_surgepays.ap_details as ap 
         inner join ap_types as apt 
         on ap.apTypeId = apt.apTypeId " . $query . " ORDER BY $orderby limit $offset,$per_page;");
         $result = $this->db->resultSetAssoc();

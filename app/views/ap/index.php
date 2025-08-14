@@ -21,6 +21,18 @@
 </style>
 <div class="container">
   <div class="page-inner">
+
+  <div class="row mb-3">
+    <div class="col-md-12">
+      <a href="<?php echo URLROOT; ?>/aps/requestAP" class="btn btn-primary position-relative">Request AP's 
+        <?php if ($data['totalAPRequest']>0) : ?>
+          <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+          <?php echo $data['totalAPRequest']; ?></span>
+        <?php endif ?>
+        </a>
+    </div>
+  </div>
+    
     <div class="row">
       <div class="col-md-12">
         <div class="card">
@@ -2277,7 +2289,9 @@
         type: "POST",
         data: {
           status: approveValue,
-          id: leaveId
+          id: leaveId,
+          formRequest: 'No'
+
         },
         success: function(data) {
           console.log(data)
@@ -2755,23 +2769,30 @@
 
   })
 
-  $(".dayOff").on("change", function() {
-    var day = $(this).data("day")
-    if ($(this).is(":checked")) {
-      console.log(day)
-      //$("#"+day+"In").val("").prop("disabled",true).rules('remove','required');
-      //$("#"+day+"Out").val("").prop("disabled",true).rules('remove','required');
-      //$("#"+day+"Lunch").val("").prop("disabled",true).rules('remove','required');
-      setScheduleInputs(day, "", "", "", true)
-    } else {
-      console.log("is not checked")
-      setScheduleInputs(day, "", "", "", false)
-      //$("#"+day+"In").prop("disabled",false).rules('add', {required: true});
-      //$("#"+day+"Out").prop("disabled",false).rules('add', {required: true});
-      //$("#"+day+"Lunch").prop("disabled",false).rules('add', {required: true});
+  $(".dayOff").on("change", function(event) {
+        // Solo continúa si el cambio fue hecho por el usuario
+        if (!event.originalEvent) return;
 
-    }
-  });
+        if ($(".dayOff:checked").length > 2) {
+            swal('Error', "You cannot select more than 3 days off.", {
+                icon: "error",
+                buttons: {
+                    confirm: {
+                        className: "btn btn-danger",
+                    },
+                },
+            });
+            $(this).prop("checked", false);
+        } else {
+            var day = $(this).data("day");
+            if ($(this).is(":checked")) {
+                setScheduleInputs(day, "", "", "", true);
+            } else {
+                setScheduleInputs(day, "", "", "", false);
+            }
+        }
+    });
+
 
   function getEmpName(userId, rol, apbody) {
 

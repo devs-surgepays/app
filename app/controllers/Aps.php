@@ -24,6 +24,7 @@ class Aps extends Controller
        
         if (getPLAps()) {
             $data['apTypes'] = $this->apModel->getAllApTypes();
+            $data['totalAPRequest'] = $this->apModel->countRegisters('', true);
             $this->view('ap/index', $data);
         }else {
             redirect(''); // dashboard inicial
@@ -130,7 +131,7 @@ class Aps extends Controller
                     $daysOff="";
 
                     $data['apDate1']=$_POST['inicioHorario'];
-                    $data['apDate2']=$_POST['finHorario'];
+                    $data['apDate2']=@$_POST['finHorario'];
                     $data['reason1']=html_entity_decode($_POST['motivo_horario']);
                     if(isset($_POST['mondayOff'])){
                         $schedule['monday']="-OFF-";
@@ -295,6 +296,156 @@ class Aps extends Controller
             }
             
             $data['status']="success";
+            $data['message']="Your leave has been saved succesfully";
+            //print_r($data);
+            //print_r($schedule);
+            echo json_encode($data);
+        }else{
+            // Forbidden Access
+            http_response_code(403);
+            echo "Access forbidden";
+        }
+	}
+	public function saveRequestAP(){
+
+		if($_SERVER['REQUEST_METHOD']=='POST'){
+            $_POST= filter_input_array(INPUT_POST,FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            $action=$_POST['Action'];
+            $comments = (isset($_POST['addComments']))?trim($_POST['addComments']):"";
+
+            $employeeData = $this->employeeModel->getEmpInfoByIdEmployee($_SESSION['employeeId']);
+
+            $data=[
+                "apTypeId" => $_POST['addLeaveType'],
+                "badge" => $employeeData['badge'],
+                "createdBy" => $_SESSION['userId'],
+                "active" => 2,
+                "comment"=>html_entity_decode($comments)
+            ]; 
+
+            switch($data['apTypeId']){
+                case 7:
+                    $daysOff="";
+                    $data['apDate1']=$_POST['inicioHorario'];
+                    $data['apDate2']=@$_POST['finHorario'];
+                    $data['reason1']=html_entity_decode($_POST['motivo_horario']);
+                    if(isset($_POST['mondayOff'])){
+                        $schedule['monday']="-OFF-";
+                        $schedule['mondayLunch']="-OFF-";
+                        $days="-";
+                        $daysOff="MON & ";
+                    }else{
+                        $schedule['monday']=$_POST['mondayIn']." - ".$_POST['mondayOut'];
+                        $schedule['mondayLunch']=$_POST['mondayLunch'];
+                        $days="M";
+                    }
+                    if(isset($_POST['tuesdayOff'])){
+                        $schedule['tuesday']="-OFF-";
+                        $schedule['tuesdayLunch']="-OFF-";
+                        $days.="-";
+                        if(strlen($daysOff)>0){
+                            $daysOff.="TUE";
+                        }else{
+                            $daysOff="TUE & ";
+                        }
+                    }else{
+                        $schedule['tuesday']=$_POST['tuesdayIn']." - ".$_POST['tuesdayOut'];
+                        $schedule['tuesdayLunch']=$_POST['tuesdayLunch'];
+                        $days.="T";
+                    }
+                    if(isset($_POST['wednesdayOff'])){
+                        $schedule['wednesday']="-OFF-";
+                        $schedule['wednesdayLunch']="-OFF-";
+                        $days.="-";
+                        if(strlen($daysOff)>0){
+                            $daysOff.="WED";
+                        }else{
+                            $daysOff="WED & ";
+                        }
+                    }else{
+                        $schedule['wednesday']=$_POST['wednesdayIn']." - ".$_POST['wednesdayOut'];
+                        $schedule['wednesdayLunch']=$_POST['wednesdayLunch'];
+                        $days.="W";
+                    }
+                    if(isset($_POST['thursdayOff'])){
+                        $schedule['thursday']="-OFF-";
+                        $schedule['thursdayLunch']="-OFF-";
+                        $days.="-";
+                        if(strlen($daysOff)>0){
+                            $daysOff.="THU";
+                        }else{
+                            $daysOff="THU & ";
+                        }
+                    }else{
+                        $schedule['thursday']=$_POST['thursdayIn']." - ".$_POST['thursdayOut'];
+                        $schedule['thursdayLunch']=$_POST['thursdayLunch'];
+                        $days.="R";
+                    }
+                    if(isset($_POST['fridayOff'])){
+                        $schedule['friday']="-OFF-";
+                        $schedule['fridayLunch']="-OFF-";
+                        $days.="-";
+                        if(strlen($daysOff)>0){
+                            $daysOff.="FRI";
+                        }else{
+                            $daysOff="FRI & ";
+                        }
+                    }else{
+                        $schedule['friday']=$_POST['fridayIn']." - ".$_POST['fridayOut'];
+                        $schedule['fridayLunch']=$_POST['fridayLunch'];
+                        $days.="F";
+                    }
+                    if(isset($_POST['saturdayOff'])){
+                        $schedule['saturday']="-OFF-";
+                        $schedule['saturdayLunch']="-OFF-";
+                        $days.="-";
+                        if(strlen($daysOff)>0){
+                            $daysOff.="SAT";
+                        }else{
+                            $daysOff="SAT & ";
+                        }
+                    }else{
+                        $schedule['saturday']=$_POST['saturdayIn']." - ".$_POST['saturdayOut'];
+                        $schedule['saturdayLunch']=$_POST['saturdayLunch'];
+                        $days.="Y";
+                    }
+                    if(isset($_POST['sundayOff'])){
+                        $schedule['sunday']="-OFF-";
+                        $schedule['sundayLunch']="-OFF-";
+                        $days.="-";
+                        if(strlen($daysOff)>0){
+                            $daysOff.="SUN";
+                        }else{
+                            $daysOff="SUN & ";
+                        }
+                    }else{
+                        $schedule['sunday']=$_POST['sundayIn']." - ".$_POST['sundayOut'];
+                        $schedule['sundayLunch']=$_POST['sundayLunch'];
+                        $days.="S";
+                    }
+                    //$data['reasonId']=$_POST['scheduleId']
+                    $schedule['days']=$days;
+                    $schedule['daysOff']=$daysOff;
+                    $schedule['status']=0;
+                    $schedule['employeeId']=$employeeData['employeeId'];
+
+                    if($action=="Insert"){
+                        $data['scheduleId']=$this->employeeScheduleModel->saveEmployeeSchedule($schedule);
+                    }else if($action=="Update"){
+                        $schedule['scheduleId']=$_POST['scheduleId'];
+                        $this->employeeScheduleModel->editEmployeeSchedule($schedule);
+                    }
+                    break;             
+            }
+            
+            if($action=="Insert"){
+                $this->apModel->insertLeave($data);
+            }else if($action=="Update"){
+                $data['apDetailsId']=$_POST['apId'];
+                $this->apModel->updateLeave($data);
+            }
+            
+            $data['status']="success";
             $data['message']="your leave has been saved succesfully";
             //print_r($data);
             //print_r($schedule);
@@ -305,6 +456,15 @@ class Aps extends Controller
             echo "Access forbidden";
         }
 	}
+
+    public function requestAP() {
+        if (getPLAps()) {
+            $data['apTypes'] = $this->apModel->getAllApTypes();
+            $this->view('ap/requestAP', $data);
+        }else {
+            redirect(''); // dashboard inicial
+        }
+    }
 	
 	public function updateAP(){
 		
@@ -339,6 +499,16 @@ class Aps extends Controller
             ];
             //Getting permission level
             $permissionLevel = $_SESSION['permissionLevelId'];
+                        
+            $requestForm = (isset($_POST['formRequest']) && $_POST['formRequest'] != false) ? trim($_POST['formRequest']) : false;
+            // if WF approved the AP - active=1 sino sigue en 2
+            if ($requestForm=='Yes'){
+                if($permissionLevel&512){
+                    $data['active'] = ($data['status']==1) ? 1 : 2;
+                }
+            }
+            
+            //----------------------------------------
             if($permissionLevel&640){
                 //128+512
                 $data['aprovedByWf']=$data['status'];
@@ -410,7 +580,7 @@ class Aps extends Controller
             //     }
             // }
             $data['response']="success";
-            $data['message']="you gave approval to this leave";
+            $data['message']="You gave approval to this leave";
             echo json_encode($data);
         }else{
             // Forbidden Access
@@ -425,6 +595,7 @@ class Aps extends Controller
         //die('Submit');
         $_POST= filter_input_array(INPUT_POST,FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         $page = (isset($_POST['page']) && !empty($_POST['page']))?$_POST['page']:1;
+        $requestAP = (isset($_POST['requestAP']) && !empty($_POST['requestAP'])) ? $_POST['requestAP'] : false;
         $data = [
             'action'=>trim($_POST['action']),
             'arrayCampos'=>$_POST['search'],
@@ -528,7 +699,7 @@ class Aps extends Controller
         $adjacents  = 2; //brecha entre páginas después de varios adyacentes
         $offset = ($data['page'] - 1) * $per_page;
         $offsetnumeroMostrar = ($data['page']-1) * $per_page + 1;
-        $numrows = $this->apModel->countRegisters($addWhere);
+        $numrows = $this->apModel->countRegisters($addWhere, $requestAP);
         $total_pages = ceil($numrows/$per_page);
         $reload = 'index.php';
         $data['per_page']=$per_page;
@@ -541,7 +712,7 @@ class Aps extends Controller
         $data['pagination']=$paginate;
         //$per_page = 30; //la cantidad de registros que desea mostrar
         
-        $getOrders = $this->apModel->getData($data['offset'],$data['per_page'],$addWhere,$data['order_by']);
+        $getOrders = $this->apModel->getData($data['offset'],$data['per_page'],$addWhere,$data['order_by'],$requestAP);
 
         $data['fields']=($getOrders)?$getOrders:0;
         //print_r($data);
