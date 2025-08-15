@@ -41,6 +41,7 @@
     <section>
         <div class="card border-light-subtle shadow-sm wrap-center" style="width: 445px;">
             <div class="row gy-3 overflow-hidden">
+                <h5 class="text-center">Update your password</h5>
                 <div class="col-12">
                     <div class="form-floating mb-3">
                         <input type="password" class="form-control" name="pass" id="pass" placeholder="name@example.com">
