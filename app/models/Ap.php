@@ -149,10 +149,23 @@ FROM hr_surgepays.ap_details ap WHERE apDetailsId=:leaveId");
                                 JOIN hr_surgepays.users u ON u.userId=a.createdBy
                                 JOIN hr_surgepays.ap_types t ON t.apTypeId = a.apTypeId $showEmWhere and active=$activeAP $getApSAA  order by a.apDetailsId  asc");
         }
+        $this->db->execute();
+        $count = $this->db->single();
+        return $count['total'];
+    }
+    public function countRegistersPendingNotification(){
+        $showEmWhere = getPLEmployeeTable(false);
+        $salaryapp=(getPLSAA()==false)?" AND a.apTypeId =12":"";
+        $attritionsapp=(getPLAT()==false)?" AND a.apTypeId =11":"";
+        $getApSAA = $salaryapp.$attritionsapp;
 
-
-
-
+        $showEmWhere = getPLEmployeeTable(true);
+        $this->db->query("SELECT count(*) as total
+                            FROM hr_surgepays.ap_details a
+                            JOIN hr_surgepays.employees em ON em.badge=a.badge
+                            JOIN hr_surgepays.users u ON u.userId=a.createdBy
+                            JOIN hr_surgepays.ap_types t ON t.apTypeId = a.apTypeId $showEmWhere and (active=2 and a.status!=2) $getApSAA  order by a.apDetailsId  asc");
+        
         $this->db->execute();
         $count = $this->db->single();
         return $count['total'];

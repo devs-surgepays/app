@@ -24,7 +24,7 @@ class Aps extends Controller
        
         if (getPLAps()) {
             $data['apTypes'] = $this->apModel->getAllApTypes();
-            $data['totalAPRequest'] = $this->apModel->countRegisters('', true);
+            $data['totalAPRequest'] = $this->apModel->countRegistersPendingNotification();
             $this->view('ap/index', $data);
         }else {
             redirect(''); // dashboard inicial
