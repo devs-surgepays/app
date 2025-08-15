@@ -1328,7 +1328,26 @@
                         break;
                 }
 
-                if (myObj.aprovedByM >= 1 || myObj.aprovedByHR >= 1) {
+                if (myObj.active == 2) { // IF its still REQUEST
+
+                    if (myObj.status > 0) { // If its was approved or Reject - NO EDIT (disabled ALL)
+                        $('#addAPButton').hide();
+                        setTimeout(function() {
+                            $('#addLeaveType').prop('disabled', true);
+                            document.getElementById("createApForm").querySelectorAll("input, select, textarea,time").forEach(function(element) {
+                                element.disabled = true;
+                            });
+                        }, 200);
+
+                    } else { // Agent CAN EDIT because its a REQUEST and it has not been approved or Reject yet.
+                        $('#addAPButton').show();
+                        $('#addLeaveType').prop('disabled', false);
+                        document.getElementById("createApForm").querySelectorAll("input, select, textarea").forEach(function(element) {
+                            element.disabled = false;
+                        });
+                    }
+
+                } else { // agent CAN'T EDIT because this is NOT REQUEST
 
                     $('#addAPButton').hide();
                     setTimeout(function() {
@@ -1338,13 +1357,9 @@
                         });
                     }, 200);
 
-                } else {
-                    $('#addAPButton').show();
-                    $('#addLeaveType').prop('disabled', false);
-                    document.getElementById("createApForm").querySelectorAll("input, select, textarea").forEach(function(element) {
-                        element.disabled = false;
-                    });
                 }
+
+
 
             }
 
@@ -1729,14 +1744,17 @@
                         <td><span class="badge badge-${statusInfo.class}">${statusInfo.text}</span></td>
                         <td>`;
 
-                        if (item.active === 1) {
+                        if (item.active == 2) { // If its still REQUEST
+
+                            if (item.status > 0) { // if its was approved or reject - No EDIT
+                                row += ` <button type="button" onclick="GetInformationPersonal(${ item.apDetailsId })" data-bs-toggle="modal" data-bs-target="#edit-user" class="btn btn-sm btn-info"><i class="fa fa-eye"></i></button>`;
+                            } else { // Agent can EDIT because its a REQUEST and it has not been approved or rejected yet.
+                                row += `<button type="button" class="btn btn-sm btn-primary updateModal" data-bs-toggle="modal" data-bs-target="#addRowModal" data-leaveId="${item.apDetailsId}">
+                                    <i class="fa fa-edit"></i>
+                                    </button>`;
+                            }
+                        } else { // agent CAN'T EDIT because this is not a REQUEST
                             row += ` <button type="button" onclick="GetInformationPersonal(${ item.apDetailsId })" data-bs-toggle="modal" data-bs-target="#edit-user" class="btn btn-sm btn-info"><i class="fa fa-eye"></i></button>`;
-                        } else if (item.active === 2) {
-                            row += `<button type="button" class="btn btn-sm btn-primary updateModal" data-bs-toggle="modal" data-bs-target="#addRowModal" data-leaveId="${item.apDetailsId}">
-                          <i class="fa fa-edit"></i>
-                        </button>`;
-                        } else {
-                            //
                         }
 
                         row += `</td>
