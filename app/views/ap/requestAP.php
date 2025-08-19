@@ -943,7 +943,11 @@
             $("#approval-error").html('');
         });
         $('#createApForm').find('input, select,textarea').each(function() {
-            initialState[$(this).attr('name')] = $(this).val();
+            if ($(this).attr('type') === 'checkbox') {
+                initialState[$(this).attr('name')] = $(this).is(':checked') ? 1 : 0;
+            } else {
+                initialState[$(this).attr('name')] = $(this).val();
+            }
         });
 
         $(".dayOff").on("change", function() {
@@ -1710,6 +1714,11 @@
             var name = $(this).attr('name');
             var currentValue = $(this).val();
             console.log(currentValue)
+            if ($(this).attr('type') === 'checkbox') {
+                var currentValue = $(this).is(':checked') ? 1 : 0;
+            } else {
+                var currentValue = $(this).val();
+            }
             if (currentValue !== initialState[name]) {
                 changedFields[name] = currentValue;
             }
