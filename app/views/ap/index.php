@@ -1016,10 +1016,15 @@
 
 
     $('#createApForm').find('input, select,textarea').each(function() {
+      var nameField = $(this).attr('name');
       if ($(this).attr('type') === 'checkbox') {
-          initialState[$(this).attr('name')] = $(this).is(':checked') ? 1 : 0;
+        if (nameField == 'prorroga') {
+          initialState[nameField] = $(this).is(':checked') ? 'Yes' : '';
+        }else {
+          initialState[nameField] = $(this).is(':checked') ? 1 : 0;
+        }
       } else {
-          initialState[$(this).attr('name')] = $(this).val();
+          initialState[nameField] = $(this).val();
       }
     });
     //console.table(initialState)
@@ -1149,152 +1154,161 @@
       url: "<?php echo URLROOT; ?>/aps/getEmployeeSchedule/" + id + "/" + type,
       method: "GET",
       success: function(data) {
-        //console.log(data)
         myObj = JSON.parse(data)
         console.table(myObj)
-        const daysObj = myObj.days.split('');
-        let start, end;
-        //console.log(daysObj)
-        $("#scheduleId").val("")
-        $("#scheduleId").val(myObj.scheduleId)
-        daysObj.forEach(function(day, index) {
-          //console.log(day)
-          switch (index) {
-            case 0:
-              if (myObj.monday == "-OFF-") {
-                $("#mondayOff").prop("checked", true).trigger("change");
-                //$("#mondayIn").val("").prop("disabled",true);
-                //$("#mondayOut").val("").prop("disabled",true);
-                //$("#mondayLunch").val("").prop("disabled",true);
-                setScheduleInputs("monday", "", "", "", true)
-              } else {
-                [start, end] = myObj.monday.split(' - ');
-                $("#mondayOff").prop("checked", false)
-                // $("#mondayIn").val(start).prop("disabled",false);
-                // $("#mondayOut").val(end).prop("disabled",false);
-                // $("#mondayLunch").val(myObj.mondayLunch).prop("disabled",false);
-                setScheduleInputs("monday", start, end, myObj.mondayLunch, false)
-              }
-              start = "";
-              end = "";
-              break;
-            case 1:
-              if (myObj.tuesday == "-OFF-") {
-                $("#tuesdayOff").prop("checked", true).trigger("change");
-                // $("#tuesdayIn").val("").prop("disabled",true);
-                // $("#tuesdayOut").val("").prop("disabled",true);
-                // $("#tuesdayLunch").val("").prop("disabled",true);
-                setScheduleInputs("tuesday", "", "", "", true)
-              } else {
-                [start, end] = myObj.tuesday.split(' - ');
-                //.log("tuesday:"+start+"-"+end)
-                $("#tuesdayOff").prop("checked", false)
-                // $("#tuesdayIn").val(start).prop("disabled",false);
-                // $("#tuesdayOut").val(end).prop("disabled",false);
-                // $("#tuesdayLunch").val(myObj.tuesdayLunch).prop("disabled",false);
-                setScheduleInputs("tuesday", start, end, myObj.tuesdayLunch, false)
-              }
-              start = "";
-              end = ""
-              break;
-            case 2:
-              if (myObj.wednesday == "-OFF-") {
-                $("#wednesdayOff").prop("checked", true).trigger("change");
-                // $("#wednesdayIn").val("").prop("disabled",true);
-                // $("#wednesdayOut").val("").prop("disabled",true);
-                // $("#wednesdayLunch").val("").prop("disabled",true);
-                setScheduleInputs("wednesday", "", "", "", true)
 
-              } else {
-                [start, end] = myObj.wednesday.split(' - ');
-                $("#wednesdayOff").prop("checked", false)
-                // $("#wednesdayIn").val(start).prop("disabled",false);
-                // $("#wednesdayOut").val(end).prop("disabled",false);
-                // $("#wednesdayLunch").val(myObj.wednesdayLunch).prop("disabled",false);
-                setScheduleInputs("wednesday", start, end, myObj.wednesdayLunch, false)
-              }
-              start = "";
-              end = ""
-              break;
-            case 3:
-              if (myObj.thursday == "-OFF-") {
-                $("#thursdayOff").prop("checked", true).trigger("change");
-                // $("#thursdayIn").val("").prop("disabled",true);
-                // $("#thursdayOut").val("").prop("disabled",true);
-                // $("#thursdayLunch").val("").prop("disabled",true);
-                setScheduleInputs("thursday", "", "", "", true)
+        const countKeysObj = Object.keys(myObj).length;
 
-              } else {
-                [start, end] = myObj.thursday.split(' - ');
-                $("#thursdayOff").prop("checked", false)
-                // $("#thursdayIn").val(start).prop("disabled",false);
-                // $("#thursdayOut").val(end).prop("disabled",false);
-                // $("#thursdayLunch").val(myObj.thursdayLunch).prop("disabled",false);
-                setScheduleInputs("thursday", start, end, myObj.thursdayLunch, false)
-              }
-              start = "";
-              end = ""
-              break;
-            case 4:
-              if (myObj.friday == "-OFF-") {
-                $("#fridayOff").prop("checked", true).trigger("change");
-                // $("#fridayIn").val("").prop("disabled",true);
-                // $("#fridayOut").val("").prop("disabled",true);
-                // $("#fridayLunch").val("").prop("disabled",true);
-                setScheduleInputs("friday", "", "", "", true)
+        if (countKeysObj  > 0  ) {
 
-              } else {
-                [start, end] = myObj.friday.split(' - ');
-                $("#fridayOff").prop("checked", false)
-                // $("#fridayIn").val(start).prop("disabled",false);
-                // $("#fridayOut").val(end).prop("disabled",false);
-                // $("#fridayLunch").val(myObj.fridayLunch).prop("disabled",false);
-                setScheduleInputs("friday", start, end, myObj.fridayLunch, false)
-              }
-              start = "";
-              end = ""
-              break;
-            case 5:
-              if (myObj.saturday == "-OFF-") {
-                $("#saturdayOff").prop("checked", true).trigger("change");
-                // $("#saturdayIn").val("").prop("disabled",true);
-                // $("#saturdayOut").val("").prop("disabled",true);
-                // $("#saturdayLunch").val("").prop("disabled",true);
-                setScheduleInputs("saturday", "", "", "", true)
+            const daysObj = myObj.days.split('');
+            let start, end;
+            $("#scheduleId").val("")
+            $("#scheduleId").val(myObj.scheduleId)
+            daysObj.forEach(function(day, index) {
+              switch (index) {
+                case 0:
+                  if (myObj.monday == "-OFF-") {
+                    $("#mondayOff").prop("checked", true).trigger("change");
+                    //$("#mondayIn").val("").prop("disabled",true);
+                    //$("#mondayOut").val("").prop("disabled",true);
+                    //$("#mondayLunch").val("").prop("disabled",true);
+                    setScheduleInputs("monday", "", "", "", true)
+                  } else {
+                    [start, end] = myObj.monday.split(' - ');
+                    $("#mondayOff").prop("checked", false)
+                    // $("#mondayIn").val(start).prop("disabled",false);
+                    // $("#mondayOut").val(end).prop("disabled",false);
+                    // $("#mondayLunch").val(myObj.mondayLunch).prop("disabled",false);
+                    setScheduleInputs("monday", start, end, myObj.mondayLunch, false)
+                  }
+                  start = "";
+                  end = "";
+                  break;
+                case 1:
+                  if (myObj.tuesday == "-OFF-") {
+                    $("#tuesdayOff").prop("checked", true).trigger("change");
+                    // $("#tuesdayIn").val("").prop("disabled",true);
+                    // $("#tuesdayOut").val("").prop("disabled",true);
+                    // $("#tuesdayLunch").val("").prop("disabled",true);
+                    setScheduleInputs("tuesday", "", "", "", true)
+                  } else {
+                    [start, end] = myObj.tuesday.split(' - ');
+                    //.log("tuesday:"+start+"-"+end)
+                    $("#tuesdayOff").prop("checked", false)
+                    // $("#tuesdayIn").val(start).prop("disabled",false);
+                    // $("#tuesdayOut").val(end).prop("disabled",false);
+                    // $("#tuesdayLunch").val(myObj.tuesdayLunch).prop("disabled",false);
+                    setScheduleInputs("tuesday", start, end, myObj.tuesdayLunch, false)
+                  }
+                  start = "";
+                  end = ""
+                  break;
+                case 2:
+                  if (myObj.wednesday == "-OFF-") {
+                    $("#wednesdayOff").prop("checked", true).trigger("change");
+                    // $("#wednesdayIn").val("").prop("disabled",true);
+                    // $("#wednesdayOut").val("").prop("disabled",true);
+                    // $("#wednesdayLunch").val("").prop("disabled",true);
+                    setScheduleInputs("wednesday", "", "", "", true)
 
-              } else {
-                [start, end] = myObj.saturday.split(' - ');
-                $("#saturdayOff").prop("checked", false)
-                // $("#saturdayIn").val(start).prop("disabled",false);
-                // $("#saturdayOut").val(end).prop("disabled",false);
-                // $("#saturdayLunch").val(myObj.saturdayLunch).prop("disabled",false);
-                setScheduleInputs("saturday", start, end, myObj.saturdayLunch, false)
-              }
-              start = "";
-              end = ""
-              break;
-            case 6:
-              if (myObj.sunday == "-OFF-") {
-                $("#sundayOff").prop("checked", true).trigger("change");
-                // $("#sundayIn").val("").prop("disabled",true);
-                // $("#sundayOut").val("").prop("disabled",true);
-                // $("#sundayLunch").val("").prop("disabled",true);
-                setScheduleInputs("sunday", "", "", "", true)
+                  } else {
+                    [start, end] = myObj.wednesday.split(' - ');
+                    $("#wednesdayOff").prop("checked", false)
+                    // $("#wednesdayIn").val(start).prop("disabled",false);
+                    // $("#wednesdayOut").val(end).prop("disabled",false);
+                    // $("#wednesdayLunch").val(myObj.wednesdayLunch).prop("disabled",false);
+                    setScheduleInputs("wednesday", start, end, myObj.wednesdayLunch, false)
+                  }
+                  start = "";
+                  end = ""
+                  break;
+                case 3:
+                  if (myObj.thursday == "-OFF-") {
+                    $("#thursdayOff").prop("checked", true).trigger("change");
+                    // $("#thursdayIn").val("").prop("disabled",true);
+                    // $("#thursdayOut").val("").prop("disabled",true);
+                    // $("#thursdayLunch").val("").prop("disabled",true);
+                    setScheduleInputs("thursday", "", "", "", true)
 
-              } else {
-                [start, end] = myObj.sunday.split(' - ');
-                $("#sundayOff").prop("checked", false)
-                // $("#sundayIn").val(start).prop("disabled",false);
-                // $("#sundayOut").val(end).prop("disabled",false);
-                // $("#sundayLunch").val(myObj.sundayLunch).prop("disabled",false);
-                setScheduleInputs("sunday", start, end, myObj.sundayLunch, false)
-              }
-              start = "";
-              end = ""
-              break;
-          }
+                  } else {
+                    [start, end] = myObj.thursday.split(' - ');
+                    $("#thursdayOff").prop("checked", false)
+                    // $("#thursdayIn").val(start).prop("disabled",false);
+                    // $("#thursdayOut").val(end).prop("disabled",false);
+                    // $("#thursdayLunch").val(myObj.thursdayLunch).prop("disabled",false);
+                    setScheduleInputs("thursday", start, end, myObj.thursdayLunch, false)
+                  }
+                  start = "";
+                  end = ""
+                  break;
+                case 4:
+                  if (myObj.friday == "-OFF-") {
+                    $("#fridayOff").prop("checked", true).trigger("change");
+                    // $("#fridayIn").val("").prop("disabled",true);
+                    // $("#fridayOut").val("").prop("disabled",true);
+                    // $("#fridayLunch").val("").prop("disabled",true);
+                    setScheduleInputs("friday", "", "", "", true)
 
-        })
+                  } else {
+                    [start, end] = myObj.friday.split(' - ');
+                    $("#fridayOff").prop("checked", false)
+                    // $("#fridayIn").val(start).prop("disabled",false);
+                    // $("#fridayOut").val(end).prop("disabled",false);
+                    // $("#fridayLunch").val(myObj.fridayLunch).prop("disabled",false);
+                    setScheduleInputs("friday", start, end, myObj.fridayLunch, false)
+                  }
+                  start = "";
+                  end = ""
+                  break;
+                case 5:
+                  if (myObj.saturday == "-OFF-") {
+                    $("#saturdayOff").prop("checked", true).trigger("change");
+                    // $("#saturdayIn").val("").prop("disabled",true);
+                    // $("#saturdayOut").val("").prop("disabled",true);
+                    // $("#saturdayLunch").val("").prop("disabled",true);
+                    setScheduleInputs("saturday", "", "", "", true)
+
+                  } else {
+                    [start, end] = myObj.saturday.split(' - ');
+                    $("#saturdayOff").prop("checked", false)
+                    // $("#saturdayIn").val(start).prop("disabled",false);
+                    // $("#saturdayOut").val(end).prop("disabled",false);
+                    // $("#saturdayLunch").val(myObj.saturdayLunch).prop("disabled",false);
+                    setScheduleInputs("saturday", start, end, myObj.saturdayLunch, false)
+                  }
+                  start = "";
+                  end = ""
+                  break;
+                case 6:
+                  if (myObj.sunday == "-OFF-") {
+                    $("#sundayOff").prop("checked", true).trigger("change");
+                    // $("#sundayIn").val("").prop("disabled",true);
+                    // $("#sundayOut").val("").prop("disabled",true);
+                    // $("#sundayLunch").val("").prop("disabled",true);
+                    setScheduleInputs("sunday", "", "", "", true)
+
+                  } else {
+                    [start, end] = myObj.sunday.split(' - ');
+                    $("#sundayOff").prop("checked", false)
+                    // $("#sundayIn").val(start).prop("disabled",false);
+                    // $("#sundayOut").val(end).prop("disabled",false);
+                    // $("#sundayLunch").val(myObj.sundayLunch).prop("disabled",false);
+                    setScheduleInputs("sunday", start, end, myObj.sundayLunch, false)
+                  }
+                  start = "";
+                  end = ""
+                  break;
+              }
+
+            })
+
+        }else {
+          console.log("THERE ARENT SCHEDULE")
+        }
+
+
+        
         // if (myObj.msg == "error") {
         //   $("#badgeDiv").addClass("has-error");
         //   $("#msgArea").html("<label><small>Record Not Found!</small></label>");
@@ -1890,9 +1904,12 @@
     $('#createApForm').find('input,select,textarea').each(function() {
       var name = $(this).attr('name');
       var currentValue = $(this).val();
-      console.log(currentValue)
       if ($(this).attr('type') === 'checkbox') {
-        var currentValue = $(this).is(':checked') ? 1 : 0;
+        if (name == 'prorroga'){
+            var currentValue = $(this).is(':checked') ? 'Yes' : 'No';
+        }else {
+            var currentValue = $(this).is(':checked') ? 1 : 0;
+        }
       } else {
         var currentValue = $(this).val();
       }
@@ -2438,6 +2455,9 @@
             if (myObj.reason2 == "Prorroga") {
               $("#prorroga").prop('checked', true);
               $("#prorroga").val("Yes")
+            }else {
+              $("#prorroga").prop('checked', false);
+              $("#prorroga").val("No")
             }
             break;
           case 6:
@@ -2637,6 +2657,9 @@
             if (myObj.reason2 == "Prorroga") {
               $("#prorroga").prop('checked', true);
               $("#prorroga").val("Yes")
+            }else {
+              $("#prorroga").prop('checked', false);
+              $("#prorroga").val("No")
             }
             break;
           case 6:

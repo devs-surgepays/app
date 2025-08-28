@@ -104,7 +104,9 @@ class Aps extends Controller
                 case 5:
                     $data['apDate1']=$_POST['inicioIncapacidad'];
                     $data['apDate2']=$_POST['finIncapacidad'];
-                    $data['reason1']=html_entity_decode($_POST['tipoIncapacidad']);
+                    if (isset($_POST['tipoIncapacidad'])) {
+                        $data['reason1']=html_entity_decode($_POST['tipoIncapacidad']);
+                    }
                     if(isset($_POST['prorroga'])){
                         $data['reason2']=($_POST['prorroga']=="Yes")?"Prorroga":"";
                     }
