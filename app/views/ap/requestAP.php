@@ -550,6 +550,8 @@
                                                                 </tbody>
                                                             </table>
                                                         </div>
+                                                        <div class="text-danger mb-3" id="errorSchedule"></div>
+
                                                     </div>
 
 
@@ -1075,106 +1077,129 @@
                 //console.log(data)
                 myObj = JSON.parse(data)
                 console.table(myObj)
-                const daysObj = myObj.days.split('');
-                let start, end;
-                //console.log(daysObj)
-                $("#scheduleId").val("")
-                $("#scheduleId").val(myObj.scheduleId)
-                daysObj.forEach(function(day, index) {
-                    //console.log(day)
-                    switch (index) {
-                        case 0:
-                            if (myObj.monday == "-OFF-") {
-                                $("#mondayOff").prop("checked", true).trigger("change");
-                                setScheduleInputs("monday", "", "", "", true)
-                            } else {
-                                [start, end] = myObj.monday.split(' - ');
-                                $("#mondayOff").prop("checked", false)
-                                setScheduleInputs("monday", start, end, myObj.mondayLunch, false)
-                            }
-                            start = "";
-                            end = "";
-                            break;
-                        case 1:
-                            if (myObj.tuesday == "-OFF-") {
-                                $("#tuesdayOff").prop("checked", true).trigger("change");
-                                setScheduleInputs("tuesday", "", "", "", true)
-                            } else {
-                                [start, end] = myObj.tuesday.split(' - ');
-                                $("#tuesdayOff").prop("checked", false)
-                                setScheduleInputs("tuesday", start, end, myObj.tuesdayLunch, false)
-                            }
-                            start = "";
-                            end = ""
-                            break;
-                        case 2:
-                            if (myObj.wednesday == "-OFF-") {
-                                $("#wednesdayOff").prop("checked", true).trigger("change");
-                                setScheduleInputs("wednesday", "", "", "", true)
 
-                            } else {
-                                [start, end] = myObj.wednesday.split(' - ');
-                                $("#wednesdayOff").prop("checked", false)
-                                setScheduleInputs("wednesday", start, end, myObj.wednesdayLunch, false)
-                            }
-                            start = "";
-                            end = ""
-                            break;
-                        case 3:
-                            if (myObj.thursday == "-OFF-") {
-                                $("#thursdayOff").prop("checked", true).trigger("change");
-                                setScheduleInputs("thursday", "", "", "", true)
+                const countKeysObj = Object.keys(myObj).length;
 
-                            } else {
-                                [start, end] = myObj.thursday.split(' - ');
-                                $("#thursdayOff").prop("checked", false)
-                                setScheduleInputs("thursday", start, end, myObj.thursdayLunch, false)
-                            }
-                            start = "";
-                            end = ""
-                            break;
-                        case 4:
-                            if (myObj.friday == "-OFF-") {
-                                $("#fridayOff").prop("checked", true).trigger("change");
-                                setScheduleInputs("friday", "", "", "", true)
+                if (countKeysObj > 0) {
 
-                            } else {
-                                [start, end] = myObj.friday.split(' - ');
-                                $("#fridayOff").prop("checked", false)
-                                setScheduleInputs("friday", start, end, myObj.fridayLunch, false)
-                            }
-                            start = "";
-                            end = ""
-                            break;
-                        case 5:
-                            if (myObj.saturday == "-OFF-") {
-                                $("#saturdayOff").prop("checked", true).trigger("change");
-                                setScheduleInputs("saturday", "", "", "", true)
+                    const daysObj = myObj.days.split('');
+                    let start, end;
+                    //console.log(daysObj)
+                    $("#scheduleId").val("")
+                    $("#scheduleId").val(myObj.scheduleId)
+                    daysObj.forEach(function(day, index) {
+                        //console.log(day)
+                        switch (index) {
+                            case 0:
+                                if (myObj.monday == "-OFF-") {
+                                    $("#mondayOff").prop("checked", true).trigger("change");
+                                    setScheduleInputs("monday", "", "", "", true)
+                                } else {
+                                    [start, end] = myObj.monday.split(' - ');
+                                    $("#mondayOff").prop("checked", false)
+                                    setScheduleInputs("monday", start, end, myObj.mondayLunch, false)
+                                }
+                                start = "";
+                                end = "";
+                                break;
+                            case 1:
+                                if (myObj.tuesday == "-OFF-") {
+                                    $("#tuesdayOff").prop("checked", true).trigger("change");
+                                    setScheduleInputs("tuesday", "", "", "", true)
+                                } else {
+                                    [start, end] = myObj.tuesday.split(' - ');
+                                    $("#tuesdayOff").prop("checked", false)
+                                    setScheduleInputs("tuesday", start, end, myObj.tuesdayLunch, false)
+                                }
+                                start = "";
+                                end = ""
+                                break;
+                            case 2:
+                                if (myObj.wednesday == "-OFF-") {
+                                    $("#wednesdayOff").prop("checked", true).trigger("change");
+                                    setScheduleInputs("wednesday", "", "", "", true)
 
-                            } else {
-                                [start, end] = myObj.saturday.split(' - ');
-                                $("#saturdayOff").prop("checked", false)
-                                setScheduleInputs("saturday", start, end, myObj.saturdayLunch, false)
-                            }
-                            start = "";
-                            end = ""
-                            break;
-                        case 6:
-                            if (myObj.sunday == "-OFF-") {
-                                $("#sundayOff").prop("checked", true).trigger("change");
-                                setScheduleInputs("sunday", "", "", "", true)
+                                } else {
+                                    [start, end] = myObj.wednesday.split(' - ');
+                                    $("#wednesdayOff").prop("checked", false)
+                                    setScheduleInputs("wednesday", start, end, myObj.wednesdayLunch, false)
+                                }
+                                start = "";
+                                end = ""
+                                break;
+                            case 3:
+                                if (myObj.thursday == "-OFF-") {
+                                    $("#thursdayOff").prop("checked", true).trigger("change");
+                                    setScheduleInputs("thursday", "", "", "", true)
 
-                            } else {
-                                [start, end] = myObj.sunday.split(' - ');
-                                $("#sundayOff").prop("checked", false)
-                                setScheduleInputs("sunday", start, end, myObj.sundayLunch, false)
-                            }
-                            start = "";
-                            end = ""
-                            break;
-                    }
+                                } else {
+                                    [start, end] = myObj.thursday.split(' - ');
+                                    $("#thursdayOff").prop("checked", false)
+                                    setScheduleInputs("thursday", start, end, myObj.thursdayLunch, false)
+                                }
+                                start = "";
+                                end = ""
+                                break;
+                            case 4:
+                                if (myObj.friday == "-OFF-") {
+                                    $("#fridayOff").prop("checked", true).trigger("change");
+                                    setScheduleInputs("friday", "", "", "", true)
 
-                })
+                                } else {
+                                    [start, end] = myObj.friday.split(' - ');
+                                    $("#fridayOff").prop("checked", false)
+                                    setScheduleInputs("friday", start, end, myObj.fridayLunch, false)
+                                }
+                                start = "";
+                                end = ""
+                                break;
+                            case 5:
+                                if (myObj.saturday == "-OFF-") {
+                                    $("#saturdayOff").prop("checked", true).trigger("change");
+                                    setScheduleInputs("saturday", "", "", "", true)
+
+                                } else {
+                                    [start, end] = myObj.saturday.split(' - ');
+                                    $("#saturdayOff").prop("checked", false)
+                                    setScheduleInputs("saturday", start, end, myObj.saturdayLunch, false)
+                                }
+                                start = "";
+                                end = ""
+                                break;
+                            case 6:
+                                if (myObj.sunday == "-OFF-") {
+                                    $("#sundayOff").prop("checked", true).trigger("change");
+                                    setScheduleInputs("sunday", "", "", "", true)
+
+                                } else {
+                                    [start, end] = myObj.sunday.split(' - ');
+                                    $("#sundayOff").prop("checked", false)
+                                    setScheduleInputs("sunday", start, end, myObj.sundayLunch, false)
+                                }
+                                start = "";
+                                end = ""
+                                break;
+                        }
+
+                    })
+
+
+
+                } else {
+                    console.log("THERE ARENT SCHEDULE")
+                    $("#scheduleId").val(0)
+                    setScheduleInputs("monday", "", "", "", false)
+                    setScheduleInputs("tuesday", "", "", "", false)
+                    setScheduleInputs("wednesday", "", "", "", false)
+                    setScheduleInputs("thursday", "", "", "", false)
+                    setScheduleInputs("friday", "", "", "", false)
+                    setScheduleInputs("saturday", "", "", "", false)
+                    setScheduleInputs("sunday", "", "", "", false)
+                    $("#errorSchedule").html('An error occurred while loading the Schedule data.')
+
+
+                }
+
             }
         })
     }
