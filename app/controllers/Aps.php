@@ -7,6 +7,7 @@ class Aps extends Controller
     public $employeeModel;
     public $departmentModel;
     public $positionModel;
+    public $activityLogModel;
 
     public function __construct()
     {
@@ -18,6 +19,8 @@ class Aps extends Controller
         $this->employeeModel = $this->model('Employee');
         $this->departmentModel = $this->model('Department');
         $this->positionModel = $this->model('Position');
+        $this->activityLogModel = $this->model('ActivityLog');
+
     }
 
     public function index(){
@@ -236,10 +239,18 @@ class Aps extends Controller
                     $schedule['employeeId']=$_POST['addEmployeeId'];
                     if($action=="Insert"){
                         $data['scheduleId']=$this->employeeScheduleModel->saveEmployeeSchedule($schedule);
+                        $idS = $data['scheduleId'];
+                        $action = "Create";
                     }else if($action=="Update"){
                         $schedule['scheduleId']=$_POST['scheduleId'];
+                        $idS = $schedule['scheduleId'];
+                        $action = "Edit";
                         $this->employeeScheduleModel->editEmployeeSchedule($schedule);
                     }
+
+                    // save activity Logs
+                    $dataLog = ['userId' => $_SESSION['userId'], 'registerId' => $idS, 'action' => $action, 'page' => 'Employee Schedule APs', 'fields' => json_encode($schedule)];
+                    $this->activityLogModel->saveActivityLog($dataLog);
                     
                     break;
                 case 8:
@@ -433,10 +444,19 @@ class Aps extends Controller
 
                     if($action=="Insert"){
                         $data['scheduleId']=$this->employeeScheduleModel->saveEmployeeSchedule($schedule);
+                        $action = "Create";
+                        $idS = $data['scheduleId'];
                     }else if($action=="Update"){
                         $schedule['scheduleId']=$_POST['scheduleId'];
+                        $action = "Edit";
+                        $idS = $schedule['scheduleId'];
                         $this->employeeScheduleModel->editEmployeeSchedule($schedule);
                     }
+
+                    // save activity Logs
+                    $dataLog = ['userId' => $_SESSION['userId'], 'registerId' => $idS, 'action' => $action, 'page' => 'Employee Schedule Request', 'fields' => json_encode($schedule)];
+                    $this->activityLogModel->saveActivityLog($dataLog);
+                        
                     break;             
             }
             
