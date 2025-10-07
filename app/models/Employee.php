@@ -345,7 +345,7 @@ class Employee
                     em.workHours as 'HORAS CONTRATADAS',
                     em.shift as 'TURNO',
                     em.endDate as 'FECHA DE BAJA',
-                    em.reasonTermination as 'RAZON DE BAJA',
+                    ap.reason  as 'RAZON DE BAJA',
                     TIMESTAMPDIFF(YEAR, em.dob, CURDATE()) AS EDAD,
                     dt.name AS 'TIPO DE DOCUMENTO',
                     em.documentNumber as 'NUMERO DE DOCUMENTO',
@@ -389,7 +389,9 @@ class Employee
                         LEFT JOIN
                     documents_type dt ON dt.documentTypeId = em.documentTypeId 
                         LEFT JOIN
-                    afp af ON af.afpId = em.afpTypeId ";
+                    afp af ON af.afpId = em.afpTypeId 
+                    LEFT JOIN 
+                        (SELECT badge,IF(reason1 = 'Other', reason2, reason1) AS reason FROM hr_surgepays.ap_details WHERE apTypeId = 11) ap ON ap.badge = em.badge";
         } else {
             $fields = "SELECT
             em.employeeId as employeeId,
