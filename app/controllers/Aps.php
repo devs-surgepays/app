@@ -136,7 +136,7 @@ class Aps extends Controller
                     $daysOff="";
 
                     $data['apDate1']=$_POST['inicioHorario'];
-                    $data['apDate2']=@$_POST['finHorario'];
+                    $data['apDate2']=$_POST['finHorario']?? '';
                     $data['reason1']=html_entity_decode($_POST['motivo_horario']);
                     if(isset($_POST['mondayOff'])){
                         $schedule['monday']="-OFF-";

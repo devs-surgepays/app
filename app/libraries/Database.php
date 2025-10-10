@@ -32,7 +32,8 @@
         $this->dbh = new PDO($dsn, $this->user, $this->pass, $options);
       } catch(PDOException $e){
         $this->error = $e->getMessage();
-        echo $this->error;
+        //echo $this->error;
+        file_put_contents("DBError.txt",$this->error);
       }
     }
 
