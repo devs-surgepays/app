@@ -114,8 +114,7 @@
       $insert = "INSERT INTO ".$table." (".$set.") VALUES (:".$setValues.")";
       $this->query($insert);
       foreach($data as $item => $value){
-        $this->bind($item,$value);
-        
+        $this->bind($item,$value); 
       }
       if($this->execute()){
         return true;
