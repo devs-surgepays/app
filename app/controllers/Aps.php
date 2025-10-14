@@ -340,7 +340,7 @@ class Aps extends Controller
                 case 7:
                     $daysOff="";
                     $data['apDate1']=$_POST['inicioHorario'];
-                    $data['apDate2']=@$_POST['finHorario'];
+                    $data['apDate2']=$_POST['finHorario'] ?? '';
                     $data['reason1']=html_entity_decode($_POST['motivo_horario']);
                     if(isset($_POST['mondayOff'])){
                         $schedule['monday']="-OFF-";
@@ -444,17 +444,17 @@ class Aps extends Controller
 
                     if($action=="Insert"){
                         $data['scheduleId']=$this->employeeScheduleModel->saveEmployeeSchedule($schedule);
-                        $action = "Create";
+                        $actionLog = "Create";
                         $idS = $data['scheduleId'];
                     }else if($action=="Update"){
                         $schedule['scheduleId']=$_POST['scheduleId'];
-                        $action = "Edit";
+                        $actionLog = "Edit";
                         $idS = $schedule['scheduleId'];
                         $this->employeeScheduleModel->editEmployeeSchedule($schedule);
                     }
 
                     // save activity Logs
-                    $dataLog = ['userId' => $_SESSION['userId'], 'registerId' => $idS, 'action' => $action, 'page' => 'Employee Schedule Request', 'fields' => json_encode($schedule)];
+                    $dataLog = ['userId' => $_SESSION['userId'], 'registerId' => $idS, 'action' => $actionLog, 'page' => 'Employee Schedule Request', 'fields' => json_encode($schedule)];
                     $this->activityLogModel->saveActivityLog($dataLog);
                         
                     break;             
