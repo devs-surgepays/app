@@ -215,6 +215,25 @@ function getPLUsers()
     return $permission;
 }
 
+/**
+ * Method getPLRequests
+ * Documents requests module.
+ * 
+ * Development - 128
+ * HR - 16
+ * TOTAL 144
+ *
+ * @return bool
+ */
+function getPLRequests()
+{
+    $permissionLevelId = $_SESSION['permissionLevelId'];
+    $permission = false;
+    if (($permissionLevelId & 144))  $permission = true;
+
+    return $permission;
+}
+
 
 /**
  * Method getPLAnotherBillTo

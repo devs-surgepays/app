@@ -10,6 +10,13 @@
   
   <!-- Fonts and icons -->
   <script src="<?php echo URLROOT ?>/assets/js/plugin/webfont/webfont.min.js"></script>
+
+  <!-- word file generation -->
+   <script src="https://cdn.jsdelivr.net/npm/pizzip@3.1.1/dist/pizzip.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docxtemplater@3.29.0/build/docxtemplater.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
+  <!-- end word file generation -->
+  
   <script>
     WebFont.load({
       google: {families: ["Public Sans:300,400,500,600,700"]},

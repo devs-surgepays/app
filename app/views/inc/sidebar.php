@@ -92,6 +92,24 @@
                     </li>
                 <?php } ?>
 
+                <?php if (personalAps()) { ?>
+                    <li class="nav-item">
+                        <a href="<?php echo URLROOT; ?>/documentsRequests">
+                            <i class="fa fa-file" aria-hidden="true"></i>
+                            <p>Documents requests</p>
+                        </a>
+                    </li>
+                <?php } ?>
+
+                <?php if (getPLRequests()) { ?>
+                    <li class="nav-item">
+                        <a href="<?php echo URLROOT; ?>/documentsRequests/indexHR">
+                            <i class="fa fa-file" aria-hidden="true"></i>
+                            <p>Documents requests</p>
+                        </a>
+                    </li>
+                <?php } ?>
+
                 <!-- <li class="nav-item">
                     <a data-bs-toggle="collapse" href="#sidebarLayouts">
                         <i class="fas fa-th-list"></i>
