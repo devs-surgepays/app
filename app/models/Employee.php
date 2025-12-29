@@ -237,6 +237,7 @@ class Employee
             em.personalEmail,
             em.career,
             em.documentNumber,
+            em.afpTypeId,
             concat_ws(" ",em.firstName,em.secondName,em.thirdName,em.firstLastName,em.secondLastName,em.thirdLastName) as fullname,
             em.contactPhone AS contactPhone,
             em.homePhone AS homePhone,

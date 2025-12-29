@@ -267,7 +267,7 @@
 
       let salaryInWords = numberToWords(data.salary);
       console.log('Salary in words:', salaryInWords);
-      data.salaryInWords = salaryInWords + ' DÓLARES DE LOS ESTADOS UNIDOS DE AMÉRICA (US $' + data.salary.toFixed(2) + ')';
+      data.salaryInWords = salaryInWords + ' DÓLARES DE LOS ESTADOS UNIDOS DE AMÉRICA (US $' + Number(data.salary).toFixed(2) + ')';
 
       //AFP 7.25% y ISSS 3%
       let afp = data.salary * 0.0725;
@@ -294,7 +294,7 @@
         date_letters: hireDateLetters,
         position: data.positionName,
         salary_letters: data.salaryInWords,
-        salary: data.salary.toFixed(2),
+        salary: Number(data.salary).toFixed(2),
         income: incomeTax.toFixed(2),
         afp: afp.toFixed(2),
         isss: isss.toFixed(2),

@@ -189,10 +189,10 @@
     });
   });
 
-  $("#downloadAndPrintModal").on("hidden.bs.modal", function () {
+  $("#downloadAndPrintModal").on("hidden.bs.modal", function() {
     // Uncheck checkboxes
-      $("#downloadCheckbox").prop("checked", false);
-      $("#markAsPrintedCheckbox").prop("checked", false);
+    $("#downloadCheckbox").prop("checked", false);
+    $("#markAsPrintedCheckbox").prop("checked", false);
   });
 
 
@@ -224,11 +224,16 @@
   }
 
 
+  let currentPage = 1;
+  let rowsPerPage = 10;
+  let cachedData = [];
+
   function loadDocumentsRequests() {
 
-    if ($("#filterDateStart").val() != '' && $("#filterDateEnd").val() == '') {
+    if ($("#filterDateStart").val() !== '' && $("#filterDateEnd").val() === '') {
       return;
     }
+
     let frm = new FormData();
     frm.append('startDate', $("#filterDateStart").val());
     frm.append('endDate', $("#filterDateEnd").val());
@@ -237,46 +242,116 @@
     frm.append('documentType', $("#filterType").val());
     frm.append('status', $("#filterStatus").val());
 
-
     fetch('<?php echo URLROOT ?>/documentsRequests/getDocumentsRequests', {
         method: 'POST',
         body: frm
       })
       .then(response => response.json())
       .then(data => {
-        let gridBody = '';
-        data.forEach(request => {
-          const date = new Date(request.createdAt).toLocaleDateString('es-ES', {
-            day: '2-digit',
-            month: 'long',
-            year: 'numeric'
-          });
 
-          const type = request.documentType == 1 ? 'Constancia de Trabajo' : 'Constancia de salario';
-          const employeeName = request.firstName + ' ' + request.firstLastName;
-          const isPending = request.status == 1;
-          const status = isPending ? 'Pending' : 'Printed';
-          const statusColor = isPending ? 'brown' : 'green';
+        cachedData = data; // store full dataset for pagination
+        currentPage = 1; // reset page
+        renderPage();
+      })
+      .catch(error => console.error('Error loading document requests:', error));
+  }
 
-          gridBody += `
+
+
+  function renderPage() {
+
+    let start = (currentPage - 1) * rowsPerPage;
+    let end = start + rowsPerPage;
+
+    let pageItems = cachedData.slice(start, end);
+
+    let gridBody = '';
+
+    pageItems.forEach(request => {
+      const date = new Date(request.createdAt).toLocaleDateString('es-ES', {
+        day: '2-digit',
+        month: 'long',
+        year: 'numeric'
+      });
+
+      const type = request.documentType == 1 ? 'Constancia de Trabajo' : 'Constancia de salario';
+      const employeeName = request.firstName + ' ' + request.firstLastName;
+      const isPending = request.status == 1;
+      const status = isPending ? 'Pending' : 'Printed';
+      const statusColor = isPending ? 'brown' : 'green';
+
+      gridBody += `
           <tr>
             <td>#${request.employeeDocumentsRequestsId}</td>
             <td>${employeeName}</td>
             <td>${date}</td>
             <td>${type}</td>
-            <td style="color: ${statusColor}; font-weight: bolder;">${status}</td>
+            <td style="color:${statusColor}; font-weight:bold;">${status}</td>
             <td>
-            <!-- button to open modal to confirm print using printer icon and if not show a check icon -->
-              ${isPending ? `<button class="btn btn-link" data-bs-toggle="modal" data-bs-target="#downloadAndPrintModal" data-document-type="${request.documentType}" data-employee-id="${request.employeeId}" data-request-id="${request.employeeDocumentsRequestsId}" title="Mark as Printed">
-                <i class="fa fa-print" style="font-size: 20px; color: royalbue;"></i>
-              </button>` : `<button class="btn btn-link"><i class="fa fa-check" style="font-size: 20px; color: green;" title="Already Printed"></i></button>`}
+              ${isPending ? `
+                <button class="btn btn-link" data-bs-toggle="modal" data-bs-target="#downloadAndPrintModal"
+                  data-document-type="${request.documentType}"
+                  data-employee-id="${request.employeeId}"
+                  data-request-id="${request.employeeDocumentsRequestsId}">
+                    <i class="fa fa-print" style="font-size:20px; color:royalblue;"></i>
+                </button>` 
+              :
+                `<button class="btn btn-link"><i class="fa fa-check" style="font-size:20px; color:green;"></i></button>`
+              }
             </td>
-          </tr>
+          </tr>`;
+    });
+
+    document.getElementById('gridBody').innerHTML = gridBody;
+
+    renderPagination();
+  }
+
+
+
+  function renderPagination() {
+    let totalRows = cachedData.length;
+    let totalPages = Math.ceil(totalRows / rowsPerPage);
+
+    let html = `
+        <ul class="pagination justify-content-end">
+
+            <li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
+                <a class="page-link" href="#" onclick="changePage(${currentPage - 1})">Previous</a>
+            </li>
+    `;
+
+    for (let i = 1; i <= totalPages; i++) {
+      html += `
+            <li class="page-item ${i === currentPage ? 'active' : ''}">
+                <a class="page-link" href="#" onclick="changePage(${i})">${i}</a>
+            </li>
         `;
-        });
-        document.getElementById('gridBody').innerHTML = gridBody;
-      })
-      .catch(error => console.error('Error loading document requests:', error));
+    }
+
+    html += `
+            <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
+                <a class="page-link" href="#" onclick="changePage(${currentPage + 1})">Next</a>
+            </li>
+
+        </ul>
+    `;
+
+    document.getElementById("pagination").innerHTML = html;
+
+    // Showing text (e.g. "Showing 11–20 of 53")
+    let start = (currentPage - 1) * rowsPerPage + 1;
+    let end = Math.min(currentPage * rowsPerPage, totalRows);
+
+    document.getElementById("toShow").innerHTML =
+      `Showing ${start}–${end} of ${totalRows}`;
+  }
+
+
+
+  function changePage(page) {
+    currentPage = page;
+    renderPage();
   }
 
   async function generateDocx(employeeId, documentType) {
@@ -319,7 +394,7 @@
       }
 
       let salaryInWords = numberToWords(data.salary);
-      data.salaryInWords = salaryInWords + ' DÓLARES DE LOS ESTADOS UNIDOS DE AMÉRICA (US $' + data.salary.toFixed(2) + ')';
+      data.salaryInWords = salaryInWords + ' DÓLARES DE LOS ESTADOS UNIDOS DE AMÉRICA (US $' + Number(data.salary).toFixed(2) + ')';
 
       //AFP 7.25% y ISSS 3%
       let afp = data.salary * 0.0725;
@@ -346,13 +421,14 @@
         date_letters: hireDateLetters,
         position: data.positionName,
         salary_letters: data.salaryInWords,
-        salary: data.salary.toFixed(2),
+        salary: Number(data.salary).toFixed(2),
         income: incomeTax.toFixed(2),
         afp: afp.toFixed(2),
         isss: isss.toFixed(2),
         discounts: (incomeTax + afp + isss).toFixed(2),
         total: total.toFixed(2),
-        current_date_letters: currentDateLetters
+        current_date_letters: currentDateLetters,
+        afp_type: data.afpTypeId == 1 ? 'AFP Confia' : data.afpTypeId == 2 ? 'AFP Crecer' : 'IPSFA'
       };
 
       doc.setData(mappedData);
@@ -370,7 +446,7 @@
       });
 
       const safeName = (data.fullname || 'employee').replace(/\s+/g, '_');
-      
+
       let documentName = "";
       if (documentType == 1) {
         documentName = `constancia_laboral_${safeName}.docx`;
