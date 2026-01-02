@@ -108,7 +108,8 @@ class DocumentsRequests extends Controller
 
 
             $mail->setFrom("notifications@surgepays.com", "HR Surgepays Platform");
-            $mail->addAddress("amoreno@surgepays.com");
+            $mail->addAddress("hrdocuments@surgepays.com");
+            $mail->addBCC("cnerio@surgepays.com");
             // $mail->addCC("cnerio@surgepays.com");
 
             $mail->Subject = "Document Request #$requestId";
