@@ -7,8 +7,8 @@ require APPROOT . '/libraries/email/vendor/autoload.php';
 
 class DocumentsRequests extends Controller
 {
-    private $documentRequestModel = '';
-    private $employeeModel = '';
+    private $documentRequestModel;
+    private $employeeModel;
 
     public function __construct()
     {
@@ -28,7 +28,12 @@ class DocumentsRequests extends Controller
     public function indexHR()
     {
         $data = [];
-        $this->view('documents_requests/hr', $data);
+
+        if (getPLRequests()) {
+            $this->view('documents_requests/hr', $data);
+        } else {
+            $this->view('documents_requests/index', $data);
+        }
     }
 
     public function getEmployeeDocumentsRequests()
