@@ -92,14 +92,14 @@
                     </li>
                 <?php } ?>
 
-                <?php if (personalAps()) { ?>
-                    <li class="nav-item">
+                <?php // if (personalAps()) { ?>
+                    <!-- <li class="nav-item">
                         <a href="<?php echo URLROOT; ?>/documentsRequests">
                             <i class="fa fa-file" aria-hidden="true"></i>
                             <p>Documents requests</p>
                         </a>
-                    </li>
-                <?php } ?>
+                    </li> -->
+                <?php // } ?>
 
                 <?php if (getPLRequests()) { ?>
                     <li class="nav-item">
@@ -108,6 +108,15 @@
                             <p>Documents requests</p>
                         </a>
                     </li>
+                <?php } else { ?>
+
+                    <li class="nav-item">
+                        <a href="<?php echo URLROOT; ?>/documentsRequests">
+                            <i class="fa fa-file" aria-hidden="true"></i>
+                            <p>Documents requests</p>
+                        </a>
+                    </li>
+
                 <?php } ?>
 
                 <!-- <li class="nav-item">
