@@ -92,14 +92,14 @@
                     </li>
                 <?php } ?>
 
-                <?php if (personalAps()) { ?>
+                <?php // if (personalAps()) { ?>
                     <li class="nav-item">
                         <a href="<?php echo URLROOT; ?>/documentsRequests">
                             <i class="fa fa-file" aria-hidden="true"></i>
                             <p>Documents requests</p>
                         </a>
                     </li>
-                <?php } ?>
+                <?php // } ?>
 
                 <?php if (getPLRequests()) { ?>
                     <li class="nav-item">
