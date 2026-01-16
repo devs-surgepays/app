@@ -300,7 +300,8 @@
         isss: isss.toFixed(2),
         discounts: (incomeTax + afp + isss).toFixed(2),
         total: total.toFixed(2),
-        current_date_letters: currentDateLetters
+        current_date_letters: currentDateLetters,
+        afp_type: data.afpTypeId == 1 ? 'AFP Confia' : data.afpTypeId == 2 ? 'AFP Crecer' : 'IPSFA'
       };
 
       doc.setData(mappedData);
