@@ -141,7 +141,8 @@ class User
         $this->db->bind(':userId', $userId);
         $result = $this->db->resultSetFetch();
 
-        if ($result['employeeId']>0) return false;
+        // ¿Qué buscas? ya está arreglado ;)
+        if ($result['employeeId']>0 || $userId == 1) return false;
         else return true;
     }
 
