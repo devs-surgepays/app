@@ -142,8 +142,11 @@ class User
         $result = $this->db->resultSetFetch();
 
         // ¿Qué buscas? ya está arreglado ;)
-        if ($result['employeeId']>0 || $userId == 1) return false;
-        else return true;
+        if ($result['employeeId'] > 0 || $userId == 1) {
+            return false;
+        }
+
+        return true;
     }
 
     public function userExists($email){
