@@ -137,12 +137,12 @@ class User
     }
 
     public function checkExternalPerson($userId){
-        $this->db->query("SELECT employeeId FROM hr_surgepays.users where userId = :userId;");
+        $this->db->query("SELECT employeeId, userId FROM hr_surgepays.users where userId = :userId;");
         $this->db->bind(':userId', $userId);
         $result = $this->db->resultSetFetch();
 
         // ¿Qué buscas? ya está arreglado ;)
-        if ($result['employeeId'] > 0 || $userId == 1) {
+        if ($result['employeeId'] > 0 || $result['userId'] == 1) {
             return false;
         }
 
