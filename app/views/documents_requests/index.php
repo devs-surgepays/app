@@ -58,7 +58,7 @@
                   <div class="modal-footer border-0">
 
                     <button type="submit" id="addDocumentRequestButton" class="btn btn-primary" onclick="generateDocx()">Submit</button>
-                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                    <button type="button" id="closeDocumentRequestButton" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
                   </div>
                 </div>
               </div>
@@ -330,6 +330,10 @@
       formData.append("documentType", $("#documentType").val());
 
       // Send to PHP 
+
+      $("#addDocumentRequestButton").prop("disabled", true);
+      $("#closeDocumentRequestButton").prop("disabled", true);
+
       const uploadResponse = await fetch("<?php echo URLROOT ?>/documentsRequests/sendEmailWithAttachment", {
         method: "POST",
         body: formData
@@ -343,13 +347,22 @@
         $("#successMessage").hide();
         $("#documentType").val('');
         $('#addDocumentRequest').modal('hide');
+        $("#addDocumentRequestButton").prop("disabled", false);
+        $("#closeDocumentRequestButton").prop("disabled", false);
+
         loadDocumentsRequests();
-      }, 5000);
+      }, 2000);
       // saveAs(out, `constancia_salarial_${safeName}.docx`);
 
     } catch (error) {
       console.error('Error generating Word file:', error);
       alert('There was an error generating the document. Check console for details.');
+      $("#addDocumentRequestButton").prop("disabled", false);
+      $("#closeDocumentRequestButton").prop("disabled", false);
+    } finally {
+      $("#sendingMessage").hide();
+      // $("#addDocumentRequestButton").prop("disabled", false);
+      // $("#closeDocumentRequestButton").prop("disabled", false);
     }
   }
 </script>
