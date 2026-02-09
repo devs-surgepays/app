@@ -129,8 +129,8 @@ FROM hr_surgepays.ap_details ap WHERE apDetailsId=:leaveId");
 
     public function countRegisters($search, $request=false){
         $showEmWhere = getPLEmployeeTable(false);
-        $salaryapp=(getPLSAA()==false)?" AND a.apTypeId =12":"";
-        $attritionsapp=(getPLAT()==false)?" AND a.apTypeId =11":"";
+        $salaryapp=(getPLSAA()==false)?" AND a.apTypeId <> 12":"";
+        $attritionsapp=(getPLAT()==false)?" AND a.apTypeId <> 11":"";
         $getApSAA = $salaryapp.$attritionsapp;
 
         $activeAP = ($request) ? 2 : 1;
@@ -155,8 +155,8 @@ FROM hr_surgepays.ap_details ap WHERE apDetailsId=:leaveId");
     }
     public function countRegistersPendingNotification(){
         $showEmWhere = getPLEmployeeTable(false);
-        $salaryapp=(getPLSAA()==false)?" AND a.apTypeId =12":"";
-        $attritionsapp=(getPLAT()==false)?" AND a.apTypeId =11":"";
+        $salaryapp=(getPLSAA()==false)?" AND a.apTypeId <> 12":"";
+        $attritionsapp=(getPLAT()==false)?" AND a.apTypeId <> 11":"";
         $getApSAA = $salaryapp.$attritionsapp;
 
         $showEmWhere = getPLEmployeeTable(true);
@@ -173,8 +173,8 @@ FROM hr_surgepays.ap_details ap WHERE apDetailsId=:leaveId");
 
     public function getData($offset,$per_page,$search,$orderby, $request=false){
         $showEmWhere = getPLEmployeeTable(false,true);
-        $salaryapp=(getPLSAA()==false)?" AND a.apTypeId !=12":"";
-        $attritionsapp=(getPLAT()==false)?" AND a.apTypeId !=11":"";
+        $salaryapp=(getPLSAA()==false)?" AND a.apTypeId <> 12":"";
+        $attritionsapp=(getPLAT()==false)?" AND a.apTypeId <> 11":"";
         $getApSAA = $salaryapp.$attritionsapp;
 		$date_now = date('Y-m-d').'%';
 
